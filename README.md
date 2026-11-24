@@ -121,3 +121,4 @@ identitas perangkat) sebelum laporan ditampilkan. Nama pelapor disamarkan otomat
 Kode dan desain dibuat untuk Techcomfest 2027.
 
 **Dikembangkan oleh Tim Aetherion Vanakei — Cyber University.**
+# PRAJVALA
