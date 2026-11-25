@@ -82,9 +82,17 @@ Tanpa ini, tautan konfirmasi email akan ditolak Supabase.
 
 Proyek Supabase saat ini memakai `mailer_autoconfirm: false`, sehingga pendaftar
 baru harus mengonfirmasi email sebelum masuk. UI menampilkan status
-“Cek email Anda” setelah pendaftaran berhasil.
+“Cek email Anda” setelah pendaftaran berhasil, plus tombol
+**“Lanjutkan dengan akun lokal”** agar demo tetap bisa dilanjutkan tanpa akses
+kotak masuk email.
+
+Halaman masuk/daftar juga memeriksa kesiapan database. Bila tabel belum dibuat,
+muncul peringatan untuk menjalankan `supabase/schema.sql`; bila server tidak
+terjangkau, aplikasi memberi tahu bahwa mode lokal sedang dipakai.
 
 - **Akun demo:** `warga@demo.prajvala.id` / `prajvala2026`
+- Mengetik kredensial demo secara manual di halaman masuk juga otomatis memakai
+  akun demo lokal bila akun Supabase belum tersedia.
 - Tombol “Masuk dengan akun demo” mencoba Supabase terlebih dahulu; bila akun demo
   belum ada di Supabase, aplikasi masuk memakai akun demo lokal dan memberi label
   mode lokal.

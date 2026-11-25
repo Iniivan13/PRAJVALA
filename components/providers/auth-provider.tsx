@@ -32,6 +32,7 @@ interface AuthContextValue {
   isSupabaseMode: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (input: RegisterInput) => Promise<AuthResult>;
+  registerLocal: (input: RegisterInput) => Promise<AuthResult>;
   loginDemo: () => Promise<AuthResult>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<AuthResult>;
@@ -486,6 +487,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      if (normalized === DEMO_ACCOUNT.email && password === DEMO_ACCOUNT.password) {
+        const demo = await localDemoLogin();
+        if (demo.ok) {
+          const session = readSession();
+          if (session) setUser(session);
+        }
+        return demo;
+      }
+
       const local = await localLogin(normalized, password);
       if (!local.profile) {
         return { ok: false, error: local.error ?? "Belum dapat masuk. Coba lagi." };
@@ -559,6 +569,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch {
         // Jaringan bermasalah; lanjutkan pendaftaran lokal.
       }
+    }
+
+    const result = await localRegister(input);
+    if (result.ok) {
+      const session = readSession();
+      if (session) setUser(session);
+    }
+    return result;
+  }, []);
+
+  const registerLocal = useCallback(async (input: RegisterInput): Promise<AuthResult> => {
+    const validationError = validateRegistration(input);
+    if (validationError) return { ok: false, error: validationError };
+
+    if (normalizeEmail(input.email) === DEMO_ACCOUNT.email) {
+      return {
+        ok: false,
+        error:
+          "Email ini khusus akun demo. Gunakan email lain, atau masuk lewat tombol “Masuk dengan akun demo”.",
+      };
     }
 
     const result = await localRegister(input);
@@ -661,11 +691,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isSupabaseMode: isSupabaseConfigured,
       login,
       register,
+      registerLocal,
       loginDemo,
       logout,
       deleteAccount,
     }),
-    [user, isHydrated, login, register, loginDemo, logout, deleteAccount],
+    [user, isHydrated, login, register, registerLocal, loginDemo, logout, deleteAccount],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
