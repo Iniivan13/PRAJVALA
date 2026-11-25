@@ -81,10 +81,24 @@ Tanpa ini, tautan konfirmasi email akan ditolak Supabase.
 
 ### 4. Konfirmasi email
 
-Proyek Supabase saat ini memakai `mailer_autoconfirm: false`, sehingga pendaftar
-baru harus mengonfirmasi email sebelum masuk. UI menampilkan status
-“Cek email Anda” setelah pendaftaran berhasil; akun baru dapat masuk setelah
-tautan konfirmasi dibuka.
+Untuk situs ini, **konfirmasi email dimatikan** agar pendaftaran warga tidak
+bergantung pada kuota email Supabase. Bawaan SMTP Supabase hanya mengirim
+sekitar **2 email per jam**; bila konfirmasi aktif dan kuota habis, pendaftaran
+gagal dengan error `429 over_email_send_rate_limit`.
+
+Cara mengaktifkannya:
+
+1. Buka **Authentication → Sign In / Providers → Email**.
+2. Matikan **Confirm email**, lalu simpan.
+
+Setelah dimatikan, `auth.signUp()` langsung mengembalikan sesi dan pendaftar
+langsung masuk tanpa perlu membuka tautan email. Bila Anda ingin konfirmasi
+tetap aktif, hubungkan SMTP sendiri di **Authentication → SMTP Settings**
+(misalnya Resend, Brevo, atau SendGrid) agar kuota tidak lagi menjadi penghalang.
+
+Catatan: server menolak sebagian domain email (error
+`email_address_invalid`). Gunakan email aktif dari penyedia umum seperti Gmail
+atau Yahoo saat menguji.
 
 Halaman masuk/daftar juga memeriksa kesiapan database. Bila tabel belum dibuat,
 muncul peringatan untuk menjalankan `supabase/schema.sql`; bila server tidak
