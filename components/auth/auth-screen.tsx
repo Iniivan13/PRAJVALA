@@ -31,7 +31,6 @@ import {
 import { useRegion } from "@/components/providers/region-provider";
 import { PROJECTS, REGIONS, TOTAL_CITIZEN_REPORTS } from "@/lib/data";
 import { cn, formatNumber, initialsFor } from "@/lib/utils";
-import type { RegisterInput } from "@/types";
 import {
   checkSupabaseSchema,
   type SupabaseSchemaStatus,
@@ -95,8 +94,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const copy = COPY[mode];
   const target = safeRedirect(redirectTo);
   const router = useRouter();
-  const { user, login, register, registerLocal, loginDemo, logout, isSupabaseMode } =
-    useAuth();
+  const { user, login, register, loginDemo, logout, isSupabaseMode } = useAuth();
   const { setActiveRegionId } = useRegion();
 
   const [email, setEmail] = useState("");
@@ -108,11 +106,6 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState("");
-  const [pendingRegistration, setPendingRegistration] = useState<RegisterInput | null>(
-    null,
-  );
-  const [localPending, setLocalPending] = useState(false);
-  const [localError, setLocalError] = useState("");
   const [schemaStatus, setSchemaStatus] = useState<SupabaseSchemaStatus>("disabled");
 
   useEffect(() => {
@@ -156,8 +149,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
       return;
     }
     setPending(true);
-    const input: RegisterInput = { name, email, password, regionId };
-    const result = await register(input);
+    const result = await register({ name, email, password, regionId });
     setPending(false);
     if (!result.ok) {
       setError(result.error ?? "Akun belum dapat dibuat. Coba lagi.");
@@ -165,25 +157,10 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
     }
     if (result.needsConfirmation) {
       setConfirmationEmail(email.trim().toLowerCase());
-      setPendingRegistration(input);
       setPassword("");
       return;
     }
     setActiveRegionId(regionId);
-    router.push(target);
-  }
-
-  async function handleUseLocal() {
-    if (!pendingRegistration) return;
-    setLocalError("");
-    setLocalPending(true);
-    const result = await registerLocal(pendingRegistration);
-    setLocalPending(false);
-    if (!result.ok) {
-      setLocalError(result.error ?? "Akun lokal belum dapat dibuat.");
-      return;
-    }
-    setActiveRegionId(pendingRegistration.regionId ?? "all");
     router.push(target);
   }
 
@@ -289,7 +266,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 <p className="mt-4 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-500">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
                   {isSupabaseMode
-                    ? "Akun dan kontribusi tersinkron aman lewat Supabase, dengan fallback lokal bila server tidak tersedia."
+                    ? "Akun dan kontribusi tersinkron aman lewat Supabase."
                     : "Mode lokal: akun disimpan di perangkat Anda dan tidak dikirim ke server mana pun."}
                 </p>
               </div>
@@ -354,7 +331,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     <code className="rounded bg-amber-100 px-1 py-0.5 font-mono text-[9px]">
                       supabase/schema.sql
                     </code>{" "}
-                    di SQL Editor. Sementara ini akun dan laporan memakai mode lokal.
+                    di SQL Editor sebelum mendaftar atau mengirim laporan.
                   </span>
                 </div>
               ) : schemaStatus === "offline" ? (
@@ -396,13 +373,8 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                       email={confirmationEmail}
                       onBack={() => {
                         setConfirmationEmail("");
-                        setPendingRegistration(null);
-                        setLocalError("");
                         setError("");
                       }}
-                      onUseLocal={handleUseLocal}
-                      localPending={localPending}
-                      localError={localError}
                     />
                   ) : mode === "register" ? (
                     <form onSubmit={handleRegister} className="mt-5 space-y-4">
@@ -758,15 +730,9 @@ function AlreadySignedIn({
 function ConfirmationNotice({
   email,
   onBack,
-  onUseLocal,
-  localPending,
-  localError,
 }: {
   email: string;
   onBack: () => void;
-  onUseLocal: () => void;
-  localPending: boolean;
-  localError: string;
 }) {
   return (
     <div className="mt-5">
@@ -801,32 +767,6 @@ function ConfirmationNotice({
         <KeyRound size={15} aria-hidden="true" />
         Lanjut ke halaman masuk
       </Link>
-
-      <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-3.5">
-        <p className="text-[11px] font-bold text-amber-900">Tidak bisa membuka email?</p>
-        <p className="mt-0.5 text-[9.5px] leading-relaxed text-amber-800">
-          Untuk demo, lanjutkan dengan akun lokal di peramban ini. Anda langsung masuk
-          tanpa menunggu konfirmasi email.
-        </p>
-        <button
-          type="button"
-          onClick={onUseLocal}
-          disabled={localPending}
-          className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-xl bg-ink-900 px-3 text-[11px] font-semibold text-white transition-colors hover:bg-ink-800 disabled:opacity-60"
-        >
-          {localPending ? (
-            <Loader2 size={13} className="animate-spin" aria-hidden="true" />
-          ) : (
-            <HardDrive size={13} className="text-amber-400" aria-hidden="true" />
-          )}
-          {localPending ? "Membuat akun lokal…" : "Lanjutkan dengan akun lokal"}
-        </button>
-        {localError ? (
-          <p className="mt-2 rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1.5 text-[9.5px] leading-relaxed text-rose-700">
-            {localError}
-          </p>
-        ) : null}
-      </div>
 
       <button
         type="button"

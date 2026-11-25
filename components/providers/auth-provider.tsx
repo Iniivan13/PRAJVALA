@@ -399,8 +399,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
           }
         } catch {
-          // Jaringan bermasalah; lanjutkan ke sesi lokal.
+          // Biarkan pengguna null; mode Supabase ketat tidak memakai sesi lokal.
         }
+
+        if (!cancelled) {
+          setUser(null);
+          setIsHydrated(true);
+        }
+        return;
       }
 
       if (!cancelled) {
@@ -421,7 +427,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (cancelled) return;
 
       if (event === "SIGNED_OUT") {
-        setUser((previous) => (previous?.source === "supabase" ? null : previous));
+        setUser(null);
         return;
       }
 
@@ -466,34 +472,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return { ok: true, message: "Masuk dengan akun Supabase." };
           }
 
-          if (error) {
-            const message = error.message ?? "";
-            if (/email not confirmed/i.test(message)) {
-              return {
-                ok: false,
-                error:
-                  "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.",
-              };
-            }
-            const canFallback =
-              /invalid login credentials|invalid email or password/i.test(message) ||
-              isTransientSupabaseError(message);
-            if (!canFallback) {
-              return { ok: false, error: mapAuthError(message) };
-            }
+          const message = error?.message ?? "Gagal masuk.";
+          if (/email not confirmed/i.test(message)) {
+            return {
+              ok: false,
+              error:
+                "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.",
+            };
           }
+          return { ok: false, error: mapAuthError(message) };
         } catch {
-          // Jaringan bermasalah; coba akun lokal di perangkat ini.
+          return {
+            ok: false,
+            error:
+              "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
+          };
         }
-      }
-
-      if (normalized === DEMO_ACCOUNT.email && password === DEMO_ACCOUNT.password) {
-        const demo = await localDemoLogin();
-        if (demo.ok) {
-          const session = readSession();
-          if (session) setUser(session);
-        }
-        return demo;
       }
 
       const local = await localLogin(normalized, password);
@@ -544,30 +538,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
             };
           }
-          if (!isTransientSupabaseError(message)) {
-            return { ok: false, error: mapAuthError(message) };
-          }
-        } else if (data.user) {
-          if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-            return {
-              ok: false,
-              error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
-            };
-          }
-          if (data.session) {
-            const profile = await profileFromSupabase(client, data.user);
-            clearSession();
-            setUser(profile);
-            return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
-          }
+          return { ok: false, error: mapAuthError(message) };
+        }
+
+        if (!data.user) {
           return {
-            ok: true,
-            needsConfirmation: true,
-            message: `Kami mengirim tautan konfirmasi ke ${normalized}. Buka email tersebut, konfirmasi akun, lalu masuk kembali.`,
+            ok: false,
+            error: "Pendaftaran belum dapat diproses. Coba lagi beberapa saat.",
           };
         }
+
+        if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          return {
+            ok: false,
+            error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
+          };
+        }
+
+        if (data.session) {
+          const profile = await profileFromSupabase(client, data.user);
+          clearSession();
+          setUser(profile);
+          return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
+        }
+
+        return {
+          ok: true,
+          needsConfirmation: true,
+          message: `Kami mengirim tautan konfirmasi ke ${normalized}. Buka email tersebut, konfirmasi akun, lalu masuk kembali.`,
+        };
       } catch {
-        // Jaringan bermasalah; lanjutkan pendaftaran lokal.
+        return {
+          ok: false,
+          error:
+            "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
+        };
       }
     }
 
@@ -580,6 +585,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const registerLocal = useCallback(async (input: RegisterInput): Promise<AuthResult> => {
+    if (createClient()) {
+      return {
+        ok: false,
+        error:
+          "Mode lokal dinonaktifkan karena Supabase aktif. Selesaikan konfirmasi email atau gunakan akun Supabase.",
+      };
+    }
+
     const validationError = validateRegistration(input);
     if (validationError) return { ok: false, error: validationError };
 
@@ -607,14 +620,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: DEMO_ACCOUNT.email,
           password: DEMO_ACCOUNT.password,
         });
+
         if (!error && data.user) {
           const profile = await profileFromSupabase(client, data.user);
           clearSession();
           setUser(profile);
-          return { ok: true, message: "Masuk dengan akun demo tersinkron Supabase." };
+          return { ok: true, message: "Masuk dengan akun demo Supabase." };
         }
+
+        const message = error?.message ?? "";
+        if (/invalid login credentials/i.test(message)) {
+          return {
+            ok: false,
+            error:
+              "Akun demo Supabase belum tersedia. Buat pengguna warga@demo.prajvala.id dengan kata sandi prajvala2026 di Authentication → Users, lalu coba lagi.",
+          };
+        }
+        return { ok: false, error: mapAuthError(message) };
       } catch {
-        // Akun demo Supabase belum tersedia; gunakan akun demo lokal.
+        return {
+          ok: false,
+          error:
+            "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
+        };
       }
     }
 

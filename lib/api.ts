@@ -7,7 +7,7 @@ import type {
   UserProfile,
 } from "@/types";
 import { clamp, initialsFor, maskName } from "@/lib/utils";
-import { createClient } from "@/utils/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 
 const REPORTS_KEY = "prajvala:reports:v1";
 const UPVOTES_KEY = "prajvala:upvotes:v1";
@@ -151,27 +151,27 @@ const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const prajvalaApi = {
   async getReports(projectId: string): Promise<StoredReport[]> {
-    const local = readStoredReports().filter((report) => report.projectId === projectId);
     const client = createClient();
 
-    const remote = await withRemote(client, async (supabase) => {
-      const { data, error } = await supabase
-        .from("reports")
-        .select(REPORT_COLUMNS)
-        .eq("project_id", projectId)
-        .order("created_at", { ascending: false });
+    if (isSupabaseConfigured) {
+      const remote = await withRemote(client, async (supabase) => {
+        const { data, error } = await supabase
+          .from("reports")
+          .select(REPORT_COLUMNS)
+          .eq("project_id", projectId)
+          .order("created_at", { ascending: false });
 
-      if (error || !Array.isArray(data)) return [] as StoredReport[];
-      return data
-        .map(toRemoteRow)
-        .filter((row): row is RemoteReportRow => row !== null)
-        .map(mapRemoteReport);
-    });
+        if (error || !Array.isArray(data)) return [] as StoredReport[];
+        return data
+          .map(toRemoteRow)
+          .filter((row): row is RemoteReportRow => row !== null)
+          .map(mapRemoteReport);
+      });
 
-    if (!remote) return local;
+      return remote ?? [];
+    }
 
-    const remoteIds = new Set(remote.map((report) => report.id));
-    return [...remote, ...local.filter((report) => !remoteIds.has(report.id))];
+    return readStoredReports().filter((report) => report.projectId === projectId);
   },
 
   async submitReport(input: NewReportInput): Promise<StoredReport> {
@@ -202,6 +202,12 @@ export const prajvalaApi = {
     });
 
     if (remote) return remote;
+
+    if (isSupabaseConfigured) {
+      throw new Error(
+        "Laporan gagal disimpan ke Supabase. Pastikan tabel reports sudah dibuat dan Anda memiliki izin insert.",
+      );
+    }
 
     await delay(650);
     const stored: StoredReport = {
@@ -249,6 +255,12 @@ export const prajvalaApi = {
       });
 
       if (result !== null && result !== undefined) return result;
+
+      if (isSupabaseConfigured) {
+        throw new Error(
+          "Dukungan gagal disimpan ke Supabase. Pastikan tabel report_votes sudah dibuat dan Anda sudah masuk.",
+        );
+      }
     }
 
     await delay(140);
@@ -433,11 +445,11 @@ export interface AccountSnapshot {
 export async function getAccountData(
   user: Pick<UserProfile, "id" | "source">,
 ): Promise<AccountSnapshot> {
-  const localReports = readStoredReports();
+  const localReports = isSupabaseConfigured ? [] : readStoredReports();
   let remoteReports: StoredReport[] = [];
   let remoteVotes = 0;
 
-  if (user.source === "supabase") {
+  if (isSupabaseConfigured && user.source === "supabase") {
     const client = createClient();
     await withRemote(client, async (supabase) => {
       const { data } = await supabase
@@ -467,7 +479,9 @@ export async function getAccountData(
   const merged = [...remoteReports, ...localReports.filter((report) => !remoteIds.has(report.id))]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const localVotes = Object.values(readUpvotes()).filter((value) => value === 1).length;
+  const localVotes = isSupabaseConfigured
+    ? 0
+    : Object.values(readUpvotes()).filter((value) => value === 1).length;
 
   return {
     reports: merged.map((stored) => prajvalaApi.toFeedItem(stored, user.id)),

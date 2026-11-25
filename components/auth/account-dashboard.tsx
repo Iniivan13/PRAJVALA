@@ -201,7 +201,7 @@ export function AccountDashboard() {
             <p className="mt-5 flex items-center justify-center gap-1.5 text-[9.5px] text-ink-400">
               <ShieldCheck size={11} className="text-emerald-500" aria-hidden="true" />
               {isSupabaseMode
-                ? "Akun dan kontribusi tersinkron lewat Supabase, dengan fallback lokal."
+                ? "Akun dan kontribusi tersinkron langsung melalui Supabase."
                 : "Data akun hanya tersimpan di peramban ini dan tidak dikirim ke server."}
             </p>
           </div>
@@ -245,7 +245,7 @@ export function AccountDashboard() {
               </h1>
               <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-ink-500">
                 {isSupabaseAccount
-                  ? "Ringkasan kontribusi yang tersinkron lewat Supabase, digabung dengan laporan lokal di perangkat ini."
+                  ? "Ringkasan kontribusi yang tersinkron langsung melalui Supabase."
                   : "Ringkasan kontribusi Anda di perangkat ini. Semua data bersifat lokal dan dapat dihapus kapan saja."}
               </p>
             </div>
@@ -423,7 +423,7 @@ export function AccountDashboard() {
                     {loadingActivity
                       ? "Memuat riwayat kontribusi…"
                       : reports.length > 0
-                        ? `${formatNumber(reports.length)} laporan tersimpan${isSupabaseAccount ? " (Supabase + lokal)" : " di perangkat ini"}`
+                        ? `${formatNumber(reports.length)} laporan tersimpan${isSupabaseAccount ? " di Supabase" : " di perangkat ini"}`
                         : "Laporan yang Anda kirim akan muncul di sini"}
                   </p>
                 </div>
