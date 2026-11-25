@@ -29,7 +29,7 @@ ${points}
 CATATAN
 ------------------------------------------------------------
 Dokumen ini merupakan ringkasan percontohan yang disusun untuk
-keperluan demonstrasi PRAJVALA pada Techcomfest 2027. Bukan
+keperluan PRAJVALA pada Techcomfest 2027. Bukan
 dokumen resmi pemerintah. Untuk implementasi penuh, dokumen
 akan ditautkan ke sumber resmi (APBD/APBDes, SIPD, atau LPSE)
 dengan jejak waktu pembaruan.
@@ -92,8 +92,8 @@ Dicetak  : ${new Date().toLocaleDateString("id-ID", {
 ${entries}
 CATATAN
 ------------------------------------------------------------
-Indeks ini merupakan ringkasan percontohan untuk demonstrasi
-PRAJVALA pada Techcomfest 2027. Bukan dokumen resmi pemerintah.
+Indeks ini merupakan ringkasan percontohan PRAJVALA pada
+Techcomfest 2027. Bukan dokumen resmi pemerintah.
 
 Dikembangkan oleh Tim Aetherion Vanakei — Cyber University.
 `;

@@ -386,7 +386,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                       Masuk sebagai {user.name}
                     </p>
                     <p className="truncate text-[9px] text-emerald-800/80">
-                      Laporan ditautkan ke akun ini di perangkat Anda · {user.email}
+                      Laporan ditautkan ke akun Supabase Anda · {user.email}
                     </p>
                   </div>
                   <Link
@@ -565,7 +565,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
             <div className="mt-5 flex flex-col-reverse gap-2 border-t border-ink-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="flex items-center gap-1.5 text-[9px] text-ink-400">
                 <ShieldCheck size={10} aria-hidden="true" />
-                Data demonstrasi disimpan di perangkat Anda.
+                Laporan tersimpan aman di Supabase.
               </p>
               <div className="flex gap-2">
                 <button type="button" onClick={onClose} className="btn-secondary h-10 flex-1 px-4 py-0 text-[11.5px] sm:flex-none">

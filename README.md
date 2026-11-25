@@ -13,8 +13,8 @@ memverifikasi kondisi lapangan bersama warga.
 
 PRAJVALA (dari bahasa Sanskerta: *cahaya yang menyinari*) menghubungkan tiga hal
 yang biasanya terpisah: dokumen anggaran, bukti fisik proyek, dan suara warga.
-Semua data demonstrasi disusun dalam Bahasa Indonesia dengan angka rupiah yang
-realistis.
+Seluruh antarmuka dan data percontohan disusun dalam Bahasa Indonesia dengan angka
+rupiah yang realistis.
 
 Fitur utama:
 
@@ -33,25 +33,21 @@ Fitur utama:
   pertanyaan umum, serta glosarium istilah anggaran.
 - **Pemilih wilayah** — data seluruh halaman mengikuti wilayah yang dipilih dan
   pilihannya tersimpan di perangkat.
-- **Akun warga** — daftar/masuk dengan Supabase Auth, akun demo satu klik,
-  prefilling identitas laporan, dan dasbor akun berisi riwayat kontribusi
-  tersinkron.
+- **Akun warga** — daftar/masuk dengan Supabase Auth, prefilling identitas
+  laporan, dan dasbor akun berisi riwayat kontribusi tersinkron.
 
 ## Akun warga & Supabase
 
 Halaman `/masuk`, `/daftar`, dan `/akun` memakai **Supabase sebagai satu-satunya
-backend** saat variabel lingkungan tersedia:
+backend** autentikasi dan kontribusi warga:
 
-1. **Mode Supabase (default)** — bila `NEXT_PUBLIC_SUPABASE_URL` dan
-   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` tersedia, akun memakai Supabase Auth,
-   laporan masuk ke tabel `reports`, dan dukungan tersinkron di `report_votes`.
-   Tidak ada fallback akun lokal: bila server atau tabel bermasalah, UI menampilkan
-   pesan error yang jelas.
-2. **Mode pratinjau lokal** — hanya aktif bila kedua variabel lingkungan tidak ada.
-   Mode ini berguna untuk membuka tampilan tanpa Supabase, bukan untuk demo utama.
+- Akun memakai Supabase Auth, laporan masuk ke tabel `reports`, dan dukungan
+  tersimpan di `report_votes`.
+- Tidak ada akun demo, akun lokal, atau fallback `localStorage`. Bila Supabase
+  belum dikonfigurasi atau tidak terjangkau, UI menampilkan pesan yang jelas.
+- Pendaftaran memerlukan konfirmasi email sebelum akun dapat masuk.
 
-Proyek Supabase `ifmjceyehvyauwmhwsbk` sudah memiliki skema, RLS, dan akun demo di
-bawah ini.
+Proyek Supabase `ifmjceyehvyauwmhwsbk` sudah memiliki skema dan RLS yang aktif.
 
 ### 1. Variabel lingkungan
 
@@ -74,21 +70,16 @@ Buka **Supabase Dashboard → SQL Editor**, tempel seluruh isi
 - `report_votes` + view `report_vote_counts` — dukungan per laporan.
 - Fungsi `delete_user()` (`security definer`) untuk hapus akun mandiri.
 
-Untuk membuat ulang akun demo secara otomatis, jalankan
-[`supabase/seed-demo.sql`](supabase/seed-demo.sql) setelah skema. Skrip ini
-membuat pengguna `warga@demo.prajvala.id` yang sudah dikonfirmasi beserta
-profilnya.
-
 ### 3. URL redirect autentikasi
 
 Di **Authentication → URL Configuration**, tambahkan:
 
 - `http://localhost:3000/**`
-- `https://<domain-produksi>/**`
+- `https://prajvala.vercel.app/**`
 
 Tanpa ini, tautan konfirmasi email akan ditolak Supabase.
 
-### 4. Konfirmasi email & akun demo
+### 4. Konfirmasi email
 
 Proyek Supabase saat ini memakai `mailer_autoconfirm: false`, sehingga pendaftar
 baru harus mengonfirmasi email sebelum masuk. UI menampilkan status
@@ -97,16 +88,7 @@ tautan konfirmasi dibuka.
 
 Halaman masuk/daftar juga memeriksa kesiapan database. Bila tabel belum dibuat,
 muncul peringatan untuk menjalankan `supabase/schema.sql`; bila server tidak
-terjangkau, aplikasi menampilkan pesan koneksi tanpa berpindah ke akun lokal.
-
-- **Akun demo Supabase:** `warga@demo.prajvala.id` / `prajvala2026`
-  (sudah dibuat dan dikonfirmasi di proyek ini; dapat dibuat ulang lewat
-  `supabase/seed-demo.sql`).
-- Tombol “Masuk dengan akun demo” langsung masuk melalui Supabase Auth.
-- Kredensial demo yang diketik manual di form juga memakai Supabase, bukan akun
-  lokal.
-- Untuk menambah akun lain, daftar lewat `/daftar` lalu konfirmasi email, atau
-  buat pengguna lewat **Authentication → Users** (centang konfirmasi email).
+terjangkau, aplikasi menampilkan pesan koneksi.
 
 ### Alur yang didukung
 
@@ -115,13 +97,12 @@ terjangkau, aplikasi menampilkan pesan koneksi tanpa berpindah ke akun lokal.
 - Sesi diperbarui lewat middleware Supabase (`utils/supabase/middleware.ts`).
 - Pengguna yang sudah masuk mendapat nama terisi otomatis pada formulir laporan;
   tamu tetap dapat mengirim laporan.
-- Upvote pengguna Supabase tersinkron ke server; tamu memakai dukungan lokal di
-  perangkat.
+- Dukungan (upvote) memerlukan akun aktif agar tersimpan di Supabase.
 - Riwayat kontribusi di `/akun` dibaca langsung dari Supabase.
-- Hapus akun Supabase memanggil RPC `delete_user()`; laporan tetap tersimpan
-  sebagai laporan anonim.
+- Hapus akun memanggil RPC `delete_user()`; laporan tetap tersimpan sebagai
+  laporan anonim.
 
-Ini tetap purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
+Ini purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 
 ## Teknologi
 
@@ -134,7 +115,7 @@ Ini tetap purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 | Ikon        | Lucide React                                    |
 | Font        | Plus Jakarta Sans, Inter, JetBrains Mono        |
 | Auth & data | Supabase Auth + Postgres/RLS                  |
-| Data demo   | Seed TypeScript + Supabase (laporan & suara)  |
+| Data proyek | Seed TypeScript (percontohan)                  |
 
 ## Menjalankan proyek
 
@@ -156,13 +137,34 @@ npm run start      # menjalankan hasil build
 Catatan: ubin peta OpenStreetMap dan foto proyek Unsplash memerlukan koneksi
 internet saat runtime. Akun, laporan, dan dukungan memerlukan Supabase aktif.
 
+## Deploy
+
+Produksi berjalan di Vercel: **https://prajvala.vercel.app**
+
+Tambahkan kedua variabel lingkungan berikut di **Vercel → Project Settings →
+Environment Variables** (Production, Preview, dan Development):
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://ifmjceyehvyauwmhwsbk.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+Lalu deploy ulang (`vercel --prod` atau push ke branch produksi).
+
+Di **Supabase → Authentication → URL Configuration**, daftarkan:
+
+- Site URL: `https://prajvala.vercel.app`
+- Redirect URLs: `https://prajvala.vercel.app/**` dan `http://localhost:3000/**`
+
+Tanpa daftar ini, tautan konfirmasi email dari domain produksi akan ditolak.
+
 ## Struktur singkat
 
 ```
 app/                 Rute App Router: /, /anggaran, /proyek, /proyek/[id], /informasi,
                      /masuk, /daftar, /akun
 components/          UI, layout, grafik, peta, proyek, validasi, informasi, akun
-lib/data.ts          Sumber data demo + agregasi wilayah
+lib/data.ts          Sumber data percontohan + agregasi wilayah
 lib/api.ts           Lapisan data laporan/upvote/aktivitas (Supabase ketat)
 lib/utils.ts         Format rupiah, tanggal, persentase, slug
 types/               Tipe TypeScript bersama
@@ -171,7 +173,7 @@ utils/supabase/      Klien browser/server + pembaruan sesi middleware
 middleware.ts        Menjaga cookie sesi Supabase tetap segar
 ```
 
-## Data demonstrasi
+## Data percontohan
 
 - 3 wilayah percontohan: **Tanjung Barat** (Kelurahan, Jakarta Selatan),
   **Sukamaju** (Desa, Kota Depok), dan **Tembalang** (Kecamatan, Semarang).
@@ -187,9 +189,8 @@ keperluan kompetisi; tidak merujuk pada pihak tertentu.
 Formulir laporan warga menyimulasikan penghapusan metadata EXIF (lokasi asli dan
 identitas perangkat) sebelum laporan ditampilkan. Nama pelapor disamarkan otomatis
 (contoh: “Rina Kusuma” → “Rina K.”) dan hanya nama tersamar itu yang dikirim ke
-Supabase. Laporan dan dukungan pengguna Supabase disimpan di database melalui RLS;
-dukungan tamu tetap tersimpan lokal di perangkat. Kata sandi dikelola sepenuhnya
-oleh Supabase Auth.
+Supabase. Laporan dan dukungan disimpan di database melalui RLS dan memerlukan akun
+aktif. Kata sandi dikelola sepenuhnya oleh Supabase Auth.
 
 ## Lisensi & atribusi
 

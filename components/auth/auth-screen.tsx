@@ -11,7 +11,6 @@ import {
   Eye,
   EyeOff,
   Fingerprint,
-  HardDrive,
   KeyRound,
   Loader2,
   LockKeyhole,
@@ -24,10 +23,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/logo";
-import {
-  DEMO_ACCOUNT,
-  useAuth,
-} from "@/components/providers/auth-provider";
+import { useAuth } from "@/components/providers/auth-provider";
 import { useRegion } from "@/components/providers/region-provider";
 import { PROJECTS, REGIONS, TOTAL_CITIZEN_REPORTS } from "@/lib/data";
 import { cn, formatNumber, initialsFor } from "@/lib/utils";
@@ -94,7 +90,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const copy = COPY[mode];
   const target = safeRedirect(redirectTo);
   const router = useRouter();
-  const { user, login, register, loginDemo, logout, isSupabaseMode } = useAuth();
+  const { user, login, register, logout, isSupabaseMode } = useAuth();
   const { setActiveRegionId } = useRegion();
 
   const [email, setEmail] = useState("");
@@ -161,19 +157,6 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
       return;
     }
     setActiveRegionId(regionId);
-    router.push(target);
-  }
-
-  async function handleDemo() {
-    setError("");
-    setPending(true);
-    const result = await loginDemo();
-    setPending(false);
-    if (!result.ok) {
-      setError(result.error ?? "Akun demo belum dapat dibuka.");
-      return;
-    }
-    setActiveRegionId("tanjung-barat");
     router.push(target);
   }
 
@@ -265,9 +248,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 </div>
                 <p className="mt-4 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-500">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
-                  {isSupabaseMode
-                    ? "Akun dan kontribusi tersinkron aman lewat Supabase."
-                    : "Mode lokal: akun disimpan di perangkat Anda dan tidak dikirim ke server mana pun."}
+                  Akun dan kontribusi tersinkron aman lewat Supabase.
                 </p>
               </div>
             </div>
@@ -309,14 +290,14 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                   {isSupabaseMode ? (
                     <Cloud size={9} aria-hidden="true" />
                   ) : (
-                    <HardDrive size={9} aria-hidden="true" />
+                    <AlertTriangle size={9} aria-hidden="true" />
                   )}
-                  {isSupabaseMode ? "Tersinkron Supabase" : "Mode lokal peramban"}
+                  {isSupabaseMode ? "Tersinkron Supabase" : "Supabase belum aktif"}
                 </span>
                 <span className="text-[8.5px] text-ink-400">
                   {isSupabaseMode
                     ? "Laporan & dukungan tersimpan di server"
-                    : "Tanpa server — cocok untuk demo offline"}
+                    : "Konfigurasi Supabase diperlukan"}
                 </span>
               </div>
 
@@ -342,7 +323,8 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                   <AlertTriangle size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
                   <span>
                     <span className="font-bold">Server Supabase belum dapat dijangkau.</span>{" "}
-                    Aplikasi otomatis memakai mode lokal agar demo tetap berjalan.
+                    Aplikasi akan mencoba lagi saat koneksi tersedia. Pastikan konfigurasi
+                    Supabase sudah benar.
                   </span>
                 </div>
               ) : null}
@@ -498,9 +480,8 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                           className="mt-0.5 h-4 w-4 shrink-0 accent-amber-500"
                         />
                         <span className="text-[9.5px] leading-relaxed text-ink-600">
-                          {isSupabaseMode
-                            ? "Saya memahami ini akun simulasi PRAJVALA. Nama, email, dan kontribusi saya disimpan di Supabase dan dapat dihapus kapan saja."
-                            : "Saya memahami ini akun simulasi PRAJVALA. Data akun disimpan hanya di perangkat ini dan tidak dikirim ke server."}
+                          Saya memahami nama, email, dan kontribusi saya disimpan di Supabase
+                          dan dapat dihapus kapan saja.
                         </span>
                       </label>
 
@@ -561,41 +542,6 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                         )}
                         {pending ? "Memeriksa akun…" : "Masuk ke akun"}
                       </button>
-
-                      <div className="relative py-1 text-center">
-                        <span className="absolute inset-x-0 top-1/2 h-px bg-ink-100" aria-hidden="true" />
-                        <span className="relative bg-white px-3 text-[9px] font-semibold uppercase tracking-[0.12em] text-ink-400">
-                          atau coba dulu
-                        </span>
-                      </div>
-
-                      <div className="rounded-2xl border border-amber-200/80 bg-amber-50/70 p-3.5">
-                        <div className="flex items-start gap-2.5">
-                          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-amber-600 shadow-sm">
-                            <Sparkles size={14} aria-hidden="true" />
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-[11px] font-bold text-amber-900">
-                              Ingin langsung melihat isi akun?
-                            </p>
-                            <p className="mt-0.5 text-[9.5px] leading-relaxed text-amber-800">
-                              Gunakan akun demo warga Tanjung Barat tanpa perlu mendaftar.
-                            </p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={handleDemo}
-                          disabled={pending}
-                          className="mt-2.5 flex h-9 w-full items-center justify-center gap-1.5 rounded-xl bg-ink-900 px-3 text-[11px] font-semibold text-white transition-colors hover:bg-ink-800 disabled:opacity-60"
-                        >
-                          <Sparkles size={13} className="text-amber-400" aria-hidden="true" />
-                          Masuk dengan akun demo
-                        </button>
-                        <p className="mt-1.5 text-center font-mono text-[8.5px] text-amber-700/80">
-                          {DEMO_ACCOUNT.email} · {DEMO_ACCOUNT.password}
-                        </p>
-                      </div>
                     </form>
                   )}
 
@@ -614,9 +560,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
 
             <p className="mt-3 flex items-start justify-center gap-1.5 px-4 text-center text-[9px] leading-relaxed text-ink-400">
               <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-              {isSupabaseMode
-                ? "Kata sandi dikelola Supabase Auth. Kami tidak pernah menyimpan kata sandi Anda. Jangan gunakan kata sandi akun penting."
-                : "Akun lokal memakai kata sandi yang di-hash di peramban. Jangan gunakan kata sandi akun penting Anda."}
+              Kata sandi dikelola Supabase Auth. Kami tidak pernah menyimpan kata sandi Anda.
             </p>
           </div>
         </div>

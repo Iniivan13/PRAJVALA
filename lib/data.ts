@@ -1796,7 +1796,7 @@ export const FAQS: FaqItem[] = [
   {
     question: "Dari mana data anggaran dan proyek berasal?",
     answer:
-      "Untuk versi demonstrasi ini, data disusun dari contoh dokumen APBD, APBDes, RAB, dan laporan proyek dengan format yang menyerupai dokumen resmi. Pada implementasi penuh, data akan ditarik dari portal APBD/APBDes daerah, SIPD, LPSE, dan kanal resmi pemerintah daerah dengan pencatatan sumber dan waktu pembaruan.",
+      "Data disusun dari contoh dokumen APBD, APBDes, RAB, dan laporan proyek dengan format yang menyerupai dokumen resmi. Pada implementasi penuh, data akan ditarik dari portal APBD/APBDes daerah, SIPD, LPSE, dan kanal resmi pemerintah daerah dengan pencatatan sumber dan waktu pembaruan.",
   },
   {
     question: "Apakah laporan warga langsung dianggap valid?",

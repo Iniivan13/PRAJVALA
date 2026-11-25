@@ -2,15 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   CitizenReport,
   NewReportInput,
-  StorageSource,
   Suitability,
   UserProfile,
 } from "@/types";
 import { clamp, initialsFor, maskName } from "@/lib/utils";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
-
-const REPORTS_KEY = "prajvala:reports:v1";
-const UPVOTES_KEY = "prajvala:upvotes:v1";
 
 export const SCORE_EFFECT: Record<Suitability, number> = {
   "Sesuai Target": 3,
@@ -28,15 +24,10 @@ export function computeValidationScore(
   return clamp(Math.round(baseScore + adjustment), 12, 99);
 }
 
-function isBrowser(): boolean {
-  return typeof window !== "undefined";
-}
-
 type StoredReport = NewReportInput & {
   id: string;
   createdAt: string;
   upvotes: number;
-  source: StorageSource;
   authorId?: string;
 };
 
@@ -60,62 +51,18 @@ interface VoteRow {
 const REPORT_COLUMNS =
   "id, project_id, author_id, author_name, suitability, rating, comment, photo_url, created_at";
 
-function readStoredReports(): StoredReport[] {
-  if (!isBrowser()) return [];
-  try {
-    const raw = window.localStorage.getItem(REPORTS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .filter(
-        (item): item is StoredReport =>
-          typeof item === "object" &&
-          item !== null &&
-          typeof (item as StoredReport).id === "string" &&
-          typeof (item as StoredReport).projectId === "string",
-      )
-      .map((item) => ({ ...item, source: item.source ?? "local" }));
-  } catch {
-    return [];
-  }
-}
+const NOT_CONFIGURED =
+  "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.";
 
-function writeStoredReports(reports: StoredReport[]): void {
-  if (!isBrowser()) return;
-  try {
-    window.localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
-  } catch {
-    // Bila penyimpanan penuh (mis. foto terlalu besar), simpan tanpa foto.
-    try {
-      const sanitized = reports.map(({ photoUrl: _photo, ...rest }) => rest);
-      window.localStorage.setItem(REPORTS_KEY, JSON.stringify(sanitized));
-    } catch {
-      // Abaikan kegagalan penyimpanan lokal agar alur tetap berjalan.
-    }
+function requireClient(): SupabaseClient {
+  if (!isSupabaseConfigured) {
+    throw new Error(NOT_CONFIGURED);
   }
-}
-
-function readUpvotes(): Record<string, number> {
-  if (!isBrowser()) return {};
-  try {
-    const raw = window.localStorage.getItem(UPVOTES_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as unknown;
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
-    return parsed as Record<string, number>;
-  } catch {
-    return {};
+  const client = createClient();
+  if (!client) {
+    throw new Error(NOT_CONFIGURED);
   }
-}
-
-function writeUpvotes(value: Record<string, number>): void {
-  if (!isBrowser()) return;
-  try {
-    window.localStorage.setItem(UPVOTES_KEY, JSON.stringify(value));
-  } catch {
-    // Abaikan kegagalan penyimpanan.
-  }
+  return client;
 }
 
 function mapRemoteReport(row: RemoteReportRow): StoredReport {
@@ -130,7 +77,6 @@ function mapRemoteReport(row: RemoteReportRow): StoredReport {
     photoUrl: row.photo_url ?? undefined,
     createdAt: row.created_at,
     upvotes: 0,
-    source: "supabase",
   };
 }
 
@@ -142,133 +88,98 @@ function toRemoteRow(value: unknown): RemoteReportRow | null {
   return row as unknown as RemoteReportRow;
 }
 
-function withRemote<T>(client: SupabaseClient | null, task: (client: SupabaseClient) => Promise<T>): Promise<T | null> {
-  if (!client) return Promise.resolve(null);
-  return task(client).catch(() => null);
-}
-
-const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const prajvalaApi = {
   async getReports(projectId: string): Promise<StoredReport[]> {
     const client = createClient();
+    if (!client) return [];
 
-    if (isSupabaseConfigured) {
-      const remote = await withRemote(client, async (supabase) => {
-        const { data, error } = await supabase
-          .from("reports")
-          .select(REPORT_COLUMNS)
-          .eq("project_id", projectId)
-          .order("created_at", { ascending: false });
+    const { data, error } = await client
+      .from("reports")
+      .select(REPORT_COLUMNS)
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false });
 
-        if (error || !Array.isArray(data)) return [] as StoredReport[];
-        return data
-          .map(toRemoteRow)
-          .filter((row): row is RemoteReportRow => row !== null)
-          .map(mapRemoteReport);
-      });
+    if (error || !Array.isArray(data)) return [];
 
-      return remote ?? [];
-    }
-
-    return readStoredReports().filter((report) => report.projectId === projectId);
+    return data
+      .map(toRemoteRow)
+      .filter((row): row is RemoteReportRow => row !== null)
+      .map(mapRemoteReport);
   },
 
   async submitReport(input: NewReportInput): Promise<StoredReport> {
+    const client = requireClient();
     const rawAuthor = input.author?.trim() || "Warga Anonim";
     const maskedAuthor = maskName(rawAuthor);
     const safeAuthorName = maskedAuthor.length >= 3 ? maskedAuthor : "Warga Anonim";
-    const client = createClient();
 
-    const remote = await withRemote(client, async (supabase) => {
-      const { data: userData } = await supabase.auth.getUser();
-      const { data, error } = await supabase
-        .from("reports")
-        .insert({
-          project_id: input.projectId,
-          author_id: userData.user?.id ?? null,
-          author_name: safeAuthorName,
-          suitability: input.suitability,
-          rating: input.rating,
-          comment: input.comment.trim(),
-          photo_url: input.photoUrl ?? null,
-        })
-        .select(REPORT_COLUMNS)
-        .single();
+    const { data: userData } = await client.auth.getUser();
+    const { data, error } = await client
+      .from("reports")
+      .insert({
+        project_id: input.projectId,
+        author_id: userData.user?.id ?? null,
+        author_name: safeAuthorName,
+        suitability: input.suitability,
+        rating: input.rating,
+        comment: input.comment.trim(),
+        photo_url: input.photoUrl ?? null,
+      })
+      .select(REPORT_COLUMNS)
+      .single();
 
-      if (error) return null;
-      const row = toRemoteRow(data);
-      return row ? mapRemoteReport(row) : null;
-    });
-
-    if (remote) return remote;
-
-    if (isSupabaseConfigured) {
+    if (error) {
       throw new Error(
-        "Laporan gagal disimpan ke Supabase. Pastikan tabel reports sudah dibuat dan Anda memiliki izin insert.",
+        "Laporan gagal disimpan. Periksa koneksi Anda lalu coba lagi.",
       );
     }
 
-    await delay(650);
-    const stored: StoredReport = {
-      ...input,
-      author: rawAuthor,
-      id: `warga-${Date.now().toString(36)}`,
-      createdAt: new Date().toISOString(),
-      upvotes: 1,
-      source: "local",
-    };
-    writeStoredReports([stored, ...readStoredReports()]);
-    return stored;
+    const row = toRemoteRow(data);
+    if (!row) {
+      throw new Error("Laporan tersimpan, tetapi respons server tidak dikenali.");
+    }
+    return mapRemoteReport(row);
   },
 
-  async toggleUpvote(reportId: string, syncToServer = false): Promise<boolean> {
-    if (syncToServer) {
-      const client = createClient();
-      const result = await withRemote(client, async (supabase) => {
-        const { data: userData } = await supabase.auth.getUser();
-        const userId = userData.user?.id;
-        if (!userId) return null;
+  async toggleUpvote(reportId: string): Promise<boolean> {
+    const client = requireClient();
+    const { data: userData } = await client.auth.getUser();
+    const userId = userData.user?.id;
 
-        const { data: existing, error: readError } = await supabase
-          .from("report_votes")
-          .select("report_id")
-          .eq("report_id", reportId)
-          .eq("voter_id", userId)
-          .maybeSingle();
-
-        if (readError) return null;
-
-        if (existing) {
-          const { error } = await supabase
-            .from("report_votes")
-            .delete()
-            .eq("report_id", reportId)
-            .eq("voter_id", userId);
-          return error ? null : false;
-        }
-
-        const { error } = await supabase
-          .from("report_votes")
-          .insert({ report_id: reportId, voter_id: userId });
-        return error ? null : true;
-      });
-
-      if (result !== null && result !== undefined) return result;
-
-      if (isSupabaseConfigured) {
-        throw new Error(
-          "Dukungan gagal disimpan ke Supabase. Pastikan tabel report_votes sudah dibuat dan Anda sudah masuk.",
-        );
-      }
+    if (!userId) {
+      throw new Error("Masuk ke akun Anda terlebih dahulu untuk mendukung laporan.");
     }
 
-    await delay(140);
-    const upvotes = readUpvotes();
-    const next = upvotes[reportId] === 1 ? 0 : 1;
-    upvotes[reportId] = next;
-    writeUpvotes(upvotes);
-    return next === 1;
+    const { data: existing, error: readError } = await client
+      .from("report_votes")
+      .select("report_id")
+      .eq("report_id", reportId)
+      .eq("voter_id", userId)
+      .maybeSingle();
+
+    if (readError) {
+      throw new Error("Dukungan belum dapat diperiksa. Coba lagi.");
+    }
+
+    if (existing) {
+      const { error } = await client
+        .from("report_votes")
+        .delete()
+        .eq("report_id", reportId)
+        .eq("voter_id", userId);
+      if (error) {
+        throw new Error("Dukungan belum dapat dibatalkan. Coba lagi.");
+      }
+      return false;
+    }
+
+    const { error } = await client
+      .from("report_votes")
+      .insert({ report_id: reportId, voter_id: userId });
+    if (error) {
+      throw new Error("Dukungan belum dapat disimpan. Coba lagi.");
+    }
+    return true;
   },
 
   async getVoteSummary(reportIds: string[]): Promise<{
@@ -280,81 +191,57 @@ export const prajvalaApi = {
     if (reportIds.length === 0) return { counts, voted };
 
     const client = createClient();
-    const result = await withRemote(client, async (supabase) => {
-      const { data: countData } = await supabase
-        .from("report_vote_counts")
-        .select("report_id, votes")
+    if (!client) return { counts, voted };
+
+    const { data: countData } = await client
+      .from("report_vote_counts")
+      .select("report_id, votes")
+      .in("report_id", reportIds);
+
+    if (Array.isArray(countData)) {
+      (countData as VoteRow[]).forEach((row) => {
+        counts[row.report_id] = row.votes;
+      });
+    }
+
+    const { data: userData } = await client.auth.getUser();
+    const userId = userData.user?.id;
+    if (userId) {
+      const { data: mine } = await client
+        .from("report_votes")
+        .select("report_id")
+        .eq("voter_id", userId)
         .in("report_id", reportIds);
 
-      if (Array.isArray(countData)) {
-        (countData as VoteRow[]).forEach((row) => {
-          counts[row.report_id] = row.votes;
-        });
+      if (Array.isArray(mine)) {
+        (mine as { report_id: string }[]).forEach((row) => voted.push(row.report_id));
       }
-
-      const { data: userData } = await supabase.auth.getUser();
-      const userId = userData.user?.id;
-      if (userId) {
-        const { data: mine } = await supabase
-          .from("report_votes")
-          .select("report_id")
-          .eq("voter_id", userId)
-          .in("report_id", reportIds);
-
-        if (Array.isArray(mine)) {
-          (mine as { report_id: string }[]).forEach((row) => voted.push(row.report_id));
-        }
-      }
-
-      return true;
-    });
-
-    return result ? { counts, voted } : { counts, voted };
-  },
-
-  async deleteReport(reportId: string, syncToServer = false): Promise<boolean> {
-    let removedRemote = false;
-
-    if (syncToServer) {
-      const client = createClient();
-      const result = await withRemote(client, async (supabase) => {
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData.user) return false;
-
-        const { error } = await supabase
-          .from("reports")
-          .delete()
-          .eq("id", reportId)
-          .eq("author_id", userData.user.id);
-
-        return !error;
-      });
-      removedRemote = result === true;
     }
 
-    await delay(180);
-    const reports = readStoredReports();
-    const next = reports.filter((report) => report.id !== reportId);
-    writeStoredReports(next);
-
-    const upvotes = readUpvotes();
-    if (reportId in upvotes) {
-      delete upvotes[reportId];
-      writeUpvotes(upvotes);
-    }
-
-    return removedRemote || next.length !== reports.length;
+    return { counts, voted };
   },
 
-  readUpvoted(reportId: string): boolean {
-    return readUpvotes()[reportId] === 1;
+  async deleteReport(reportId: string): Promise<boolean> {
+    const client = requireClient();
+    const { data: userData } = await client.auth.getUser();
+    if (!userData.user) {
+      throw new Error("Masuk ke akun Anda terlebih dahulu untuk menghapus laporan.");
+    }
+
+    const { error } = await client
+      .from("reports")
+      .delete()
+      .eq("id", reportId)
+      .eq("author_id", userData.user.id);
+
+    if (error) {
+      throw new Error("Laporan belum dapat dihapus. Coba lagi.");
+    }
+    return true;
   },
 
   toFeedItem(stored: StoredReport, currentUserId?: string): CitizenReport {
-    const isRemote = stored.source === "supabase";
-    const isOwn = isRemote
-      ? Boolean(currentUserId && stored.authorId === currentUserId)
-      : true;
+    const isOwn = Boolean(currentUserId && stored.authorId === currentUserId);
 
     return {
       id: stored.id,
@@ -370,16 +257,10 @@ export const prajvalaApi = {
       upvotes: stored.upvotes,
       photoUrl: stored.photoUrl,
       isUserSubmitted: isOwn,
-      source: stored.source,
+      source: "supabase",
     };
   },
 };
-
-export function resetLocalData(): void {
-  if (!isBrowser()) return;
-  window.localStorage.removeItem(REPORTS_KEY);
-  window.localStorage.removeItem(UPVOTES_KEY);
-}
 
 export interface DeviceActivity {
   reportCount: number;
@@ -418,73 +299,49 @@ function buildActivity(reports: StoredReport[], upvoteCount: number): DeviceActi
   };
 }
 
-export function getDeviceReports(): CitizenReport[] {
-  return readStoredReports()
-    .slice()
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .map((stored) => prajvalaApi.toFeedItem(stored));
-}
-
-export function getDeviceActivity(): DeviceActivity {
-  return buildActivity(
-    readStoredReports(),
-    Object.values(readUpvotes()).filter((value) => value === 1).length,
-  );
-}
-
 export interface AccountSnapshot {
   reports: CitizenReport[];
   activity: DeviceActivity;
 }
 
 /**
- * Riwayat kontribusi akun. Bila akun berasal dari Supabase, laporan dan
- * dukungan diambil dari server lalu digabung dengan laporan lokal di
- * perangkat agar demo tetap menampilkan keduanya.
+ * Riwayat kontribusi akun, dibaca langsung dari Supabase.
  */
 export async function getAccountData(
   user: Pick<UserProfile, "id" | "source">,
 ): Promise<AccountSnapshot> {
-  const localReports = isSupabaseConfigured ? [] : readStoredReports();
+  const client = createClient();
   let remoteReports: StoredReport[] = [];
   let remoteVotes = 0;
 
-  if (isSupabaseConfigured && user.source === "supabase") {
-    const client = createClient();
-    await withRemote(client, async (supabase) => {
-      const { data } = await supabase
-        .from("reports")
-        .select(REPORT_COLUMNS)
-        .eq("author_id", user.id)
-        .order("created_at", { ascending: false });
+  if (client && user.source === "supabase") {
+    const { data } = await client
+      .from("reports")
+      .select(REPORT_COLUMNS)
+      .eq("author_id", user.id)
+      .order("created_at", { ascending: false });
 
-      if (Array.isArray(data)) {
-        remoteReports = data
-          .map(toRemoteRow)
-          .filter((row): row is RemoteReportRow => row !== null)
-          .map(mapRemoteReport);
-      }
+    if (Array.isArray(data)) {
+      remoteReports = data
+        .map(toRemoteRow)
+        .filter((row): row is RemoteReportRow => row !== null)
+        .map(mapRemoteReport);
+    }
 
-      const { data: votes } = await supabase
-        .from("report_votes")
-        .select("report_id")
-        .eq("voter_id", user.id);
+    const { data: votes } = await client
+      .from("report_votes")
+      .select("report_id")
+      .eq("voter_id", user.id);
 
-      if (Array.isArray(votes)) remoteVotes = votes.length;
-      return true;
-    });
+    if (Array.isArray(votes)) remoteVotes = votes.length;
   }
 
-  const remoteIds = new Set(remoteReports.map((report) => report.id));
-  const merged = [...remoteReports, ...localReports.filter((report) => !remoteIds.has(report.id))]
+  const sorted = remoteReports
+    .slice()
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const localVotes = isSupabaseConfigured
-    ? 0
-    : Object.values(readUpvotes()).filter((value) => value === 1).length;
-
   return {
-    reports: merged.map((stored) => prajvalaApi.toFeedItem(stored, user.id)),
-    activity: buildActivity(merged, localVotes + remoteVotes),
+    reports: sorted.map((stored) => prajvalaApi.toFeedItem(stored, user.id)),
+    activity: buildActivity(sorted, remoteVotes),
   };
 }

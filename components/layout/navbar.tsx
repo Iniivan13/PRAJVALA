@@ -92,7 +92,7 @@ export function Navbar() {
           </p>
           <p className="hidden items-center gap-1.5 text-[10.5px] font-medium text-white/45 sm:flex">
             <ShieldCheck size={12} className="text-amber-400" aria-hidden="true" />
-            Data demonstrasi · Techcomfest 2027
+            Data percontohan · Techcomfest 2027
           </p>
         </div>
       </div>

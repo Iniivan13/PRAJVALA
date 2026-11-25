@@ -7,7 +7,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 /**
  * Memperbarui cookie sesi Supabase pada setiap request dan mengembalikan
  * response yang sudah membawa cookie terbaru. Bila Supabase belum
- * dikonfigurasi, request diteruskan apa adanya (mode lokal).
+ * dikonfigurasi, request diteruskan apa adanya.
  */
 export async function updateSession(request: NextRequest) {
   if (!supabaseUrl || !supabaseKey) {

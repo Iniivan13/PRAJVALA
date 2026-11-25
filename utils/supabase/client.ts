@@ -5,8 +5,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 /**
- * Apakah kredensial Supabase tersedia. Bila tidak, aplikasi otomatis memakai
- * mode lokal (localStorage) agar demo tetap dapat dijalankan tanpa backend.
+ * Apakah kredensial Supabase tersedia. Aplikasi produksi memerlukan Supabase
+ * untuk autentikasi, laporan, dan dukungan warga.
  */
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 

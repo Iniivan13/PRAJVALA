@@ -13,27 +13,12 @@ import { REGIONS } from "@/lib/data";
 import type { AuthResult, RegisterInput, UserProfile } from "@/types";
 import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 
-const USERS_KEY = "prajvala:users:v1";
-const SESSION_KEY = "prajvala:session:v1";
-
-export const DEMO_ACCOUNT = {
-  email: "warga@demo.prajvala.id",
-  password: "prajvala2026",
-} as const;
-
-interface StoredUser extends UserProfile {
-  passwordHash: string;
-  salt: string;
-}
-
 interface AuthContextValue {
   user: UserProfile | null;
   isHydrated: boolean;
   isSupabaseMode: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (input: RegisterInput) => Promise<AuthResult>;
-  registerLocal: (input: RegisterInput) => Promise<AuthResult>;
-  loginDemo: () => Promise<AuthResult>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<AuthResult>;
 }
@@ -46,117 +31,12 @@ function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
 
-function readUsers(): StoredUser[] {
-  if (!isBrowser()) return [];
-  try {
-    const raw = window.localStorage.getItem(USERS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (item): item is StoredUser =>
-        typeof item === "object" &&
-        item !== null &&
-        typeof (item as StoredUser).id === "string" &&
-        typeof (item as StoredUser).email === "string" &&
-        typeof (item as StoredUser).passwordHash === "string" &&
-        typeof (item as StoredUser).salt === "string",
-    );
-  } catch {
-    return [];
-  }
-}
-
-function writeUsers(users: StoredUser[]): boolean {
-  if (!isBrowser()) return false;
-  try {
-    window.localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function writeSession(userId: string): void {
-  if (!isBrowser()) return;
-  try {
-    window.localStorage.setItem(SESSION_KEY, userId);
-  } catch {
-    // Sesi tetap berjalan di memori bila penyimpanan tidak tersedia.
-  }
-}
-
-function clearSession(): void {
-  if (!isBrowser()) return;
-  try {
-    window.localStorage.removeItem(SESSION_KEY);
-  } catch {
-    // Abaikan kegagalan penyimpanan.
-  }
-}
-
-function readSession(): UserProfile | null {
-  if (!isBrowser()) return null;
-  try {
-    const id = window.localStorage.getItem(SESSION_KEY);
-    if (!id) return null;
-    const found = readUsers().find((item) => item.id === id);
-    if (!found) return null;
-    return toProfile(found);
-  } catch {
-    return null;
-  }
-}
-
-function toProfile(user: StoredUser): UserProfile {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    regionId: user.regionId,
-    createdAt: user.createdAt,
-    source: "local",
-  };
-}
-
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
 function normalizeName(name: string): string {
   return name.trim().replace(/\s+/g, " ");
-}
-
-function randomToken(): string {
-  if (isBrowser() && typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID().replace(/-/g, "");
-  }
-  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
-}
-
-function fallbackHash(value: string): string {
-  let hash = 2166136261;
-  for (let index = 0; index < value.length; index += 1) {
-    hash ^= value.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0).toString(16).padStart(8, "0");
-}
-
-async function hashPassword(password: string, salt: string): Promise<string> {
-  const payload = `${salt}:${password}`;
-  if (isBrowser() && typeof crypto !== "undefined" && crypto.subtle) {
-    try {
-      const bytes = new TextEncoder().encode(payload);
-      const digest = await crypto.subtle.digest("SHA-256", bytes);
-      return Array.from(new Uint8Array(digest))
-        .map((byte) => byte.toString(16).padStart(2, "0"))
-        .join("");
-    } catch {
-      // Lanjutkan ke hash fallback untuk lingkungan tanpa Web Crypto.
-    }
-  }
-  return fallbackHash(payload);
 }
 
 function validateRegistration(input: RegisterInput): string | null {
@@ -177,25 +57,6 @@ function validateRegistration(input: RegisterInput): string | null {
 
 function resolveRegionId(regionId?: string): string {
   return REGIONS.some((region) => region.id === regionId) ? (regionId as string) : "all";
-}
-
-async function createStoredUser(
-  input: RegisterInput,
-): Promise<{ stored: StoredUser | null; error?: string }> {
-  const salt = randomToken().slice(0, 16);
-  const passwordHash = await hashPassword(input.password, salt);
-
-  return {
-    stored: {
-      id: `usr-${randomToken().slice(0, 12)}`,
-      name: normalizeName(input.name),
-      email: normalizeEmail(input.email),
-      regionId: resolveRegionId(input.regionId),
-      createdAt: new Date().toISOString(),
-      salt,
-      passwordHash,
-    },
-  };
 }
 
 function isTransientSupabaseError(message: string): boolean {
@@ -219,7 +80,7 @@ function mapAuthError(message: string, fallback = "Terjadi kendala. Silakan coba
     return "Kata sandi terlalu pendek. Gunakan minimal 8 karakter.";
   }
   if (value.includes("signups not allowed") || value.includes("signup is disabled")) {
-    return "Pendaftaran akun baru sedang ditutup. Coba masuk dengan akun demo.";
+    return "Pendaftaran akun baru sedang ditutup. Hubungi pengelola PRAJVALA.";
   }
   if (value.includes("rate limit") || value.includes("too many requests")) {
     return "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.";
@@ -228,7 +89,7 @@ function mapAuthError(message: string, fallback = "Terjadi kendala. Silakan coba
     return "Alamat email belum valid. Contoh: nama@email.com.";
   }
   if (isTransientSupabaseError(value)) {
-    return "Server Supabase belum dapat dijangkau. Kami memakai mode lokal sementara.";
+    return "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
   }
   return fallback;
 }
@@ -285,96 +146,10 @@ async function profileFromSupabase(
       };
     }
   } catch {
-    // Tabel profil belum tersedia; metadata auth sudah cukup untuk demo.
+    // Tabel profil belum tersedia; metadata auth tetap dapat dipakai.
   }
 
   return fallback;
-}
-
-async function localLogin(
-  email: string,
-  password: string,
-): Promise<{ profile: UserProfile | null; error?: string }> {
-  const users = readUsers();
-  const stored = users.find((item) => item.email === email);
-  if (!stored) {
-    return {
-      profile: null,
-      error: "Email belum terdaftar. Periksa kembali atau buat akun baru.",
-    };
-  }
-
-  const candidate = await hashPassword(password, stored.salt);
-  if (candidate !== stored.passwordHash) {
-    return { profile: null, error: "Kata sandi belum cocok. Silakan coba lagi." };
-  }
-
-  writeSession(stored.id);
-  return { profile: toProfile(stored) };
-}
-
-async function localRegister(input: RegisterInput): Promise<AuthResult> {
-  const normalized = normalizeEmail(input.email);
-  const users = readUsers();
-  if (users.some((item) => item.email === normalized)) {
-    return { ok: false, error: "Email ini sudah terdaftar. Silakan masuk." };
-  }
-
-  const { stored, error } = await createStoredUser(input);
-  if (!stored || error) {
-    return { ok: false, error: error ?? "Akun belum dapat dibuat." };
-  }
-
-  if (!writeUsers([stored, ...users])) {
-    return {
-      ok: false,
-      error:
-        "Penyimpanan peramban tidak tersedia. Aktifkan cookie/localStorage lalu coba lagi.",
-    };
-  }
-
-  writeSession(stored.id);
-  return {
-    ok: true,
-    message: "Akun lokal berhasil dibuat. Anda langsung masuk.",
-  };
-}
-
-async function localDemoLogin(): Promise<AuthResult> {
-  const users = readUsers();
-  const demoEmail = DEMO_ACCOUNT.email;
-  const existing = users.find((item) => item.email === demoEmail);
-
-  if (existing) {
-    const candidate = await hashPassword(DEMO_ACCOUNT.password, existing.salt);
-    if (candidate !== existing.passwordHash) {
-      return {
-        ok: false,
-        error: "Akun demo di perangkat ini memakai kata sandi berbeda.",
-      };
-    }
-    writeSession(existing.id);
-    return { ok: true, message: "Masuk dengan akun demo lokal." };
-  }
-
-  const { stored } = await createStoredUser({
-    name: "Rina Kusuma",
-    email: demoEmail,
-    password: DEMO_ACCOUNT.password,
-    regionId: "tanjung-barat",
-  });
-
-  if (!stored) return { ok: false, error: "Akun demo belum dapat dibuat." };
-  if (!writeUsers([stored, ...users])) {
-    return {
-      ok: false,
-      error:
-        "Penyimpanan peramban tidak tersedia. Aktifkan cookie/localStorage lalu coba lagi.",
-    };
-  }
-
-  writeSession(stored.id);
-  return { ok: true, message: "Masuk dengan akun demo lokal." };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -386,22 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const client = createClient();
 
     async function hydrate() {
-      if (client) {
-        try {
-          const { data } = await client.auth.getUser();
-          if (data.user) {
-            const profile = await profileFromSupabase(client, data.user);
-            if (!cancelled) {
-              clearSession();
-              setUser(profile);
-              setIsHydrated(true);
-            }
-            return;
-          }
-        } catch {
-          // Biarkan pengguna null; mode Supabase ketat tidak memakai sesi lokal.
-        }
-
+      if (!client) {
         if (!cancelled) {
           setUser(null);
           setIsHydrated(true);
@@ -409,8 +169,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      try {
+        const { data } = await client.auth.getUser();
+        if (data.user) {
+          const profile = await profileFromSupabase(client, data.user);
+          if (!cancelled) {
+            setUser(profile);
+            setIsHydrated(true);
+          }
+          return;
+        }
+      } catch {
+        // Biarkan pengguna null; sesi akan dipulihkan saat koneksi tersedia.
+      }
+
       if (!cancelled) {
-        setUser(readSession());
+        setUser(null);
         setIsHydrated(true);
       }
     }
@@ -458,184 +232,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const client = createClient();
-      if (client) {
-        try {
-          const { data, error } = await client.auth.signInWithPassword({
-            email: normalized,
-            password,
-          });
-
-          if (!error && data.user) {
-            const profile = await profileFromSupabase(client, data.user);
-            clearSession();
-            setUser(profile);
-            return { ok: true, message: "Masuk dengan akun Supabase." };
-          }
-
-          const message = error?.message ?? "Gagal masuk.";
-          if (/email not confirmed/i.test(message)) {
-            return {
-              ok: false,
-              error:
-                "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.",
-            };
-          }
-          return { ok: false, error: mapAuthError(message) };
-        } catch {
-          return {
-            ok: false,
-            error:
-              "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
-          };
-        }
-      }
-
-      const local = await localLogin(normalized, password);
-      if (!local.profile) {
-        return { ok: false, error: local.error ?? "Belum dapat masuk. Coba lagi." };
-      }
-      setUser(local.profile);
-      return { ok: true, message: "Masuk dengan akun lokal di perangkat ini." };
-    },
-    [],
-  );
-
-  const register = useCallback(async (input: RegisterInput): Promise<AuthResult> => {
-    const validationError = validateRegistration(input);
-    if (validationError) return { ok: false, error: validationError };
-
-    const normalized = normalizeEmail(input.email);
-    if (normalized === DEMO_ACCOUNT.email) {
-      return {
-        ok: false,
-        error:
-          "Email ini khusus akun demo. Gunakan email lain, atau masuk lewat tombol “Masuk dengan akun demo”.",
-      };
-    }
-
-    const client = createClient();
-    if (client) {
-      try {
-        const { data, error } = await client.auth.signUp({
-          email: normalized,
-          password: input.password,
-          options: {
-            data: {
-              full_name: normalizeName(input.name),
-              region_id: resolveRegionId(input.regionId),
-            },
-            emailRedirectTo: isBrowser()
-              ? `${window.location.origin}/masuk?redirect=%2Fakun`
-              : undefined,
-          },
-        });
-
-        if (error) {
-          const message = error.message ?? "";
-          if (/already registered|already exists|user already/i.test(message)) {
-            return {
-              ok: false,
-              error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
-            };
-          }
-          return { ok: false, error: mapAuthError(message) };
-        }
-
-        if (!data.user) {
-          return {
-            ok: false,
-            error: "Pendaftaran belum dapat diproses. Coba lagi beberapa saat.",
-          };
-        }
-
-        if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-          return {
-            ok: false,
-            error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
-          };
-        }
-
-        if (data.session) {
-          const profile = await profileFromSupabase(client, data.user);
-          clearSession();
-          setUser(profile);
-          return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
-        }
-
-        return {
-          ok: true,
-          needsConfirmation: true,
-          message: `Kami mengirim tautan konfirmasi ke ${normalized}. Buka email tersebut, konfirmasi akun, lalu masuk kembali.`,
-        };
-      } catch {
+      if (!client) {
         return {
           ok: false,
-          error:
-            "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
+          error: "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
         };
       }
-    }
 
-    const result = await localRegister(input);
-    if (result.ok) {
-      const session = readSession();
-      if (session) setUser(session);
-    }
-    return result;
-  }, []);
-
-  const registerLocal = useCallback(async (input: RegisterInput): Promise<AuthResult> => {
-    if (createClient()) {
-      return {
-        ok: false,
-        error:
-          "Mode lokal dinonaktifkan karena Supabase aktif. Selesaikan konfirmasi email atau gunakan akun Supabase.",
-      };
-    }
-
-    const validationError = validateRegistration(input);
-    if (validationError) return { ok: false, error: validationError };
-
-    if (normalizeEmail(input.email) === DEMO_ACCOUNT.email) {
-      return {
-        ok: false,
-        error:
-          "Email ini khusus akun demo. Gunakan email lain, atau masuk lewat tombol “Masuk dengan akun demo”.",
-      };
-    }
-
-    const result = await localRegister(input);
-    if (result.ok) {
-      const session = readSession();
-      if (session) setUser(session);
-    }
-    return result;
-  }, []);
-
-  const loginDemo = useCallback(async (): Promise<AuthResult> => {
-    const client = createClient();
-    if (client) {
       try {
         const { data, error } = await client.auth.signInWithPassword({
-          email: DEMO_ACCOUNT.email,
-          password: DEMO_ACCOUNT.password,
+          email: normalized,
+          password,
         });
 
         if (!error && data.user) {
           const profile = await profileFromSupabase(client, data.user);
-          clearSession();
           setUser(profile);
-          return { ok: true, message: "Masuk dengan akun demo Supabase." };
+          return { ok: true, message: "Berhasil masuk." };
         }
 
-        const message = error?.message ?? "";
-        if (/invalid login credentials/i.test(message)) {
-          return {
-            ok: false,
-            error:
-              "Akun demo Supabase belum tersedia. Buat pengguna warga@demo.prajvala.id dengan kata sandi prajvala2026 di Authentication → Users, lalu coba lagi.",
-          };
-        }
+        const message = error?.message ?? "Gagal masuk.";
         return { ok: false, error: mapAuthError(message) };
       } catch {
         return {
@@ -644,14 +260,82 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
         };
       }
+    },
+    [],
+  );
+
+  const register = useCallback(async (input: RegisterInput): Promise<AuthResult> => {
+    const validationError = validateRegistration(input);
+    if (validationError) return { ok: false, error: validationError };
+
+    const client = createClient();
+    if (!client) {
+      return {
+        ok: false,
+        error: "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
+      };
     }
 
-    const result = await localDemoLogin();
-    if (result.ok) {
-      const session = readSession();
-      if (session) setUser(session);
+    const normalized = normalizeEmail(input.email);
+
+    try {
+      const { data, error } = await client.auth.signUp({
+        email: normalized,
+        password: input.password,
+        options: {
+          data: {
+            full_name: normalizeName(input.name),
+            region_id: resolveRegionId(input.regionId),
+          },
+          emailRedirectTo: isBrowser()
+            ? `${window.location.origin}/masuk?redirect=%2Fakun`
+            : undefined,
+        },
+      });
+
+      if (error) {
+        const message = error.message ?? "";
+        if (/already registered|already exists|user already/i.test(message)) {
+          return {
+            ok: false,
+            error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
+          };
+        }
+        return { ok: false, error: mapAuthError(message) };
+      }
+
+      if (!data.user) {
+        return {
+          ok: false,
+          error: "Pendaftaran belum dapat diproses. Coba lagi beberapa saat.",
+        };
+      }
+
+      if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        return {
+          ok: false,
+          error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
+        };
+      }
+
+      if (data.session) {
+        const profile = await profileFromSupabase(client, data.user);
+        setUser(profile);
+        return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
+      }
+
+      return {
+        ok: true,
+        needsConfirmation: true,
+        message: `Kami mengirim tautan konfirmasi ke ${normalized}. Buka email tersebut, konfirmasi akun, lalu masuk kembali.`,
+      };
+    } catch {
+      return {
+        ok: false,
+        error:
+          "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
+      };
     }
-    return result;
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
@@ -660,56 +344,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         await client.auth.signOut();
       } catch {
-        // Sesi lokal tetap dibersihkan meski server tidak terjangkau.
+        // Sesi di memori tetap dibersihkan meski server tidak terjangkau.
       }
     }
-    clearSession();
     setUser(null);
   }, []);
 
   const deleteAccount = useCallback(async (): Promise<AuthResult> => {
     if (!user) return { ok: false, error: "Tidak ada akun yang sedang aktif." };
 
-    if (user.source === "supabase") {
-      const client = createClient();
-      if (!client) {
+    const client = createClient();
+    if (!client) {
+      return {
+        ok: false,
+        error: "Koneksi Supabase tidak tersedia. Coba lagi setelah jaringan pulih.",
+      };
+    }
+
+    try {
+      const { error } = await client.rpc("delete_user");
+      if (error) {
         return {
           ok: false,
-          error: "Koneksi Supabase tidak tersedia. Coba lagi setelah jaringan pulih.",
+          error: `Akun belum dapat dihapus: ${mapAuthError(error.message, error.message)}`,
         };
       }
       try {
-        const { error } = await client.rpc("delete_user");
-        if (error) {
-          return {
-            ok: false,
-            error: `Akun belum dapat dihapus: ${mapAuthError(error.message, error.message)}`,
-          };
-        }
-        try {
-          await client.auth.signOut();
-        } catch {
-          // Abaikan; sesi lokal tetap dibersihkan di bawah.
-        }
-        clearSession();
-        setUser(null);
-        return { ok: true, message: "Akun Supabase berhasil dihapus." };
+        await client.auth.signOut();
       } catch {
-        return {
-          ok: false,
-          error:
-            "Akun belum dapat dihapus. Pastikan fungsi delete_user sudah dijalankan di Supabase.",
-        };
+        // Abaikan; state pengguna tetap dibersihkan di bawah.
       }
+      setUser(null);
+      return { ok: true, message: "Akun berhasil dihapus." };
+    } catch {
+      return {
+        ok: false,
+        error:
+          "Akun belum dapat dihapus. Pastikan fungsi delete_user sudah dijalankan di Supabase.",
+      };
     }
-
-    const remaining = readUsers().filter((item) => item.id !== user.id);
-    if (!writeUsers(remaining)) {
-      return { ok: false, error: "Akun belum dapat dihapus dari perangkat ini." };
-    }
-    clearSession();
-    setUser(null);
-    return { ok: true, message: "Akun lokal berhasil dihapus dari perangkat ini." };
   }, [user]);
 
   const value = useMemo(
@@ -719,12 +392,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isSupabaseMode: isSupabaseConfigured,
       login,
       register,
-      registerLocal,
-      loginDemo,
       logout,
       deleteAccount,
     }),
-    [user, isHydrated, login, register, registerLocal, loginDemo, logout, deleteAccount],
+    [user, isHydrated, login, register, logout, deleteAccount],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

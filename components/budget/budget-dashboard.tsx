@@ -269,8 +269,8 @@ export function BudgetDashboard() {
           <BadgeInfo size={13} className="mt-0.5 shrink-0 text-ink-400" aria-hidden="true" />
           Indikator kewajaran harga membandingkan harga satuan dengan harga acuan
           regional dan kontrak sejenis. Penanda “Perlu Tinjauan” bukan pernyataan
-          pelanggaran, melainkan sinyal untuk meminta klarifikasi. Data pada versi
-          demonstrasi ini bersifat percontohan.
+          pelanggaran, melainkan sinyal untuk meminta klarifikasi. Data pada versi ini
+          bersifat percontohan.
         </p>
       </div>
     </>

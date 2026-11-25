@@ -155,9 +155,9 @@ export function Footer() {
           </p>
         </div>
         <p className="mt-3 text-[10px] leading-relaxed text-ink-600">
-          Seluruh data pada versi demonstrasi ini merupakan data percontohan yang
-          disusun untuk keperluan kompetisi. Nama proyek, penyedia, dan laporan warga
-          tidak merujuk pada pihak tertentu.
+          Seluruh data pada versi ini merupakan data percontohan yang disusun untuk
+          keperluan kompetisi. Nama proyek, penyedia, dan laporan warga tidak merujuk
+          pada pihak tertentu.
         </p>
       </div>
 

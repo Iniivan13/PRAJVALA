@@ -81,7 +81,7 @@ const QUICK_ACTIONS = [
 
 export function AccountDashboard() {
   const router = useRouter();
-  const { user, isHydrated, isSupabaseMode, logout, deleteAccount } = useAuth();
+  const { user, isHydrated, logout, deleteAccount } = useAuth();
   const { activeRegionId, setActiveRegionId } = useRegion();
 
   const [reports, setReports] = useState<CitizenReport[]>([]);
@@ -116,7 +116,7 @@ export function AccountDashboard() {
         setActivity(snapshot.activity);
       })
       .catch(() => {
-        // Biarkan data kosong; mode lokal tetap dapat dipakai.
+        // Biarkan data kosong; pengguna dapat memuat ulang halaman.
       })
       .finally(() => {
         if (!cancelled) setLoadingActivity(false);
@@ -185,7 +185,7 @@ export function AccountDashboard() {
             </h1>
             <p className="mx-auto mt-2 max-w-md text-[12.5px] leading-relaxed text-ink-500">
               Masuk untuk melihat ringkasan kontribusi, menyimpan identitas laporan, dan
-              mengatur wilayah pantau. Akun demo tersedia dalam satu klik.
+              mengatur wilayah pantau.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
               <Link href="/masuk" className="btn-primary h-11 px-5 py-0 text-[12.5px]">
@@ -200,17 +200,13 @@ export function AccountDashboard() {
             </div>
             <p className="mt-5 flex items-center justify-center gap-1.5 text-[9.5px] text-ink-400">
               <ShieldCheck size={11} className="text-emerald-500" aria-hidden="true" />
-              {isSupabaseMode
-                ? "Akun dan kontribusi tersinkron langsung melalui Supabase."
-                : "Data akun hanya tersimpan di peramban ini dan tidak dikirim ke server."}
+              Akun dan kontribusi tersinkron langsung melalui Supabase.
             </p>
           </div>
         </div>
       </section>
     );
   }
-
-  const isSupabaseAccount = user.source === "supabase";
 
   const handleLogout = async () => {
     await logout();
@@ -244,9 +240,7 @@ export function AccountDashboard() {
                 Selamat datang, {user.name.split(" ")[0]}.
               </h1>
               <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-ink-500">
-                {isSupabaseAccount
-                  ? "Ringkasan kontribusi yang tersinkron langsung melalui Supabase."
-                  : "Ringkasan kontribusi Anda di perangkat ini. Semua data bersifat lokal dan dapat dihapus kapan saja."}
+                Ringkasan kontribusi yang tersinkron langsung melalui Supabase.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -373,13 +367,11 @@ export function AccountDashboard() {
                 },
                 {
                   label: "Status akun",
-                  value: isSupabaseAccount ? "Supabase" : "Lokal",
-                  hint: isSupabaseAccount
-                    ? "Tersinkron ke server"
-                    : "Tersimpan di peramban ini",
+                  value: "Supabase",
+                  hint: "Tersinkron ke server",
                   icon: ShieldCheck,
-                  tone: isSupabaseAccount ? "text-emerald-600" : "text-rose-500",
-                  bg: isSupabaseAccount ? "bg-emerald-50" : "bg-rose-50",
+                  tone: "text-emerald-600",
+                  bg: "bg-emerald-50",
                 },
               ].map((stat) => {
                 const Icon = stat.icon;
@@ -423,7 +415,7 @@ export function AccountDashboard() {
                     {loadingActivity
                       ? "Memuat riwayat kontribusi…"
                       : reports.length > 0
-                        ? `${formatNumber(reports.length)} laporan tersimpan${isSupabaseAccount ? " di Supabase" : " di perangkat ini"}`
+                        ? `${formatNumber(reports.length)} laporan tersimpan di Supabase`
                         : "Laporan yang Anda kirim akan muncul di sini"}
                   </p>
                 </div>
@@ -613,9 +605,8 @@ export function AccountDashboard() {
                   </dt>
                   <dd className="mt-0.5 flex items-start gap-1.5 text-[10.5px] leading-relaxed text-ink-500">
                     <ShieldCheck size={12} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-                    {isSupabaseAccount
-                      ? "Akun & kontribusi tersinkron aman di Supabase. Kata sandi dikelola Supabase Auth."
-                      : "Kata sandi di-hash dan disimpan hanya di peramban ini."}
+                    Akun & kontribusi tersinkron aman di Supabase. Kata sandi dikelola
+                    Supabase Auth.
                   </dd>
                 </div>
               </dl>
@@ -623,21 +614,16 @@ export function AccountDashboard() {
               <div className="mt-5 border-t border-ink-100 pt-4">
                 <p className="flex items-start gap-2 text-[9.5px] leading-relaxed text-ink-400">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-                  {isSupabaseAccount
-                    ? "Akun ini tersimpan di Supabase untuk demonstrasi Techcomfest 2027. Anda dapat menghapusnya kapan saja."
-                    : "Ini akun simulasi untuk demonstrasi Techcomfest 2027. Jangan gunakan kata sandi akun penting Anda."}
+                  Akun ini tersimpan di Supabase. Anda dapat menghapusnya kapan saja.
                 </p>
                 {confirmDelete ? (
                   <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
                     <p className="text-[10.5px] font-semibold text-rose-800">
-                      {isSupabaseAccount
-                        ? "Hapus akun Supabase secara permanen?"
-                        : "Hapus akun dari perangkat ini?"}
+                      Hapus akun secara permanen?
                     </p>
                     <p className="mt-0.5 text-[9.5px] leading-relaxed text-rose-700">
-                      {isSupabaseAccount
-                        ? "Akun auth dan profil Supabase akan dihapus. Laporan yang sudah terkirim tetap tersimpan sebagai laporan anonim."
-                        : "Anda akan keluar dan data akun dihapus. Laporan yang sudah dikirim tetap tersimpan sebagai laporan anonim."}
+                      Akun auth dan profil Supabase akan dihapus. Laporan yang sudah terkirim
+                      tetap tersimpan sebagai laporan anonim.
                     </p>
                     <div className="mt-2.5 flex gap-2">
                       <button
@@ -670,7 +656,7 @@ export function AccountDashboard() {
                     className="mt-3 inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-ink-400 transition-colors hover:text-rose-600"
                   >
                     <Trash2 size={12} aria-hidden="true" />
-                    {isSupabaseAccount ? "Hapus akun permanen" : "Hapus akun dari perangkat"}
+                    Hapus akun permanen
                   </button>
                 )}
               </div>

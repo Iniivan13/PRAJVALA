@@ -179,7 +179,7 @@ export function FaqSection() {
               <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-amber-200/80 bg-amber-50/70 p-3.5">
                 <Bot size={15} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
                 <p className="text-[10px] leading-relaxed text-amber-800">
-                  <span className="font-bold">Catatan demonstrasi:</span> seluruh angka pada
+                  <span className="font-bold">Catatan data:</span> seluruh angka pada
                   versi ini adalah data percontohan yang disusun menyerupai dokumen resmi
                   untuk Techcomfest 2027.
                 </p>
