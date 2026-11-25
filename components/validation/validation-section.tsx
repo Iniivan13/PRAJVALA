@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "@/components/providers/auth-provider";
 import { ReportForm } from "@/components/validation/report-form";
 import { computeValidationScore, prajvalaApi } from "@/lib/api";
 import { getReportsForProject } from "@/lib/data";
@@ -55,9 +56,12 @@ function ReportStars({ rating }: { rating: number }) {
 }
 
 export function ValidationSection({ project }: { project: Project }) {
+  const { user } = useAuth();
   const seedReports = useMemo(() => getReportsForProject(project.id), [project.id]);
   const [userReports, setUserReports] = useState<CitizenReport[]>([]);
   const [upvoted, setUpvoted] = useState<Set<string>>(new Set());
+  const [serverVoted, setServerVoted] = useState<Set<string>>(new Set());
+  const [serverVotes, setServerVotes] = useState<Record<string, number>>({});
   const [pendingUpvotes, setPendingUpvotes] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<FilterValue>("Semua");
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -68,18 +72,40 @@ export function ValidationSection({ project }: { project: Project }) {
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+
     prajvalaApi
       .getReports(project.id)
-      .then((stored) => {
+      .then(async (stored) => {
         if (cancelled) return;
-        const mapped = stored.map((item) => prajvalaApi.toFeedItem(item));
+        const mapped = stored.map((item) => prajvalaApi.toFeedItem(item, user?.id));
         setUserReports(mapped);
-        const ids = new Set<string>();
+
+        const localIds = new Set<string>();
         [...mapped, ...seedReports].forEach((report) => {
-          if (prajvalaApi.readUpvoted(report.id)) ids.add(report.id);
+          const usesLocalVote =
+            report.source !== "supabase" || user?.source !== "supabase";
+          if (usesLocalVote && prajvalaApi.readUpvoted(report.id)) {
+            localIds.add(report.id);
+          }
         });
-        setUpvoted(ids);
-        setLoading(false);
+        setUpvoted(localIds);
+
+        const remoteIds = mapped
+          .filter((report) => report.source === "supabase")
+          .map((report) => report.id);
+
+        if (remoteIds.length > 0) {
+          const summary = await prajvalaApi.getVoteSummary(remoteIds);
+          if (cancelled) return;
+          setServerVotes(summary.counts);
+          setServerVoted(new Set(summary.voted));
+        } else {
+          setServerVotes({});
+          setServerVoted(new Set());
+        }
+
+        if (!cancelled) setLoading(false);
       })
       .catch(() => {
         if (!cancelled) setLoading(false);
@@ -87,7 +113,7 @@ export function ValidationSection({ project }: { project: Project }) {
     return () => {
       cancelled = true;
     };
-  }, [project.id, seedReports]);
+  }, [project.id, seedReports, user?.id]);
 
   useEffect(() => {
     if (!success) return;
@@ -162,6 +188,54 @@ export function ValidationSection({ project }: { project: Project }) {
 
   const handleUpvote = async (report: CitizenReport) => {
     if (pendingUpvotes.has(report.id)) return;
+    const isRemote = report.source === "supabase";
+    const usesServerVote = isRemote && user?.source === "supabase";
+
+    if (usesServerVote) {
+      const wasUpvoted = serverVoted.has(report.id);
+      const currentCount = serverVotes[report.id] ?? report.upvotes;
+      setServerVoted((previous) => {
+        const next = new Set(previous);
+        if (wasUpvoted) next.delete(report.id);
+        else next.add(report.id);
+        return next;
+      });
+      setServerVotes((previous) => ({
+        ...previous,
+        [report.id]: Math.max(0, currentCount + (wasUpvoted ? -1 : 1)),
+      }));
+      setPendingUpvotes((previous) => new Set(previous).add(report.id));
+
+      try {
+        const active = await prajvalaApi.toggleUpvote(report.id, true);
+        setServerVoted((previous) => {
+          const next = new Set(previous);
+          if (active) next.add(report.id);
+          else next.delete(report.id);
+          return next;
+        });
+        setServerVotes((previous) => {
+          const base = Math.max(0, currentCount - (wasUpvoted ? 1 : 0));
+          return { ...previous, [report.id]: Math.max(0, base + (active ? 1 : 0)) };
+        });
+      } catch {
+        setServerVoted((previous) => {
+          const next = new Set(previous);
+          if (wasUpvoted) next.add(report.id);
+          else next.delete(report.id);
+          return next;
+        });
+        setServerVotes((previous) => ({ ...previous, [report.id]: currentCount }));
+      } finally {
+        setPendingUpvotes((previous) => {
+          const next = new Set(previous);
+          next.delete(report.id);
+          return next;
+        });
+      }
+      return;
+    }
+
     const wasUpvoted = upvoted.has(report.id);
     setUpvoted((previous) => {
       const next = new Set(previous);
@@ -202,14 +276,24 @@ export function ValidationSection({ project }: { project: Project }) {
     setFilter("Semua");
   };
 
-  const handleDelete = async (reportId: string) => {
-    setDeletingId(reportId);
+  const handleDelete = async (report: CitizenReport) => {
+    setDeletingId(report.id);
     try {
-      await prajvalaApi.deleteReport(reportId);
-      setUserReports((previous) => previous.filter((report) => report.id !== reportId));
+      await prajvalaApi.deleteReport(report.id, report.source === "supabase");
+      setUserReports((previous) => previous.filter((item) => item.id !== report.id));
       setUpvoted((previous) => {
         const next = new Set(previous);
-        next.delete(reportId);
+        next.delete(report.id);
+        return next;
+      });
+      setServerVoted((previous) => {
+        const next = new Set(previous);
+        next.delete(report.id);
+        return next;
+      });
+      setServerVotes((previous) => {
+        const next = { ...previous };
+        delete next[report.id];
         return next;
       });
       setDeleteTarget(null);
@@ -451,8 +535,15 @@ export function ValidationSection({ project }: { project: Project }) {
 
       <div className="mt-4 space-y-3.5">
         {filteredReports.map((report) => {
-          const isUpvoted = upvoted.has(report.id);
-          const upvoteCount = report.upvotes + (isUpvoted ? 1 : 0);
+          const isRemote = report.source === "supabase";
+          const usesServerVote = isRemote && user?.source === "supabase";
+          const isUpvoted = usesServerVote
+            ? serverVoted.has(report.id)
+            : upvoted.has(report.id);
+          const upvoteCount = usesServerVote
+            ? (serverVotes[report.id] ?? report.upvotes)
+            : (isRemote ? (serverVotes[report.id] ?? report.upvotes) : report.upvotes) +
+              (isUpvoted ? 1 : 0);
           const isPending = pendingUpvotes.has(report.id);
 
           return (
@@ -484,7 +575,8 @@ export function ValidationSection({ project }: { project: Project }) {
                       ) : null}
                     </p>
                     <p className="mt-0.5 text-[9px] text-ink-400">
-                      {formatDateShort(report.createdAt)} · Pelapor warga
+                      {formatDateShort(report.createdAt)} ·{" "}
+                      {report.source === "supabase" ? "Tersinkron Supabase" : "Pelapor warga"}
                     </p>
                   </div>
                 </div>
@@ -563,7 +655,7 @@ export function ValidationSection({ project }: { project: Project }) {
                         Hapus laporan?
                         <button
                           type="button"
-                          onClick={() => handleDelete(report.id)}
+                          onClick={() => handleDelete(report)}
                           disabled={deletingId === report.id}
                           className="rounded-full bg-rose-600 px-1.5 py-0.5 text-[8.5px] font-bold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
                         >

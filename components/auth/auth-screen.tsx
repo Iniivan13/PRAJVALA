@@ -6,9 +6,11 @@ import {
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
+  Cloud,
   Eye,
   EyeOff,
   Fingerprint,
+  HardDrive,
   KeyRound,
   Loader2,
   LockKeyhole,
@@ -87,7 +89,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const copy = COPY[mode];
   const target = safeRedirect(redirectTo);
   const router = useRouter();
-  const { user, login, register, loginDemo, logout } = useAuth();
+  const { user, login, register, loginDemo, logout, isSupabaseMode } = useAuth();
   const { setActiveRegionId } = useRegion();
 
   const [email, setEmail] = useState("");
@@ -98,6 +100,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState("");
 
   const passwordChecks = [
     password.length >= 8,
@@ -126,7 +129,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
     event.preventDefault();
     setError("");
     if (!consent) {
-      setError("Centang persetujuan agar kami dapat menyimpan akun demo di perangkat ini.");
+      setError("Centang persetujuan agar kami dapat menyimpan akun Anda.");
       return;
     }
     setPending(true);
@@ -134,6 +137,11 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
     setPending(false);
     if (!result.ok) {
       setError(result.error ?? "Akun belum dapat dibuat. Coba lagi.");
+      return;
+    }
+    if (result.needsConfirmation) {
+      setConfirmationEmail(email.trim().toLowerCase());
+      setPassword("");
       return;
     }
     setActiveRegionId(regionId);
@@ -241,8 +249,9 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 </div>
                 <p className="mt-4 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-500">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
-                  Versi demonstrasi: akun disimpan di perangkat Anda dan tidak dikirim ke
-                  server mana pun.
+                  {isSupabaseMode
+                    ? "Akun dan kontribusi tersinkron aman lewat Supabase, dengan fallback lokal bila server tidak tersedia."
+                    : "Mode lokal: akun disimpan di perangkat Anda dan tidak dikirim ke server mana pun."}
                 </p>
               </div>
             </div>
@@ -272,12 +281,36 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 </span>
               </div>
 
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.08em]",
+                    isSupabaseMode
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                      : "border-ink-200 bg-ink-50 text-ink-500",
+                  )}
+                >
+                  {isSupabaseMode ? (
+                    <Cloud size={9} aria-hidden="true" />
+                  ) : (
+                    <HardDrive size={9} aria-hidden="true" />
+                  )}
+                  {isSupabaseMode ? "Tersinkron Supabase" : "Mode lokal peramban"}
+                </span>
+                <span className="text-[8.5px] text-ink-400">
+                  {isSupabaseMode
+                    ? "Laporan & dukungan tersimpan di server"
+                    : "Tanpa server — cocok untuk demo offline"}
+                </span>
+              </div>
+
               {user ? (
                 <AlreadySignedIn
                   name={user.name}
                   email={user.email}
+                  isSupabaseMode={user.source === "supabase"}
                   onLogout={() => {
-                    logout();
+                    void logout();
                     setError("");
                   }}
                 />
@@ -292,7 +325,15 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     </div>
                   ) : null}
 
-                  {mode === "register" ? (
+                  {confirmationEmail ? (
+                    <ConfirmationNotice
+                      email={confirmationEmail}
+                      onBack={() => {
+                        setConfirmationEmail("");
+                        setError("");
+                      }}
+                    />
+                  ) : mode === "register" ? (
                     <form onSubmit={handleRegister} className="mt-5 space-y-4">
                       <AuthField
                         id="auth-name"
@@ -414,8 +455,9 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                           className="mt-0.5 h-4 w-4 shrink-0 accent-amber-500"
                         />
                         <span className="text-[9.5px] leading-relaxed text-ink-600">
-                          Saya memahami ini akun simulasi PRAJVALA. Data akun disimpan
-                          hanya di perangkat ini dan tidak dikirim ke server.
+                          {isSupabaseMode
+                            ? "Saya memahami ini akun simulasi PRAJVALA. Nama, email, dan kontribusi saya disimpan di Supabase dan dapat dihapus kapan saja."
+                            : "Saya memahami ini akun simulasi PRAJVALA. Data akun disimpan hanya di perangkat ini dan tidak dikirim ke server."}
                         </span>
                       </label>
 
@@ -529,8 +571,9 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
 
             <p className="mt-3 flex items-start justify-center gap-1.5 px-4 text-center text-[9px] leading-relaxed text-ink-400">
               <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-              Akun demonstrasi tersimpan lokal dengan kata sandi yang di-hash. Jangan gunakan
-              kata sandi akun penting Anda.
+              {isSupabaseMode
+                ? "Kata sandi dikelola Supabase Auth. Kami tidak pernah menyimpan kata sandi Anda. Jangan gunakan kata sandi akun penting."
+                : "Akun lokal memakai kata sandi yang di-hash di peramban. Jangan gunakan kata sandi akun penting Anda."}
             </p>
           </div>
         </div>
@@ -592,10 +635,12 @@ function PasswordToggle({
 function AlreadySignedIn({
   name,
   email,
+  isSupabaseMode,
   onLogout,
 }: {
   name: string;
   email: string;
+  isSupabaseMode: boolean;
   onLogout: () => void;
 }) {
   return (
@@ -631,8 +676,61 @@ function AlreadySignedIn({
       </button>
       <p className="mt-3 flex items-center justify-center gap-1 text-[9px] text-ink-400">
         <CheckCircle2 size={10} className="text-emerald-500" aria-hidden="true" />
-        Sesi akun tersimpan di peramban ini
+        {isSupabaseMode
+          ? "Sesi tersinkron lewat Supabase Auth"
+          : "Sesi akun tersimpan di peramban ini"}
       </p>
+    </div>
+  );
+}
+
+function ConfirmationNotice({
+  email,
+  onBack,
+}: {
+  email: string;
+  onBack: () => void;
+}) {
+  return (
+    <div className="mt-5">
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
+        <div className="flex items-start gap-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white">
+            <Mail size={17} aria-hidden="true" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[12.5px] font-bold text-emerald-900">Cek email Anda</p>
+            <p className="mt-1 text-[10.5px] leading-relaxed text-emerald-800">
+              Tautan konfirmasi sudah dikirim ke{" "}
+              <span className="font-semibold">{email}</span>. Buka email tersebut lalu
+              konfirmasi akun sebelum masuk.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ul className="mt-3 space-y-1.5 text-[9.5px] leading-relaxed text-ink-500">
+        <li className="flex items-start gap-1.5">
+          <CheckCircle2 size={10} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
+          Tidak menemukan email? Periksa folder spam atau promosi.
+        </li>
+        <li className="flex items-start gap-1.5">
+          <CheckCircle2 size={10} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
+          Setelah dikonfirmasi, masuk lewat halaman ini dengan email dan kata sandi Anda.
+        </li>
+      </ul>
+
+      <Link href="/masuk" className="btn-primary mt-4 h-11 w-full px-4 py-0 text-[12.5px]">
+        <KeyRound size={15} aria-hidden="true" />
+        Lanjut ke halaman masuk
+      </Link>
+      <button
+        type="button"
+        onClick={onBack}
+        className="btn-secondary mt-2 h-10 w-full px-4 py-0 text-[11.5px]"
+      >
+        Daftar dengan email lain
+      </button>
     </div>
   );
 }

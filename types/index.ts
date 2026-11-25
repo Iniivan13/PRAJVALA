@@ -133,10 +133,13 @@ export interface BudgetItem {
   note?: string;
 }
 
+export type StorageSource = "supabase" | "local";
+
 export interface CitizenReport {
   id: string;
   projectId: string;
   author: string;
+  authorId?: string;
   initials: string;
   verified: boolean;
   suitability: Suitability;
@@ -146,6 +149,7 @@ export interface CitizenReport {
   upvotes: number;
   photoUrl?: string;
   isUserSubmitted?: boolean;
+  source?: StorageSource;
 }
 
 export interface PublicDocument {
@@ -201,6 +205,8 @@ export interface UserProfile {
   email: string;
   regionId: string;
   createdAt: string;
+  /** Asal akun: Supabase (tersinkron) atau penyimpanan lokal peramban. */
+  source?: StorageSource;
 }
 
 export interface RegisterInput {
@@ -208,5 +214,14 @@ export interface RegisterInput {
   email: string;
   password: string;
   regionId?: string;
+}
+
+export interface AuthResult {
+  ok: boolean;
+  error?: string;
+  /** Pendaftaran berhasil, tetapi pengguna harus mengonfirmasi email dahulu. */
+  needsConfirmation?: boolean;
+  /** Pesan sukses / instruksi lanjutan untuk ditampilkan di UI. */
+  message?: string;
 }
 

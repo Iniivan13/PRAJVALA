@@ -167,7 +167,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
         comment: comment.trim(),
         photoUrl: photo ?? undefined,
       });
-      onSubmitted(prajvalaApi.toFeedItem(stored));
+      onSubmitted(prajvalaApi.toFeedItem(stored, user?.id));
     } catch {
       setErrors({
         form: "Laporan gagal dikirim. Periksa koneksi Anda lalu coba lagi.",
