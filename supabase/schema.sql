@@ -23,20 +23,20 @@ drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own"
   on public.profiles for select
   to authenticated
-  using (auth.uid() = id);
+  using ((select auth.uid()) = id);
 
 drop policy if exists "profiles_insert_own" on public.profiles;
 create policy "profiles_insert_own"
   on public.profiles for insert
   to authenticated
-  with check (auth.uid() = id);
+  with check ((select auth.uid()) = id);
 
 drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own"
   on public.profiles for update
   to authenticated
-  using (auth.uid() = id)
-  with check (auth.uid() = id);
+  using ((select auth.uid()) = id)
+  with check ((select auth.uid()) = id);
 
 grant select, insert, update on public.profiles to authenticated;
 
@@ -67,6 +67,8 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
+revoke all on function public.handle_new_user() from public, anon, authenticated;
+
 -- Profil untuk user yang sudah ada sebelum skema ini dipasang.
 insert into public.profiles (id, full_name, region_id)
 select
@@ -82,12 +84,15 @@ on conflict (id) do nothing;
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
   return new;
 end;
 $$;
+
+revoke all on function public.set_updated_at() from public, anon, authenticated;
 
 drop trigger if exists profiles_set_updated_at on public.profiles;
 create trigger profiles_set_updated_at
@@ -131,7 +136,7 @@ create policy "reports_insert_valid"
   on public.reports for insert
   to anon, authenticated
   with check (
-    (author_id is null or author_id = auth.uid())
+    (author_id is null or author_id = (select auth.uid()))
     and rating between 1 and 5
     and char_length(comment) between 20 and 600
   );
@@ -140,7 +145,7 @@ drop policy if exists "reports_delete_own" on public.reports;
 create policy "reports_delete_own"
   on public.reports for delete
   to authenticated
-  using (author_id = auth.uid());
+  using (author_id = (select auth.uid()));
 
 grant select, insert on public.reports to anon, authenticated;
 grant delete on public.reports to authenticated;
@@ -159,6 +164,9 @@ create table if not exists public.report_votes (
 create index if not exists report_votes_report_idx
   on public.report_votes (report_id);
 
+create index if not exists report_votes_voter_idx
+  on public.report_votes (voter_id);
+
 alter table public.report_votes enable row level security;
 
 drop policy if exists "report_votes_read_all" on public.report_votes;
@@ -171,13 +179,13 @@ drop policy if exists "report_votes_insert_own" on public.report_votes;
 create policy "report_votes_insert_own"
   on public.report_votes for insert
   to authenticated
-  with check (voter_id = auth.uid());
+  with check (voter_id = (select auth.uid()));
 
 drop policy if exists "report_votes_delete_own" on public.report_votes;
 create policy "report_votes_delete_own"
   on public.report_votes for delete
   to authenticated
-  using (voter_id = auth.uid());
+  using (voter_id = (select auth.uid()));
 
 grant select on public.report_votes to anon, authenticated;
 grant insert, delete on public.report_votes to authenticated;
@@ -209,6 +217,8 @@ create trigger reports_cleanup_votes
   after delete on public.reports
   for each row execute function public.cleanup_report_votes();
 
+revoke all on function public.cleanup_report_votes() from public, anon, authenticated;
+
 -- ----------------------------------------------------------------------------
 -- 4. Hapus akun mandiri
 -- Pengguna terautentikasi dapat menghapus auth.users miliknya sendiri.
@@ -221,10 +231,10 @@ security definer
 set search_path = ''
 as $$
 begin
-  if auth.uid() is null then
+  if (select auth.uid()) is null then
     raise exception 'Pengguna belum terautentikasi';
   end if;
-  delete from auth.users where id = auth.uid();
+  delete from auth.users where id = (select auth.uid());
 end;
 $$;
 
