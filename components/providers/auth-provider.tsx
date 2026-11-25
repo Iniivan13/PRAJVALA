@@ -65,8 +65,56 @@ function isTransientSupabaseError(message: string): boolean {
   );
 }
 
-function mapAuthError(message: string, fallback = "Terjadi kendala. Silakan coba lagi."): string {
+/**
+ * Pesan error Supabase lebih andal dipetakan lewat `code` resmi. Pencocokan teks
+ * hanya dipakai sebagai cadangan bila kode tidak tersedia.
+ */
+function mapAuthError(
+  error: { message?: string; code?: string; status?: number } | string,
+  fallback = "Terjadi kendala. Silakan coba lagi.",
+): string {
+  const message = typeof error === "string" ? error : (error.message ?? "");
+  const code = typeof error === "string" ? undefined : error.code;
+  const status = typeof error === "string" ? undefined : error.status;
   const value = message.toLowerCase();
+
+  if (
+    code === "over_email_send_rate_limit" ||
+    code === "over_request_rate_limit" ||
+    status === 429
+  ) {
+    return "Batas pengiriman email Supabase sedang tercapai. Tunggu sekitar satu jam, lalu coba daftar lagi.";
+  }
+
+  if (
+    code === "email_address_invalid" ||
+    code === "email_address_not_authorized" ||
+    /email address .* is invalid/.test(value)
+  ) {
+    return "Alamat email ini tidak diterima server. Gunakan email aktif dari penyedia umum, misalnya Gmail atau Yahoo.";
+  }
+
+  if (code === "email_exists" || code === "user_already_exists") {
+    return "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.";
+  }
+
+  if (code === "weak_password" || code === "same_password") {
+    return "Kata sandi terlalu lemah. Gunakan minimal 8 karakter berisi huruf dan angka.";
+  }
+
+  if (code === "email_not_confirmed") {
+    return "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.";
+  }
+
+  if (code === "invalid_credentials") {
+    return "Email atau kata sandi belum cocok. Periksa kembali lalu coba lagi.";
+  }
+
+  if (code === "signup_disabled" || code === "email_provider_disabled") {
+    return "Pendaftaran akun baru sedang ditutup. Hubungi pengelola PRAJVALA.";
+  }
+
+  // Cadangan berbasis teks untuk respons lama atau tanpa kode.
   if (value.includes("invalid login credentials")) {
     return "Email atau kata sandi belum cocok. Periksa kembali lalu coba lagi.";
   }
@@ -83,10 +131,7 @@ function mapAuthError(message: string, fallback = "Terjadi kendala. Silakan coba
     return "Pendaftaran akun baru sedang ditutup. Hubungi pengelola PRAJVALA.";
   }
   if (value.includes("rate limit") || value.includes("too many requests")) {
-    return "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.";
-  }
-  if (value.includes("email address is invalid") || value.includes("invalid email")) {
-    return "Alamat email belum valid. Contoh: nama@email.com.";
+    return "Batas pengiriman email Supabase sedang tercapai. Tunggu sekitar satu jam, lalu coba daftar lagi.";
   }
   if (isTransientSupabaseError(value)) {
     return "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
@@ -251,8 +296,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { ok: true, message: "Berhasil masuk." };
         }
 
-        const message = error?.message ?? "Gagal masuk.";
-        return { ok: false, error: mapAuthError(message) };
+        if (!error) {
+          return {
+            ok: false,
+            error: "Gagal masuk. Periksa email dan kata sandi Anda lalu coba lagi.",
+          };
+        }
+
+        return { ok: false, error: mapAuthError(error) };
       } catch {
         return {
           ok: false,
@@ -294,14 +345,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) {
-        const message = error.message ?? "";
-        if (/already registered|already exists|user already/i.test(message)) {
-          return {
-            ok: false,
-            error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
-          };
-        }
-        return { ok: false, error: mapAuthError(message) };
+        return { ok: false, error: mapAuthError(error) };
       }
 
       if (!data.user) {
