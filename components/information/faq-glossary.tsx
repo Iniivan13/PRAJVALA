@@ -17,7 +17,6 @@ import {
   X,
 } from "lucide-react";
 import { useId, useMemo, useState } from "react";
-import { Reveal } from "@/components/ui/reveal";
 import { FAQS, GLOSSARY } from "@/lib/data";
 import { cn, formatNumber } from "@/lib/utils";
 
@@ -107,7 +106,7 @@ export function FaqSection() {
             <div className="lg:sticky lg:top-24">
               <div className="overflow-hidden rounded-2xl border border-ink-200/80 bg-ink-50 shadow-soft">
                 <div className="border-b border-ink-200/70 bg-white px-5 py-4">
-                  <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-ink-400">
+                  <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-ink-500">
                     <Sparkles size={12} className="text-amber-500" aria-hidden="true" />
                     Cara membaca data
                   </p>
@@ -138,7 +137,7 @@ export function FaqSection() {
                       <li key={step.title} className="flex gap-3">
                         <span className="relative grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-white text-navy shadow-sm">
                           <Icon size={15} aria-hidden="true" />
-                          <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-amber-500 text-[8px] font-bold text-ink-900">
+                          <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-amber-500 text-[9.5px] font-bold text-ink-900">
                             {index + 1}
                           </span>
                         </span>
@@ -160,7 +159,7 @@ export function FaqSection() {
                     className="group flex items-center justify-between gap-3 rounded-xl bg-ink-900 px-4 py-3 text-white transition-colors hover:bg-ink-800"
                   >
                     <span>
-                      <span className="block text-[9px] font-semibold uppercase tracking-[0.12em] text-amber-400">
+                      <span className="block text-[9.5px] font-semibold uppercase tracking-[0.12em] text-amber-400">
                         Mulai dari lapangan
                       </span>
                       <span className="mt-0.5 block text-[12px] font-semibold">
@@ -241,7 +240,7 @@ export function GlossarySection() {
             <span className="sr-only">Cari istilah anggaran</span>
             <Search
               size={16}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400"
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
               aria-hidden="true"
             />
             <input
@@ -249,14 +248,14 @@ export function GlossarySection() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Cari istilah, mis. “termin”…"
-              className="h-11 w-full rounded-xl border border-white/15 bg-white/10 pl-10 pr-9 text-[12.5px] text-white placeholder:text-ink-400 transition-colors focus:border-amber-400/60 focus:outline-none focus:ring-4 focus:ring-amber-400/10"
+              className="h-11 w-full rounded-xl border border-white/15 bg-white/10 pl-10 pr-9 text-[12.5px] text-white placeholder:text-ink-500 transition-colors focus:border-amber-400/60 focus:outline-none focus:ring-4 focus:ring-amber-400/10"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Hapus pencarian istilah"
-                className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-ink-400 transition-colors hover:bg-white/10 hover:text-white"
+                className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-ink-500 transition-colors hover:bg-white/10 hover:text-white"
               >
                 <X size={13} aria-hidden="true" />
               </button>
@@ -265,8 +264,8 @@ export function GlossarySection() {
         </div>
 
         <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((item, index) => (
-            <Reveal key={item.term} delay={Math.min(index, 6) * 35}>
+          {filtered.map((item) => (
+            <div key={item.term}>
               <div className="group h-full rounded-2xl border border-white/10 bg-white/[0.045] p-4 transition-colors hover:border-amber-400/30 hover:bg-white/[0.07]">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-display text-[13.5px] font-bold leading-snug text-amber-300">
@@ -282,7 +281,7 @@ export function GlossarySection() {
                   {item.definition}
                 </p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
 
@@ -291,7 +290,7 @@ export function GlossarySection() {
             <p className="text-[13px] font-semibold text-white">
               Istilah “{query.trim()}” belum ada di glosarium.
             </p>
-            <p className="mx-auto mt-1 max-w-md text-[11.5px] leading-relaxed text-ink-400">
+            <p className="mx-auto mt-1 max-w-md text-[11.5px] leading-relaxed text-ink-500">
               Coba kata kunci lain, atau buka pertanyaan umum untuk penjelasan yang lebih
               luas.
             </p>
@@ -307,14 +306,14 @@ export function GlossarySection() {
         ) : null}
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
-          <p className="inline-flex items-center gap-2 text-[10.5px] text-ink-400">
+          <p className="inline-flex items-center gap-2 text-[10.5px] text-ink-300">
             <CheckCircle2 size={13} className="text-emerald-400" aria-hidden="true" />
             {formatNumber(filtered.length)} dari {formatNumber(GLOSSARY.length)} istilah
             ditampilkan
           </p>
           <Link
             href="/informasi#faq"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 transition-colors hover:text-amber-300"
+            className="inline-flex min-h-8 items-center gap-1.5 text-[11.5px] font-semibold text-amber-400 transition-colors hover:text-amber-300"
           >
             Masih bingung? Baca pertanyaan umum
             <ArrowRight size={13} aria-hidden="true" />

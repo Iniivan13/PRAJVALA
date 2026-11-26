@@ -55,11 +55,11 @@ export function BudgetDashboard() {
             Tahun anggaran {activeRegion?.budgetYear ?? 2026}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <Wallet size={12} className="text-ink-400" aria-hidden="true" />
+            <Wallet size={12} className="text-ink-500" aria-hidden="true" />
             {summary.totalProjects} proyek terpantau
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <BadgeInfo size={12} className="text-ink-400" aria-hidden="true" />
+            <BadgeInfo size={12} className="text-ink-500" aria-hidden="true" />
             {activeRegion ? activeRegion.fullName : "Agregat 3 wilayah percontohan"}
           </span>
         </div>
@@ -136,7 +136,7 @@ export function BudgetDashboard() {
             </div>
             <div className="mt-2 grid grid-cols-3 divide-x divide-ink-100 border-t border-ink-100 pt-3">
               <div className="px-3 first:pl-0">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Terserap
                 </p>
                 <p className="mt-0.5 font-mono text-[11.5px] font-bold text-ink-900">
@@ -144,7 +144,7 @@ export function BudgetDashboard() {
                 </p>
               </div>
               <div className="px-3">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Sisa
                 </p>
                 <p className="mt-0.5 font-mono text-[11.5px] font-bold text-ink-900">
@@ -152,7 +152,7 @@ export function BudgetDashboard() {
                 </p>
               </div>
               <div className="px-3">
-                <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Rata-rata/bulan
                 </p>
                 <p className="mt-0.5 font-mono text-[11.5px] font-bold text-ink-900">
@@ -197,7 +197,7 @@ export function BudgetDashboard() {
               </p>
               <Link
                 href="#tabel-rab"
-                className="mt-2 inline-flex items-center gap-1 text-[10.5px] font-semibold text-amber-900 hover:underline"
+                className="mt-2 inline-flex min-h-8 items-center gap-1 text-[11px] font-semibold text-amber-900 hover:underline"
               >
                 Periksa rincian item
                 <ArrowRight size={11} aria-hidden="true" />
@@ -251,7 +251,7 @@ export function BudgetDashboard() {
               {reviewItems.length > 0 ? (
                 <Link
                   href="#tabel-rab"
-                  className="mt-2 inline-flex items-center gap-1 text-[10.5px] font-semibold text-rose-900 hover:underline"
+                  className="mt-2 inline-flex min-h-8 items-center gap-1 text-[11px] font-semibold text-rose-900 hover:underline"
                 >
                   Lihat item bertanda
                   <ArrowRight size={11} aria-hidden="true" />
@@ -265,8 +265,8 @@ export function BudgetDashboard() {
           <BudgetTable />
         </div>
 
-        <p className="mt-4 flex items-start gap-2 rounded-xl border border-ink-200/70 bg-white/60 px-4 py-3 text-[10px] leading-relaxed text-ink-400">
-          <BadgeInfo size={13} className="mt-0.5 shrink-0 text-ink-400" aria-hidden="true" />
+        <p className="mt-4 flex items-start gap-2 rounded-xl border border-ink-200/70 bg-white/60 px-4 py-3 text-[10px] leading-relaxed text-ink-500">
+          <BadgeInfo size={13} className="mt-0.5 shrink-0 text-ink-500" aria-hidden="true" />
           Indikator kewajaran harga membandingkan harga satuan dengan harga acuan
           regional dan kontrak sejenis. Penanda “Perlu Tinjauan” bukan pernyataan
           pelanggaran, melainkan sinyal untuk meminta klarifikasi. Data pada versi ini

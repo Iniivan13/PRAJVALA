@@ -45,7 +45,7 @@ export function LandingSnapshot() {
         </Reveal>
 
         <div className="mt-9 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-          <Reveal delay={80} className="h-full">
+          <Reveal delay={80} className="h-full min-w-0">
             <div className="card-base relative h-full overflow-hidden p-5 sm:p-7">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -69,7 +69,7 @@ export function LandingSnapshot() {
 
               <div className="mt-6 grid grid-cols-3 divide-x divide-ink-100 rounded-xl border border-ink-100 bg-ink-50/60 py-3">
                 <div className="px-4">
-                  <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                     Serapan
                   </p>
                   <p className="mt-1 font-display text-base font-extrabold text-ink-900">
@@ -77,7 +77,7 @@ export function LandingSnapshot() {
                   </p>
                 </div>
                 <div className="px-4">
-                  <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                     Penduduk
                   </p>
                   <p className="mt-1 font-display text-base font-extrabold text-ink-900">
@@ -85,19 +85,19 @@ export function LandingSnapshot() {
                   </p>
                 </div>
                 <div className="px-4">
-                  <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                     Akuntabilitas
                   </p>
                   <p className="mt-1 flex items-baseline gap-1 font-display text-base font-extrabold text-ink-900">
                     {formatNumber(summary.accountabilityScore, 1)}
-                    <span className="text-[9px] font-medium text-ink-400">/100</span>
+                    <span className="text-[10px] font-medium text-ink-500">/100</span>
                   </p>
                 </div>
               </div>
 
               <Link
                 href="/anggaran"
-                className="mt-4 inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-navy transition-colors hover:text-amber-600"
+                className="mt-4 inline-flex min-h-8 items-center gap-1.5 text-[11.5px] font-semibold text-navy transition-colors hover:text-amber-600"
               >
                 Lihat rincian realisasi anggaran
                 <ArrowRight size={13} aria-hidden="true" />
@@ -105,7 +105,7 @@ export function LandingSnapshot() {
             </div>
           </Reveal>
 
-          <Reveal delay={160} className="h-full">
+          <Reveal delay={160} className="h-full min-w-0">
             <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-ink-900 p-5 text-white shadow-lifted sm:p-7">
               <div className="surface-grid-dark absolute inset-0 opacity-50" aria-hidden="true" />
               <div
@@ -115,16 +115,16 @@ export function LandingSnapshot() {
 
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-ink-300">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-300">
                     <MapPin size={10} className="text-amber-400" aria-hidden="true" />
                     {activeRegion ? `${activeRegion.level} · ${activeRegion.province}` : "Nasional"}
                   </span>
-                  <span className="text-[9px] font-semibold text-ink-500">TA 2026</span>
+                  <span className="text-[10px] font-semibold text-ink-300">TA 2026</span>
                 </div>
                 <h3 className="mt-4 font-display text-[22px] font-extrabold leading-tight tracking-tight">
                   {activeRegion ? activeRegion.headline : "Transparansi anggaran dari Sabang sampai Merauke."}
                 </h3>
-                <p className="mt-2 text-[12px] leading-relaxed text-ink-400">
+                <p className="mt-2 text-[12.5px] leading-relaxed text-ink-300">
                   {activeRegion
                     ? activeRegion.description
                     : "Tiga wilayah percontohan memperlihatkan bagaimana anggaran publik dapat dipantau dan diverifikasi bersama warga."}
@@ -135,14 +135,14 @@ export function LandingSnapshot() {
                     <Wallet size={16} aria-hidden="true" />
                   </span>
                   <div>
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-ink-500">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-300">
                       Pagu wilayah
                     </p>
                     <p className="mt-0.5 font-mono text-[15px] font-bold text-white">
                       {formatCompactIDR(summary.totalBudget)}
                     </p>
                   </div>
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-md bg-emerald-400/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-300">
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-md bg-emerald-400/10 px-1.5 py-0.5 text-[9.5px] font-bold text-emerald-300">
                     <BadgeCheck size={10} aria-hidden="true" />
                     {summary.verifiedProjects} tervalidasi
                   </span>
@@ -150,7 +150,7 @@ export function LandingSnapshot() {
               </div>
 
               <div className="relative mt-5 space-y-2.5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ink-500">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-ink-300">
                   Proyek dengan validasi tertinggi
                 </p>
                 {projects.map((project) => (
@@ -166,7 +166,7 @@ export function LandingSnapshot() {
                       <span className="block truncate text-[11.5px] font-semibold text-white">
                         {project.name}
                       </span>
-                      <span className="mt-0.5 flex items-center gap-1.5 text-[9px] text-ink-500">
+                      <span className="mt-0.5 flex items-center gap-1.5 text-[10px] text-ink-300">
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[project.status].dot}`}
                           aria-hidden="true"
@@ -187,7 +187,7 @@ export function LandingSnapshot() {
 
               <Link
                 href="/proyek"
-                className="relative mt-auto inline-flex items-center gap-1.5 pt-5 text-[11.5px] font-semibold text-amber-400 transition-colors hover:text-amber-300"
+                className="relative mt-auto inline-flex min-h-8 items-center gap-1.5 pt-5 text-[11.5px] font-semibold text-amber-400 transition-colors hover:text-amber-300"
               >
                 Jelajahi semua proyek di peta
                 <ArrowRight size={13} aria-hidden="true" />

@@ -155,7 +155,7 @@ export function ValidationSection({ project }: { project: Project }) {
   const scoreTone =
     score >= 85
       ? {
-          color: "#34D399",
+          color: "#10B981",
           label: "Sangat baik",
           text: "text-emerald-400",
           chip: "bg-emerald-400/10 text-emerald-300 border-emerald-400/20",
@@ -168,7 +168,7 @@ export function ValidationSection({ project }: { project: Project }) {
             chip: "bg-amber-400/10 text-amber-300 border-amber-400/20",
           }
         : {
-            color: "#FB7185",
+            color: "#EF4444",
             label: "Perlu perhatian",
             text: "text-rose-400",
             chip: "bg-rose-400/10 text-rose-300 border-rose-400/20",
@@ -355,7 +355,7 @@ export function ValidationSection({ project }: { project: Project }) {
                   <p className="font-display text-[30px] font-extrabold leading-none text-white">
                     {score}
                   </p>
-                  <p className="mt-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-ink-500">
+                  <p className="mt-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-ink-300">
                     dari 100
                   </p>
                 </div>
@@ -363,7 +363,7 @@ export function ValidationSection({ project }: { project: Project }) {
             </div>
 
             <div className="min-w-0">
-              <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-ink-400">
+              <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink-300">
                 <ShieldCheck size={11} aria-hidden="true" />
                 Skor validasi warga
               </p>
@@ -372,7 +372,7 @@ export function ValidationSection({ project }: { project: Project }) {
               </p>
               <span
                 className={cn(
-                  "mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-semibold",
+                  "mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9.5px] font-semibold",
                   scoreTone.chip,
                 )}
               >
@@ -382,11 +382,11 @@ export function ValidationSection({ project }: { project: Project }) {
                     ? "• Skor tetap stabil setelah laporan Anda"
                     : `${delta > 0 ? "↑" : "↓"} ${delta > 0 ? `+${delta}` : delta} poin dari laporan Anda`}
               </span>
-              <p className="mt-2 text-[10px] leading-relaxed text-ink-400">
+              <p className="mt-2 text-[10px] leading-relaxed text-ink-300">
                 {formatNumber(distribution.total)} laporan warga ·{" "}
                 {formatNumber(distribution.sesuai)} sesuai target
               </p>
-              <p className="mt-1 flex items-center gap-1 text-[9px] text-ink-500">
+              <p className="mt-1 flex items-center gap-1 text-[9.5px] text-ink-300">
                 <Users size={10} aria-hidden="true" />
                 Skor diperbarui otomatis setiap laporan baru
               </p>
@@ -399,7 +399,7 @@ export function ValidationSection({ project }: { project: Project }) {
             <h3 className="font-display text-[14px] font-bold text-ink-900">
               Sebaran penilaian warga
             </h3>
-            <span className="text-[9px] font-medium text-ink-400">
+            <span className="text-[9.5px] font-medium text-ink-500">
               {formatNumber(distribution.total)} laporan
             </span>
           </div>
@@ -438,7 +438,7 @@ export function ValidationSection({ project }: { project: Project }) {
                     {row.label}
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="font-mono text-[9.5px] text-ink-400">
+                    <span className="font-mono text-[9.5px] text-ink-500">
                       {formatNumber(row.count)}
                     </span>
                     <span className="w-10 text-right font-mono font-semibold tabular text-ink-800">
@@ -461,7 +461,7 @@ export function ValidationSection({ project }: { project: Project }) {
               </div>
             ))}
           </div>
-          <p className="mt-3.5 border-t border-ink-100 pt-2.5 text-[9px] leading-relaxed text-ink-400">
+          <p className="mt-3.5 border-t border-ink-100 pt-2.5 text-[9.5px] leading-relaxed text-ink-500">
             Persentase dihitung dari seluruh laporan terverifikasi, termasuk laporan
             yang tidak ditampilkan di feed terbaru.
           </p>
@@ -488,7 +488,7 @@ export function ValidationSection({ project }: { project: Project }) {
                 {option.shortLabel}
                 <span
                   className={cn(
-                    "rounded-full px-1.5 text-[8.5px]",
+                    "rounded-full px-1.5 text-[9.5px]",
                     active ? "bg-white/15 text-white" : "bg-ink-100 text-ink-500",
                   )}
                 >
@@ -498,7 +498,7 @@ export function ValidationSection({ project }: { project: Project }) {
             );
           })}
         </div>
-        <p className="flex items-center gap-1.5 text-[9.5px] text-ink-400">
+        <p className="flex items-center gap-1.5 text-[9.5px] text-ink-500">
           {loading ? (
             <Loader2 size={11} className="animate-spin" aria-hidden="true" />
           ) : (
@@ -532,18 +532,18 @@ export function ValidationSection({ project }: { project: Project }) {
                     <p className="flex flex-wrap items-center gap-1.5 text-[11.5px] font-bold text-ink-900">
                       <span className="truncate">{report.author}</span>
                       {report.verified ? (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-semibold text-emerald-700">
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9.5px] font-semibold text-emerald-700">
                           <BadgeCheck size={9} aria-hidden="true" />
                           Terverifikasi
                         </span>
                       ) : null}
                       {report.isUserSubmitted ? (
-                        <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[8px] font-bold text-amber-800">
+                        <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-800">
                           Laporan Anda
                         </span>
                       ) : null}
                     </p>
-                    <p className="mt-0.5 text-[9px] text-ink-400">
+                    <p className="mt-0.5 text-[9.5px] text-ink-500">
                       {formatDateShort(report.createdAt)} ·{" "}
                       {report.source === "firebase" ? "Tersinkron Firebase" : "Laporan warga"}
                     </p>
@@ -551,7 +551,7 @@ export function ValidationSection({ project }: { project: Project }) {
                 </div>
                 <span
                   className={cn(
-                    "shrink-0 rounded-full border px-2 py-0.5 text-[8.5px] font-semibold",
+                    "shrink-0 rounded-full border px-2 py-0.5 text-[9.5px] font-semibold",
                     report.suitability === "Sesuai Target" &&
                       "border-emerald-200 bg-emerald-50 text-emerald-700",
                     report.suitability === "Terlambat" &&
@@ -566,7 +566,7 @@ export function ValidationSection({ project }: { project: Project }) {
 
               <div className="mt-3 flex items-center gap-2">
                 <ReportStars rating={report.rating} />
-                <span className="text-[9px] text-ink-400">
+                <span className="text-[9.5px] text-ink-500">
                   Kesesuaian dengan RAB: {report.rating}/5
                 </span>
               </div>
@@ -585,11 +585,11 @@ export function ValidationSection({ project }: { project: Project }) {
                     className="object-cover"
                     unoptimized={report.photoUrl.startsWith("data:")}
                   />
-                  <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[8px] font-semibold text-white backdrop-blur">
+                  <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[9.5px] font-semibold text-white backdrop-blur">
                     <ImageIcon size={9} aria-hidden="true" />
                     Bukti foto warga
                   </span>
-                  <span className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[8px] font-medium text-white/90 backdrop-blur">
+                  <span className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[9.5px] font-medium text-white/90 backdrop-blur">
                     <ShieldCheck size={9} className="text-emerald-400" aria-hidden="true" />
                     Metadata dibersihkan
                   </span>
@@ -620,20 +620,20 @@ export function ValidationSection({ project }: { project: Project }) {
                   </button>
                   {report.isUserSubmitted ? (
                     deleteTarget === report.id ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9px] font-semibold text-rose-700">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9.5px] font-semibold text-rose-700">
                         Hapus laporan?
                         <button
                           type="button"
                           onClick={() => handleDelete(report)}
                           disabled={deletingId === report.id}
-                          className="rounded-full bg-rose-600 px-1.5 py-0.5 text-[8.5px] font-bold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
+                          className="rounded-full bg-rose-600 px-1.5 py-0.5 text-[9.5px] font-bold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
                         >
                           {deletingId === report.id ? "Menghapus…" : "Ya, hapus"}
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(null)}
-                          className="text-[8.5px] font-semibold text-rose-700/70 underline underline-offset-2 hover:text-rose-900"
+                          className="text-[9.5px] font-semibold text-rose-700/70 underline underline-offset-2 hover:text-rose-900"
                         >
                           Batal
                         </button>
@@ -642,7 +642,7 @@ export function ValidationSection({ project }: { project: Project }) {
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(report.id)}
-                        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-semibold text-ink-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9.5px] font-semibold text-ink-500 transition-colors hover:bg-rose-50 hover:text-rose-600"
                         aria-label={`Hapus laporan Anda tentang ${project.name}`}
                       >
                         <Trash2 size={10} aria-hidden="true" />
@@ -650,12 +650,12 @@ export function ValidationSection({ project }: { project: Project }) {
                       </button>
                     )
                   ) : null}
-                  <span className="hidden items-center gap-1 text-[8.5px] text-ink-400 sm:inline-flex">
+                  <span className="hidden items-center gap-1 text-[9.5px] text-ink-500 sm:inline-flex">
                     <MapPin size={9} aria-hidden="true" />
                     Lokasi sesuai proyek
                   </span>
                 </div>
-                <span className="flex items-center gap-1 text-[8.5px] text-ink-400">
+                <span className="flex items-center gap-1 text-[9.5px] text-ink-500">
                   <ShieldCheck size={9} className="text-emerald-500" aria-hidden="true" />
                   Diverifikasi kecocokan lokasi
                 </span>
@@ -680,7 +680,7 @@ export function ValidationSection({ project }: { project: Project }) {
         ) : null}
       </div>
 
-      <p className="mt-3 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-400">
+      <p className="mt-3 flex items-start gap-1.5 text-[9.5px] leading-relaxed text-ink-500">
         <AlertTriangle size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
         Laporan warga tidak menggantikan audit resmi. Status “Perlu Audit” adalah
         penanda untuk ditindaklanjuti, bukan pernyataan bersalah.

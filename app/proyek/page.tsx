@@ -37,7 +37,7 @@ export default async function ProyekPage({ searchParams }: ProyekPageProps) {
       >
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-ink-500">
           <span className="inline-flex items-center gap-1.5">
-            <MapPinned size={12} className="text-ink-400" aria-hidden="true" />
+            <MapPinned size={12} className="text-ink-500" aria-hidden="true" />
             Peta OpenStreetMap
           </span>
           <span className="inline-flex items-center gap-1.5">
@@ -45,7 +45,7 @@ export default async function ProyekPage({ searchParams }: ProyekPageProps) {
             Koordinat langsung dari lokasi proyek
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <ShieldCheck size={12} className="text-ink-400" aria-hidden="true" />
+            <ShieldCheck size={12} className="text-ink-500" aria-hidden="true" />
             Laporan warga terverifikasi
           </span>
         </div>

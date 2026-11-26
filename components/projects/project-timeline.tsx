@@ -14,7 +14,7 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
     <div>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink-200/70 bg-ink-50/60 px-4 py-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
             Tahap pelaksanaan
           </p>
           <p className="mt-0.5 text-[12px] font-semibold text-ink-800">
@@ -75,7 +75,7 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
                   <p
                     className={cn(
                       "text-[12px] font-semibold leading-snug",
-                      isDone || isActive ? "text-ink-900" : "text-ink-400",
+                      isDone || isActive ? "text-ink-900" : "text-ink-500",
                     )}
                   >
                     {milestone.label}
@@ -83,21 +83,21 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
                   <time
                     dateTime={milestone.date}
                     className={cn(
-                      "shrink-0 font-mono text-[9px]",
-                      isActive ? "font-semibold text-amber-600" : "text-ink-400",
+                      "shrink-0 font-mono text-[9.5px]",
+                      isActive ? "font-semibold text-amber-600" : "text-ink-500",
                     )}
                   >
                     {formatDateLong(milestone.date)}
                   </time>
                 </div>
                 {milestone.note ? (
-                  <p className="mt-1 text-[10.5px] leading-relaxed text-ink-400">
+                  <p className="mt-1 text-[10.5px] leading-relaxed text-ink-500">
                     {milestone.note}
                   </p>
                 ) : null}
                 {isActive ? (
-                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-bold text-amber-700">
-                    <span className="h-1 w-1 rounded-full bg-amber-500 animate-pulse-soft" aria-hidden="true" />
+                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[9.5px] font-bold text-amber-700">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
                     Sedang berlangsung
                   </span>
                 ) : null}

@@ -97,7 +97,7 @@ export function Navbar() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-ink-200/70 bg-white/95 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-ink-200/70 bg-white">
         <div className="container-page flex h-[70px] items-center justify-between gap-5">
           <Link
             href="/"
@@ -169,7 +169,7 @@ export function Navbar() {
                   <ChevronDown
                     size={14}
                     className={cn(
-                      "text-ink-400 transition-transform",
+                      "text-ink-500 transition-transform",
                       accountOpen && "rotate-180",
                     )}
                     aria-hidden="true"
@@ -199,7 +199,7 @@ export function Navbar() {
                         role="menuitem"
                         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900"
                       >
-                        <LayoutDashboard size={14} className="text-ink-400" aria-hidden="true" />
+                        <LayoutDashboard size={14} className="text-ink-500" aria-hidden="true" />
                         Akun saya
                       </Link>
                       <Link
@@ -207,7 +207,7 @@ export function Navbar() {
                         role="menuitem"
                         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900"
                       >
-                        <UserRound size={14} className="text-ink-400" aria-hidden="true" />
+                        <UserRound size={14} className="text-ink-500" aria-hidden="true" />
                         Jelajahi proyek
                       </Link>
                       <button

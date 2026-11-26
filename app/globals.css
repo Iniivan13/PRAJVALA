@@ -201,21 +201,11 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  opacity: 0.35;
-  animation: markerPulse 2.2s ease-out infinite;
+  opacity: 0.22;
+  transform: scale(1.7);
 }
 
-@keyframes markerPulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.5;
-  }
-  80%,
-  100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
+/* Halo statis: penanda peta tidak berdenyut terus-menerus (DESIGN.md §6). */
 
 @media (prefers-reduced-motion: reduce) {
   html {

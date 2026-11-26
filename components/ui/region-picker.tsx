@@ -74,7 +74,7 @@ export function RegionPicker({
           <span
             className={cn(
               "block text-[10px] font-semibold uppercase tracking-[0.12em]",
-              isDark ? "text-ink-300" : "text-ink-400",
+              isDark ? "text-ink-300" : "text-ink-500",
             )}
           >
             {label}
@@ -86,7 +86,7 @@ export function RegionPicker({
           className={cn(
             "shrink-0 transition-transform duration-200",
             open && "rotate-180",
-            isDark ? "text-ink-300" : "text-ink-400",
+            isDark ? "text-ink-300" : "text-ink-500",
           )}
         />
       </button>
@@ -101,7 +101,7 @@ export function RegionPicker({
             align === "right" ? "right-0" : "left-0",
           )}
         >
-          <p className="px-3 pb-1.5 pt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-ink-400">
+          <p className="px-3 pb-1.5 pt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-ink-500">
             Cakupan data
           </p>
           <button
@@ -165,7 +165,7 @@ export function RegionPicker({
                     <span className="truncate text-sm font-semibold text-ink-900">
                       {region.name}
                     </span>
-                    <span className="rounded bg-ink-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-500">
+                    <span className="rounded bg-ink-100 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-ink-500">
                       {region.level}
                     </span>
                   </span>

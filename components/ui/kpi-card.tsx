@@ -6,27 +6,22 @@ import { cn } from "@/lib/utils";
 const TONES = {
   navy: {
     icon: "bg-navy-soft text-navy",
-    accent: "from-navy/[0.06]",
     delta: "bg-emerald-50 text-emerald-700",
   },
   amber: {
     icon: "bg-amber-50 text-amber-600",
-    accent: "from-amber-500/[0.08]",
     delta: "bg-amber-50 text-amber-700",
   },
   emerald: {
     icon: "bg-emerald-50 text-emerald-600",
-    accent: "from-emerald-500/[0.08]",
     delta: "bg-emerald-50 text-emerald-700",
   },
   sky: {
-    icon: "bg-sky-50 text-sky-600",
-    accent: "from-sky-500/[0.08]",
+    icon: "bg-sky-50 text-sky-700",
     delta: "bg-sky-50 text-sky-700",
   },
   rose: {
     icon: "bg-rose-50 text-rose-600",
-    accent: "from-rose-500/[0.08]",
     delta: "bg-rose-50 text-rose-700",
   },
 } as const;
@@ -70,18 +65,11 @@ export function KpiCard({
         className,
       )}
     >
-      <div
-        className={cn(
-          "pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full bg-gradient-to-br to-transparent opacity-80 blur-2xl",
-          style.accent,
-        )}
-        aria-hidden="true"
-      />
       <div className="relative flex items-start justify-between gap-3">
         <p className="text-[12px] font-semibold leading-snug text-ink-500">{label}</p>
         <span
           className={cn(
-            "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-transform duration-300 group-hover:-rotate-6",
+            "grid h-9 w-9 shrink-0 place-items-center rounded-xl",
             style.icon,
           )}
         >
@@ -110,7 +98,7 @@ export function KpiCard({
             {delta}
           </span>
         ) : null}
-        {hint ? <span className="text-[11px] text-ink-400">{hint}</span> : null}
+        {hint ? <span className="text-[11px] text-ink-500">{hint}</span> : null}
       </div>
     </div>
   );

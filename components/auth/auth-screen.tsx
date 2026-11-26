@@ -210,7 +210,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                         <p className="text-[12px] font-semibold text-white">
                           {benefit.title}
                         </p>
-                        <p className="mt-0.5 max-w-[19rem] text-[10.5px] leading-relaxed text-ink-400">
+                        <p className="mt-0.5 max-w-[19rem] text-[10.5px] leading-relaxed text-ink-300">
                           {benefit.body}
                         </p>
                       </div>
@@ -225,7 +225,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     <p className="font-display text-lg font-extrabold text-white">
                       {formatNumber(TOTAL_CITIZEN_REPORTS)}
                     </p>
-                    <p className="mt-0.5 text-[8.5px] uppercase tracking-[0.08em] text-ink-400">
+                    <p className="mt-0.5 text-[9.5px] uppercase tracking-[0.08em] text-ink-300">
                       Laporan warga
                     </p>
                   </div>
@@ -233,7 +233,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     <p className="font-display text-lg font-extrabold text-white">
                       {PROJECTS.length}
                     </p>
-                    <p className="mt-0.5 text-[8.5px] uppercase tracking-[0.08em] text-ink-400">
+                    <p className="mt-0.5 text-[9.5px] uppercase tracking-[0.08em] text-ink-300">
                       Proyek terpantau
                     </p>
                   </div>
@@ -241,12 +241,12 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     <p className="font-display text-lg font-extrabold text-white">
                       {REGIONS.length}
                     </p>
-                    <p className="mt-0.5 text-[8.5px] uppercase tracking-[0.08em] text-ink-400">
+                    <p className="mt-0.5 text-[9.5px] uppercase tracking-[0.08em] text-ink-300">
                       Wilayah
                     </p>
                   </div>
                 </div>
-                <p className="mt-4 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-500">
+                <p className="mt-4 flex items-start gap-1.5 text-[9.5px] leading-relaxed text-ink-300">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
                   Akun dan kontribusi tersinkron aman lewat Firebase.
                 </p>
@@ -281,7 +281,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 <span
                   className={cn(
-                    "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.08em]",
+                    "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em]",
                     isFirebaseMode
                       ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                       : "border-ink-200 bg-ink-50 text-ink-500",
@@ -294,7 +294,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                   )}
                   {isFirebaseMode ? "Tersinkron Firebase" : "Firebase belum aktif"}
                 </span>
-                <span className="text-[8.5px] text-ink-400">
+                <span className="text-[9.5px] text-ink-500">
                   {isFirebaseMode
                     ? "Laporan & dukungan tersimpan di server"
                     : "Konfigurasi Firebase diperlukan"}
@@ -397,8 +397,8 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
 
                       {password.length > 0 ? (
                         <div className="-mt-1">
-                          <div className="flex items-center justify-between text-[9px]">
-                            <span className="text-ink-400">Kekuatan kata sandi</span>
+                          <div className="flex items-center justify-between text-[9.5px]">
+                            <span className="text-ink-500">Kekuatan kata sandi</span>
                             <span
                               className={cn(
                                 "font-semibold",
@@ -436,7 +436,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                         <div className="relative mt-1.5">
                           <MapPin
                             size={15}
-                            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400"
+                            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
                             aria-hidden="true"
                           />
                           <select
@@ -453,7 +453,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                             ))}
                           </select>
                         </div>
-                        <p className="mt-1 text-[9px] text-ink-400">
+                        <p className="mt-1 text-[9.5px] text-ink-500">
                           Data di beranda dan dashboard akan mengikuti pilihan ini.
                         </p>
                       </div>
@@ -535,7 +535,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                     {copy.switchText}{" "}
                     <Link
                       href={`${copy.switchHref}${redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`}
-                      className="font-semibold text-navy underline-offset-4 hover:text-amber-600 hover:underline"
+                      className="inline-flex min-h-8 items-center font-semibold text-navy underline-offset-4 hover:text-amber-600 hover:underline"
                     >
                       {copy.switchAction}
                     </Link>
@@ -544,7 +544,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
               )}
             </div>
 
-            <p className="mt-3 flex items-start justify-center gap-1.5 px-4 text-center text-[9px] leading-relaxed text-ink-400">
+            <p className="mt-3 flex items-start justify-center gap-1.5 px-4 text-center text-[9.5px] leading-relaxed text-ink-500">
               <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
               Kata sandi dikelola Firebase Authentication. Kami tidak pernah menyimpan kata sandi Anda.
             </p>
@@ -576,12 +576,12 @@ function AuthField({
       <div className="relative mt-1.5">
         <Icon
           size={15}
-          className="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-ink-400"
+          className="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-ink-500"
           aria-hidden="true"
         />
         {children}
       </div>
-      {hint ? <p className="mt-1 text-[9px] text-ink-400">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-[9.5px] text-ink-500">{hint}</p> : null}
     </div>
   );
 }
@@ -598,7 +598,7 @@ function PasswordToggle({
       type="button"
       onClick={onToggle}
       aria-label={visible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-      className="absolute right-2.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700"
+      className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-700"
     >
       {visible ? <EyeOff size={15} aria-hidden="true" /> : <Eye size={15} aria-hidden="true" />}
     </button>
@@ -647,7 +647,7 @@ function AlreadySignedIn({
       >
         Keluar dari akun
       </button>
-      <p className="mt-3 flex items-center justify-center gap-1 text-[9px] text-ink-400">
+      <p className="mt-3 flex items-center justify-center gap-1 text-[9.5px] text-ink-500">
         <CheckCircle2 size={10} className="text-emerald-500" aria-hidden="true" />
         {isFirebaseMode
           ? "Sesi tersinkron lewat Firebase Authentication"

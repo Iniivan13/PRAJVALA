@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, MoveHorizontal, ShieldCheck } from "lucide-react";
 import type { BudgetItem } from "@/types";
 import { cn, formatIDR, formatNumber } from "@/lib/utils";
 
@@ -27,24 +27,28 @@ export function ProjectBudgetTable({ items }: { items: BudgetItem[] }) {
         </Link>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-ink-200">
+      <p className="mt-3 flex items-center gap-1.5 text-[10.5px] text-ink-500 sm:hidden">
+        <MoveHorizontal size={12} className="shrink-0 text-ink-500" aria-hidden="true" />
+        Geser tabel ke samping untuk melihat semua kolom.
+      </p>
+      <div className="mt-4 overflow-x-auto rounded-xl border border-ink-200" tabIndex={0} role="region" aria-label="Tabel rincian RAB dapat digeser">
         <table className="w-full min-w-[600px] border-collapse text-left">
           <caption className="sr-only">Rincian RAB proyek</caption>
           <thead>
             <tr className="border-b border-ink-200 bg-ink-50/80">
-              <th scope="col" className="px-3 py-2 text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Item pekerjaan
               </th>
-              <th scope="col" className="px-3 py-2 text-right text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Volume
               </th>
-              <th scope="col" className="px-3 py-2 text-right text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Harga satuan
               </th>
-              <th scope="col" className="px-3 py-2 text-right text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Total
               </th>
-              <th scope="col" className="px-3 py-2 text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Harga
               </th>
             </tr>
@@ -57,7 +61,7 @@ export function ProjectBudgetTable({ items }: { items: BudgetItem[] }) {
                   <td className="px-3 py-2.5 text-[10.5px] leading-snug text-ink-700">
                     {item.item}
                     {isReview && item.note ? (
-                      <span className="mt-0.5 block text-[8.5px] text-rose-500">{item.note}</span>
+                      <span className="mt-0.5 block text-[9.5px] text-rose-500">{item.note}</span>
                     ) : null}
                   </td>
                   <td className="whitespace-nowrap px-3 py-2.5 text-right font-mono text-[9.5px] tabular text-ink-500">
@@ -72,7 +76,7 @@ export function ProjectBudgetTable({ items }: { items: BudgetItem[] }) {
                   <td className="whitespace-nowrap px-3 py-2.5">
                     <span
                       className={cn(
-                        "inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold",
+                        "inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9.5px] font-bold",
                         isReview
                           ? "border-rose-200 bg-rose-50 text-rose-700"
                           : "border-emerald-200 bg-emerald-50 text-emerald-700",
@@ -104,7 +108,7 @@ export function ProjectBudgetTable({ items }: { items: BudgetItem[] }) {
           </tfoot>
         </table>
       </div>
-      <p className="mt-2 text-[9px] leading-relaxed text-ink-400">
+      <p className="mt-2 text-[9.5px] leading-relaxed text-ink-500">
         Harga satuan dibandingkan dengan harga acuan regional. Penanda “Perlu Tinjauan”
         memerlukan klarifikasi, bukan bukti pelanggaran.
       </p>

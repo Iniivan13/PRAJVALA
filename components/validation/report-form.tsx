@@ -279,7 +279,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                         <span className="block text-[11px] font-semibold text-ink-900">
                           {option.label}
                         </span>
-                        <span className="mt-0.5 block text-[9px] leading-relaxed text-ink-500">
+                        <span className="mt-0.5 block text-[9.5px] leading-relaxed text-ink-500">
                           {option.description}
                         </span>
                       </span>
@@ -343,7 +343,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 <label htmlFor="report-comment" className="text-[11px] font-bold text-ink-800">
                   Uraian temuan lapangan <span className="text-rose-500">*</span>
                 </label>
-                <span className="text-[9.5px] tabular text-ink-400">{comment.length}/600</span>
+                <span className="text-[9.5px] tabular text-ink-500">{comment.length}/600</span>
               </div>
               <textarea
                 id="report-comment"
@@ -357,7 +357,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 aria-invalid={Boolean(errors.comment)}
                 aria-describedby={errors.comment ? "report-comment-error" : undefined}
                 className={cn(
-                  "mt-1.5 w-full resize-y rounded-xl border bg-ink-50/40 px-3.5 py-3 text-[12px] leading-relaxed text-ink-900 placeholder:text-ink-400 transition-colors focus:bg-white focus:outline-none focus:ring-4",
+                  "mt-1.5 w-full resize-y rounded-xl border bg-ink-50/40 px-3.5 py-3 text-[12px] leading-relaxed text-ink-900 placeholder:text-ink-500 transition-colors focus:bg-white focus:outline-none focus:ring-4",
                   errors.comment
                     ? "border-rose-300 focus:border-rose-400 focus:ring-rose-500/10"
                     : "border-ink-200 focus:border-ink-300 focus:ring-ink-900/5",
@@ -385,7 +385,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                       <BadgeCheck size={12} aria-hidden="true" />
                       Masuk sebagai {user.name}
                     </p>
-                    <p className="truncate text-[9px] text-emerald-800/80">
+                    <p className="truncate text-[9.5px] text-emerald-800/80">
                       Laporan ditautkan ke akun Firebase Anda · {user.email}
                     </p>
                   </div>
@@ -405,7 +405,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     <p className="text-[10.5px] font-bold text-ink-800">
                       Ingin laporan tersimpan di akun Anda?
                     </p>
-                    <p className="text-[9px] leading-relaxed text-ink-500">
+                    <p className="text-[9.5px] leading-relaxed text-ink-500">
                       Masuk agar nama terisi otomatis dan kontribusi mudah ditelusuri.
                       Anda tetap bisa mengirim sebagai tamu.
                     </p>
@@ -423,7 +423,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
             <div className="mt-5 grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
               <div>
                 <label htmlFor="report-author" className="text-[11px] font-bold text-ink-800">
-                  Nama atau inisial <span className="font-normal text-ink-400">(opsional)</span>
+                  Nama atau inisial <span className="font-normal text-ink-500">(opsional)</span>
                 </label>
                 <input
                   id="report-author"
@@ -432,9 +432,9 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   maxLength={60}
                   onChange={(event) => setAuthor(event.target.value)}
                   placeholder="Contoh: Rina Kusuma"
-                  className="mt-1.5 h-10 w-full rounded-xl border border-ink-200 bg-ink-50/40 px-3.5 text-[12px] text-ink-900 placeholder:text-ink-400 transition-colors focus:border-ink-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+                  className="mt-1.5 h-10 w-full rounded-xl border border-ink-200 bg-ink-50/40 px-3.5 text-[12px] text-ink-900 placeholder:text-ink-500 transition-colors focus:border-ink-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
                 />
-                <p className="mt-1 text-[9px] text-ink-400">
+                <p className="mt-1 text-[9.5px] text-ink-500">
                   {user
                     ? `Terisi dari akun Anda dan tetap bisa diubah. Akan tampil sebagai “${maskName(
                         author.trim() || user.name,
@@ -444,7 +444,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
               </div>
 
               <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 p-3">
-                <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-emerald-800">
+                <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-emerald-800">
                   <MapPin size={10} aria-hidden="true" />
                   Lokasi & waktu terdeteksi
                 </p>
@@ -452,7 +452,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   {project.location.coordinates.lat.toFixed(5)},{" "}
                   {project.location.coordinates.lng.toFixed(5)}
                 </p>
-                <p className="mt-0.5 text-[9px] text-emerald-700">
+                <p className="mt-0.5 text-[9.5px] text-emerald-700">
                   ± 8 m · {detectedAt.toLocaleDateString("id-ID", {
                     day: "numeric",
                     month: "short",
@@ -493,7 +493,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     <span className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[9.5px] text-ink-500">
                       <ImageIcon size={11} aria-hidden="true" />
                       {photoName} · {(photoSize / 1024).toFixed(0)} KB
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[8px] font-semibold text-emerald-700">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-emerald-700">
                         <ShieldCheck size={9} aria-hidden="true" />
                         EXIF dibersihkan
                       </span>
@@ -507,7 +507,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     <span className="mt-2 text-[11px] font-semibold text-ink-700">
                       Unggah foto bukti (opsional)
                     </span>
-                    <span className="mt-0.5 text-[9px] text-ink-400">
+                    <span className="mt-0.5 text-[9.5px] text-ink-500">
                       JPG, PNG, atau WebP · maksimal 3 MB
                     </span>
                   </>
@@ -515,7 +515,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
               </label>
 
               <div className="mt-1.5 flex flex-wrap items-center justify-between gap-2">
-                <p className="flex items-center gap-1 text-[9px] text-emerald-700">
+                <p className="flex items-center gap-1 text-[9.5px] text-emerald-700">
                   <ShieldCheck size={10} aria-hidden="true" />
                   Metadata GPS dan identitas perangkat dihapus otomatis sebelum publikasi.
                 </p>
@@ -563,7 +563,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
             </div>
 
             <div className="mt-5 flex flex-col-reverse gap-2 border-t border-ink-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="flex items-center gap-1.5 text-[9px] text-ink-400">
+              <p className="flex items-center gap-1.5 text-[9.5px] text-ink-500">
                 <ShieldCheck size={10} aria-hidden="true" />
                 Laporan tersimpan aman di Firebase.
               </p>
@@ -586,7 +586,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
               </div>
             </div>
 
-            <p className="mt-3 text-center text-[9px] text-ink-400">
+            <p className="mt-3 text-center text-[9.5px] text-ink-500">
               Total karakter uraian: {formatNumber(comment.length)} · Laporan akan tampil
               segera setelah dikirim.
             </p>

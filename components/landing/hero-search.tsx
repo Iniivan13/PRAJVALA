@@ -71,7 +71,7 @@ export function HeroSearch() {
         }}
         className="flex items-center gap-2 rounded-2xl border border-ink-200 bg-white p-1.5 pl-4 shadow-soft transition-shadow focus-within:border-ink-300 focus-within:shadow-lifted"
       >
-        <Search size={18} className="shrink-0 text-ink-400" aria-hidden="true" />
+        <Search size={18} className="shrink-0 text-ink-500" aria-hidden="true" />
         <label htmlFor="hero-search" className="sr-only">
           Cari proyek atau wilayah
         </label>
@@ -93,7 +93,7 @@ export function HeroSearch() {
           aria-autocomplete="list"
           aria-expanded={open && results.length > 0}
           aria-controls={listboxId}
-          className="h-11 min-w-0 flex-1 bg-transparent text-[13.5px] text-ink-900 outline-none placeholder:text-ink-400 [&::-webkit-search-cancel-button]:hidden"
+          className="h-11 min-w-0 flex-1 bg-transparent text-[13.5px] text-ink-900 outline-none placeholder:text-ink-500 [&::-webkit-search-cancel-button]:hidden"
         />
         <button
           type="submit"
@@ -114,7 +114,7 @@ export function HeroSearch() {
         >
           {results.length > 0 ? (
             <>
-              <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.14em] text-ink-400">
+              <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.14em] text-ink-500">
                 {results.length} proyek ditemukan
               </p>
               {results.map((project) => {
@@ -135,7 +135,7 @@ export function HeroSearch() {
                       <span className="block truncate text-[13px] font-semibold text-ink-900">
                         {project.name}
                       </span>
-                      <span className="mt-0.5 flex items-center gap-1 text-[10.5px] text-ink-400">
+                      <span className="mt-0.5 flex items-center gap-1 text-[10.5px] text-ink-500">
                         <MapPin size={10} aria-hidden="true" />
                         {region?.name} · {project.category}
                       </span>
@@ -158,7 +158,7 @@ export function HeroSearch() {
               <p className="text-[12.5px] font-semibold text-ink-700">
                 Belum ada hasil untuk “{query.trim()}”
               </p>
-              <p className="mt-1 text-[11px] text-ink-400">
+              <p className="mt-1 text-[11px] text-ink-500">
                 Coba kata kunci seperti “jalan”, “drainase”, atau nama desa.
               </p>
             </div>
@@ -167,7 +167,7 @@ export function HeroSearch() {
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="text-[10.5px] font-medium text-ink-400">Coba:</span>
+        <span className="text-[10.5px] font-medium text-ink-500">Coba:</span>
         {QUICK_LINKS.map((link) => (
           <button
             key={link.label}
@@ -177,7 +177,7 @@ export function HeroSearch() {
               submit(link.query);
             }}
             className={cn(
-              "rounded-full border border-ink-200 bg-white/70 px-2.5 py-1 text-[10.5px] font-medium text-ink-500 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700",
+              "inline-flex min-h-9 items-center rounded-full border border-ink-200 bg-white/70 px-3 py-1.5 text-[11px] font-medium text-ink-600 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700",
             )}
           >
             {link.label}

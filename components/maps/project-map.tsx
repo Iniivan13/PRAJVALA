@@ -37,7 +37,7 @@ export function ProjectMap({
           <Layers size={14} aria-hidden="true" />
         </span>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-400">
+          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-500">
             Peta sebaran
           </p>
           <p className="text-[11px] font-semibold text-ink-800">
@@ -47,7 +47,7 @@ export function ProjectMap({
       </div>
 
       <div className="pointer-events-none absolute bottom-4 left-4 z-[500] hidden rounded-xl border border-ink-200/80 bg-white/95 p-2.5 shadow-soft backdrop-blur sm:block">
-        <p className="flex items-center gap-1 px-1 pb-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+        <p className="flex items-center gap-1 px-1 pb-1.5 text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
           <MapPin size={10} aria-hidden="true" />
           Keterangan
         </p>

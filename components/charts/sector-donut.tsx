@@ -77,19 +77,19 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
               <span className="mt-0.5 font-display text-[21px] font-extrabold tracking-tight text-ink-900">
                 {formatCompactIDR(active.pagu)}
               </span>
-              <span className="text-[10px] font-semibold text-ink-400">
+              <span className="text-[10px] font-semibold text-ink-500">
                 {formatPercent(activePercentage)}
               </span>
             </>
           ) : (
             <>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-400">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-500">
                 Total Pagu
               </span>
               <span className="mt-1 font-display text-[23px] font-extrabold tracking-tight text-ink-900">
                 {formatCompactIDR(total)}
               </span>
-              <span className="mt-0.5 text-[10px] text-ink-400">
+              <span className="mt-0.5 text-[10px] text-ink-500">
                 {sectors.length} sektor
               </span>
             </>
@@ -141,7 +141,7 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
                       style={{ width: `${percentage}%`, backgroundColor: sector.color }}
                     />
                   </div>
-                  <span className="w-[70px] shrink-0 text-right text-[10px] font-medium text-ink-400">
+                  <span className="w-[70px] shrink-0 text-right text-[10px] font-medium text-ink-500">
                     {formatCompactIDR(sector.pagu)}
                   </span>
                 </div>

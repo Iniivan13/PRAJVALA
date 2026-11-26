@@ -112,10 +112,10 @@ export function MapCanvas({ projects, activeRegionId }: MapCanvasProps) {
                     style={{ backgroundColor: STATUS_STYLES[project.status].marker }}
                     aria-hidden="true"
                   />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <span className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     {project.status}
                   </span>
-                  <span className="ml-auto rounded bg-ink-100 px-1 py-0.5 text-[8px] font-semibold text-ink-500">
+                  <span className="ml-auto rounded bg-ink-100 px-1 py-0.5 text-[9.5px] font-semibold text-ink-500">
                     {project.category}
                   </span>
                 </div>
@@ -126,7 +126,7 @@ export function MapCanvas({ projects, activeRegionId }: MapCanvasProps) {
                   {region?.name} · {project.location.district}
                 </p>
                 <div className="mt-2 flex items-center justify-between text-[9.5px]">
-                  <span className="text-ink-400">Pagu</span>
+                  <span className="text-ink-500">Pagu</span>
                   <span className="font-mono font-semibold text-ink-900">
                     {formatCompactIDR(project.budget)}
                   </span>
@@ -147,7 +147,7 @@ export function MapCanvas({ projects, activeRegionId }: MapCanvasProps) {
                     }}
                   />
                 </div>
-                <div className="mt-1 flex justify-between text-[8.5px] text-ink-400">
+                <div className="mt-1 flex justify-between text-[9.5px] text-ink-500">
                   <span>Progres fisik</span>
                   <span className="font-semibold text-ink-600">{project.progress}%</span>
                 </div>

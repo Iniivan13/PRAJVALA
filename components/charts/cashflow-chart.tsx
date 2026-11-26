@@ -20,7 +20,7 @@ function CashflowTooltip({ active, payload, label }: Partial<TooltipContentProps
 
   return (
     <div className="min-w-[200px] rounded-xl border border-ink-200 bg-white p-3 shadow-lifted">
-      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink-400">
+      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink-500">
         {label} 2026
       </p>
       <div className="mt-2 space-y-1.5">
@@ -44,7 +44,7 @@ function CashflowTooltip({ active, payload, label }: Partial<TooltipContentProps
         </div>
       </div>
       {planned && realized !== undefined ? (
-        <p className="mt-2 border-t border-ink-100 pt-2 text-[10px] text-ink-400">
+        <p className="mt-2 border-t border-ink-100 pt-2 text-[10px] text-ink-500">
           Serapan bulan ini{" "}
           <span className="font-semibold text-ink-700">
             {Math.round((realized / planned) * 100)}%

@@ -10,27 +10,43 @@ interface RevealProps {
   threshold?: number;
 }
 
-export function Reveal({ children, className, delay = 0, threshold = 0.12 }: RevealProps) {
+/**
+ * Entrance transition for content below the fold.
+ *
+ * Content is rendered visible by default so it stays readable when JavaScript is
+ * unavailable or fails. Only elements that start below the viewport are hidden
+ * and then revealed on intersection. Users who request reduced motion skip the
+ * transition entirely.
+ */
+export function Reveal({ children, className, delay = 0, threshold = 0.01 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
-    if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
+    if (
+      typeof IntersectionObserver === "undefined" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setHidden(false);
       return;
     }
+
+    // Content already on screen should never flash hidden.
+    if (element.getBoundingClientRect().top < window.innerHeight * 0.92) return;
+
+    setHidden(true);
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisible(true);
+          setHidden(false);
           observer.disconnect();
         }
       },
-      { threshold, rootMargin: "0px 0px -48px 0px" },
+      { threshold, rootMargin: "0px 0px -10% 0px" },
     );
 
     observer.observe(element);
@@ -43,7 +59,7 @@ export function Reveal({ children, className, delay = 0, threshold = 0.12 }: Rev
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
         "transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-        visible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
+        hidden ? "translate-y-5 opacity-0" : "translate-y-0 opacity-100",
         className,
       )}
     >

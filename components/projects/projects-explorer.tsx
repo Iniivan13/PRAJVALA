@@ -170,7 +170,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
         {summaryStats.map((stat) => (
           <div key={stat.label} className="bg-white px-4 py-3.5 sm:px-5">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[9.5px] font-semibold uppercase tracking-[0.07em] text-ink-400">
+              <p className="text-[9.5px] font-semibold uppercase tracking-[0.07em] text-ink-500">
                 {stat.label}
               </p>
               <stat.icon size={13} className={stat.color} aria-hidden="true" />
@@ -178,7 +178,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
             <p className="mt-1 font-display text-[17px] font-extrabold tracking-tight text-ink-900">
               {stat.value}
             </p>
-            <p className="mt-0.5 text-[9px] text-ink-400">{stat.hint}</p>
+            <p className="mt-0.5 text-[9.5px] text-ink-500">{stat.hint}</p>
           </div>
         ))}
       </div>
@@ -188,14 +188,14 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
           type="button"
           onClick={() => setStatus("Semua status")}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors",
+            "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[11.5px] font-semibold transition-colors",
             status === "Semua status"
               ? "border-ink-900 bg-ink-900 text-white"
               : "border-ink-200 bg-white text-ink-600 hover:border-ink-300",
           )}
         >
           Semua
-          <span className="rounded-full bg-white/15 px-1.5 text-[9px]">
+          <span className="rounded-full bg-white/15 px-1.5 text-[9.5px]">
             {regionProjects.length}
           </span>
         </button>
@@ -214,7 +214,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
               onClick={() => setStatus(isActive ? "Semua status" : label)}
               aria-pressed={isActive}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors",
+                "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[11.5px] font-semibold transition-colors",
                 isActive
                   ? "border-ink-300 bg-white text-ink-900 shadow-sm"
                   : "border-ink-200 bg-white/70 text-ink-500 hover:border-ink-300",
@@ -226,11 +226,11 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
                 aria-hidden="true"
               />
               {label}
-              <span className="text-[9px] text-ink-400">{statusCounts[label]}</span>
+              <span className="text-[9.5px] text-ink-500">{statusCounts[label]}</span>
             </button>
           );
         })}
-        <span className="ml-auto hidden items-center gap-1.5 text-[10px] text-ink-400 sm:flex">
+        <span className="ml-auto hidden items-center gap-1.5 text-[10px] text-ink-500 sm:flex">
           <MapPin size={11} aria-hidden="true" />
           {activeRegionId === "all" ? "3 wilayah percontohan" : summary.name} · peta interaktif
         </span>
@@ -241,7 +241,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
           <div className="relative flex-1">
             <Search
               size={15}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400"
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
               aria-hidden="true"
             />
             <label htmlFor="project-search" className="sr-only">
@@ -253,7 +253,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Cari nama proyek, alamat, atau penyedia…"
-              className="h-10 w-full rounded-xl border border-transparent bg-ink-50 pl-9 pr-4 text-[12.5px] text-ink-800 placeholder:text-ink-400 transition-colors focus:border-ink-200 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+              className="h-10 w-full rounded-xl border border-transparent bg-ink-50 pl-9 pr-4 text-[12.5px] text-ink-800 placeholder:text-ink-500 transition-colors focus:border-ink-200 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -394,7 +394,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
             </span>
             <div>
               <p className="text-[11px] font-semibold text-ink-800">{item.title}</p>
-              <p className="mt-0.5 text-[9.5px] leading-relaxed text-ink-400">{item.text}</p>
+              <p className="mt-0.5 text-[9.5px] leading-relaxed text-ink-500">{item.text}</p>
             </div>
           </div>
         ))}
@@ -407,7 +407,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
         </p>
         <a
           href={filtered[0] ? `/proyek/${filtered[0].id}#validasi` : "/proyek"}
-          className="inline-flex items-center gap-1 font-semibold hover:underline"
+          className="inline-flex min-h-8 items-center gap-1 font-semibold hover:underline"
         >
           Kirim laporan warga
           <ArrowRight size={11} aria-hidden="true" />

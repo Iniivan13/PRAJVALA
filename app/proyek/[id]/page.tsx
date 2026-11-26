@@ -78,9 +78,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
       <div className="border-b border-ink-200/70 bg-white">
         <div className="container-page py-5 sm:py-7">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-1.5 text-[10.5px] text-ink-400">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[10.5px] text-ink-500">
               <li>
-                <Link href="/" className="transition-colors hover:text-ink-700">
+                <Link href="/" className="inline-flex min-h-8 items-center transition-colors hover:text-ink-700">
                   Beranda
                 </Link>
               </li>
@@ -113,15 +113,15 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-ink-500">
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin size={12} className="text-ink-400" aria-hidden="true" />
+                  <MapPin size={12} className="text-ink-500" aria-hidden="true" />
                   {project.location.address}, {project.location.district} · {region?.city}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <CalendarDays size={12} className="text-ink-400" aria-hidden="true" />
+                  <CalendarDays size={12} className="text-ink-500" aria-hidden="true" />
                   {formatDateLong(project.startDate)} – {formatDateLong(project.endDate)}
                 </span>
                 <span className="inline-flex items-center gap-1.5 font-mono text-[10px]">
-                  <FileSignature size={12} className="text-ink-400" aria-hidden="true" />
+                  <FileSignature size={12} className="text-ink-500" aria-hidden="true" />
                   {project.contractNumber}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                 key={stat.label}
                 className="rounded-xl border border-ink-200/80 bg-ink-50/60 px-3 py-2"
               >
-                <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   {stat.label}
                 </p>
                 <p className="mt-0.5 font-mono text-[13px] font-bold text-ink-900">
@@ -202,7 +202,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                   key={spec.label}
                   className="rounded-xl border border-ink-100 bg-ink-50/50 px-3.5 py-2.5"
                 >
-                  <p className="text-[9px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                  <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                     {spec.label}
                   </p>
                   <p className="mt-0.5 text-[11.5px] font-semibold text-ink-800">{spec.value}</p>
@@ -212,7 +212,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink-200/70 px-3.5 py-2.5">
               <span className="flex items-center gap-1.5 text-[10px] text-ink-500">
-                <MapPin size={11} className="text-ink-400" aria-hidden="true" />
+                <MapPin size={11} className="text-ink-500" aria-hidden="true" />
                 Koordinat proyek:
                 <span className="font-mono text-ink-700">
                   {toCoordinateLabel(
@@ -295,22 +295,22 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
               />
               <div className="relative">
                 <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.14em] text-ink-400">
+                  <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink-300">
                     <Wallet size={11} className="text-amber-400" aria-hidden="true" />
                     Ringkasan proyek
                   </p>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8.5px] font-semibold text-ink-300">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9.5px] font-semibold text-ink-300">
                     {region?.level}
                   </span>
                 </div>
-                <p className="mt-3 text-[9.5px] text-ink-400">Pagu anggaran</p>
+                <p className="mt-3 text-[9.5px] text-ink-300">Pagu anggaran</p>
                 <p className="mt-0.5 font-display text-[26px] font-extrabold tracking-tight">
                   {formatIDR(project.budget)}
                 </p>
 
                 <div className="mt-4">
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-ink-400">Progres fisik</span>
+                    <span className="text-ink-300">Progres fisik</span>
                     <span className="font-mono font-semibold text-amber-400">
                       {project.progress}%
                     </span>
@@ -325,7 +325,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
 
                 <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/10 pt-3">
                   <div>
-                    <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+                    <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-300">
                       Terealisasi
                     </p>
                     <p className="mt-0.5 font-mono text-[11px] font-semibold text-white">
@@ -333,7 +333,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                     </p>
                   </div>
                   <div>
-                    <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+                    <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-300">
                       Sisa pagu
                     </p>
                     <p className="mt-0.5 font-mono text-[11px] font-semibold text-white">
@@ -346,7 +346,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                   <div className="flex items-center gap-1.5">
                     <ShieldCheck size={12} className="text-emerald-400" aria-hidden="true" />
                     <div>
-                      <p className="text-[8px] uppercase tracking-[0.06em] text-ink-500">Skor warga</p>
+                      <p className="text-[10px] uppercase tracking-[0.06em] text-ink-300">Skor warga</p>
                       <p className="font-mono text-[10.5px] font-semibold text-white">
                         {project.validationScore}/100
                       </p>
@@ -355,7 +355,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 size={12} className="text-amber-400" aria-hidden="true" />
                     <div>
-                      <p className="text-[8px] uppercase tracking-[0.06em] text-ink-500">Laporan</p>
+                      <p className="text-[10px] uppercase tracking-[0.06em] text-ink-300">Laporan</p>
                       <p className="font-mono text-[10.5px] font-semibold text-white">
                         {formatNumber(project.reportCount)}
                       </p>
@@ -368,28 +368,28 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             <div className="space-y-3 p-5">
               <div className="flex items-center justify-between gap-2">
                 <StatusBadge status={project.status} />
-                <span className="text-[9px] text-ink-400">TA {project.fiscalYear}</span>
+                <span className="text-[9.5px] text-ink-500">TA {project.fiscalYear}</span>
               </div>
 
               <dl className="space-y-2.5 text-[10.5px]">
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-ink-400">Penyedia</dt>
+                  <dt className="shrink-0 text-ink-500">Penyedia</dt>
                   <dd className="text-right font-medium text-ink-800">{project.vendor}</dd>
                 </div>
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-ink-400">No. kontrak</dt>
+                  <dt className="shrink-0 text-ink-500">No. kontrak</dt>
                   <dd className="text-right font-mono text-[9.5px] text-ink-700">
                     {project.contractNumber}
                   </dd>
                 </div>
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-ink-400">Pelaksanaan</dt>
+                  <dt className="shrink-0 text-ink-500">Pelaksanaan</dt>
                   <dd className="text-right text-ink-700">
                     {formatDateLong(project.startDate)} – {formatDateLong(project.endDate)}
                   </dd>
                 </div>
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-ink-400">Wilayah</dt>
+                  <dt className="shrink-0 text-ink-500">Wilayah</dt>
                   <dd className="text-right text-ink-700">
                     {region?.name}, {region?.city}
                   </dd>
@@ -397,7 +397,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
               </dl>
 
               <div className="rounded-xl border border-ink-100 bg-ink-50/60 p-3">
-                <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-ink-400">
+                <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                   <MapPin size={10} aria-hidden="true" />
                   Lokasi proyek
                 </p>
@@ -405,7 +405,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                   {project.location.address}, {project.location.neighborhood},{" "}
                   {project.location.district}, {project.location.city}
                 </p>
-                <p className="mt-1 font-mono text-[9px] text-ink-500">
+                <p className="mt-1 font-mono text-[9.5px] text-ink-500">
                   {toCoordinateLabel(
                     project.location.coordinates.lat,
                     project.location.coordinates.lng,
@@ -431,7 +431,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                 <ArrowRight size={12} aria-hidden="true" />
               </Link>
 
-              <p className="flex items-start gap-1.5 text-[8.5px] leading-relaxed text-ink-400">
+              <p className="flex items-start gap-1.5 text-[9.5px] leading-relaxed text-ink-500">
                 <ShieldCheck size={10} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
                 Data bersumber dari RAB, kontrak, LPJ, dan laporan warga. Terakhir
                 diperbarui November 2026.

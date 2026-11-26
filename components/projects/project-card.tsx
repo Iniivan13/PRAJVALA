@@ -51,7 +51,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <p className="flex items-center gap-1.5 text-[11px] font-medium text-ink-400">
+        <p className="flex items-center gap-1.5 text-[11px] font-medium text-ink-500">
           <MapPin size={12} aria-hidden="true" />
           <span className="truncate">
             {region?.name ?? project.location.district} · {region?.city}
@@ -66,7 +66,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
         <div className="mt-auto pt-4">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="font-medium text-ink-400">Progres fisik</span>
+            <span className="font-medium text-ink-500">Progres fisik</span>
             <span className="font-mono font-semibold tabular text-ink-700">
               {project.progress}%
             </span>
@@ -80,7 +80,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
           <div className="mt-3.5 flex items-end justify-between gap-3 border-t border-ink-100 pt-3.5">
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-ink-400">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-ink-500">
                 Pagu anggaran
               </p>
               <p className="mt-0.5 font-mono text-[13px] font-bold tabular text-ink-900">
@@ -88,7 +88,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1 text-[10.5px] font-medium text-ink-400">
+              <span className="flex items-center gap-1 text-[10.5px] font-medium text-ink-500">
                 <MessageSquare size={12} aria-hidden="true" />
                 {project.reportCount}
               </span>

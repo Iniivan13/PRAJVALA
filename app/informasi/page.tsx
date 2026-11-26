@@ -55,7 +55,7 @@ export default function InformasiPage() {
                   <span className="block text-[11px] font-semibold text-ink-800">
                     {anchor.label}
                   </span>
-                  <span className="block text-[9px] uppercase tracking-wide text-ink-400">
+                  <span className="block text-[9.5px] uppercase tracking-wide text-ink-500">
                     {anchor.note}
                   </span>
                 </span>

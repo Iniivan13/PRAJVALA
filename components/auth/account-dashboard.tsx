@@ -198,7 +198,7 @@ export function AccountDashboard() {
                 Daftar gratis
               </Link>
             </div>
-            <p className="mt-5 flex items-center justify-center gap-1.5 text-[9.5px] text-ink-400">
+            <p className="mt-5 flex items-center justify-center gap-1.5 text-[9.5px] text-ink-500">
               <ShieldCheck size={11} className="text-emerald-500" aria-hidden="true" />
               Akun dan kontribusi tersinkron langsung melalui Firebase.
             </p>
@@ -265,13 +265,13 @@ export function AccountDashboard() {
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-center gap-2 text-[15px] font-bold text-ink-900">
                       {user.name}
-                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.08em] text-emerald-700">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-emerald-700">
                         <BadgeCheck size={9} aria-hidden="true" />
                         Akun aktif
                       </span>
                     </p>
                     <p className="mt-0.5 truncate text-[11.5px] text-ink-500">{user.email}</p>
-                    <p className="mt-1.5 flex items-center gap-1.5 text-[10px] text-ink-400">
+                    <p className="mt-1.5 flex items-center gap-1.5 text-[10px] text-ink-500">
                       <CalendarDays size={11} aria-hidden="true" />
                       Bergabung {formatDateLong(user.createdAt)}
                     </p>
@@ -289,21 +289,21 @@ export function AccountDashboard() {
 
               <div className="mt-5 grid gap-3 border-t border-ink-100 pt-4 sm:grid-cols-2">
                 <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-3">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <p className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     Wilayah akun
                   </p>
                   <p className="mt-1 flex items-center gap-1.5 text-[12px] font-semibold text-ink-800">
                     <MapPin size={12} className="text-amber-600" aria-hidden="true" />
                     {accountRegion ? accountRegion.name : "Semua wilayah"}
                   </p>
-                  <p className="mt-0.5 text-[9.5px] text-ink-400">
+                  <p className="mt-0.5 text-[9.5px] text-ink-500">
                     {accountRegion
                       ? `${accountRegion.level}, ${accountRegion.city}`
                       : "Agregat tiga wilayah percontohan"}
                   </p>
                 </div>
                 <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-3">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <p className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     Wilayah pantau saat ini
                   </p>
                   <p className="mt-1 flex items-center gap-1.5 text-[12px] font-semibold text-ink-800">
@@ -319,7 +319,7 @@ export function AccountDashboard() {
                       Terapkan wilayah akun
                     </button>
                   ) : (
-                    <p className="mt-0.5 text-[9.5px] text-ink-400">Sudah sesuai wilayah akun</p>
+                    <p className="mt-0.5 text-[9.5px] text-ink-500">Sudah sesuai wilayah akun</p>
                   )}
                 </div>
               </div>
@@ -328,7 +328,7 @@ export function AccountDashboard() {
                 <RegionPicker className="w-full sm:w-[280px]" label="Ubah wilayah pantau" />
                 <Link
                   href="/proyek"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-navy hover:text-amber-600"
+                  className="inline-flex min-h-8 items-center gap-1 text-[11.5px] font-semibold text-navy hover:text-amber-600"
                 >
                   Kirim laporan baru
                   <ArrowUpRight size={12} aria-hidden="true" />
@@ -393,7 +393,7 @@ export function AccountDashboard() {
                       {stat.value}
                     </p>
                     <p className="mt-0.5 text-[10px] font-semibold text-ink-600">{stat.label}</p>
-                    <p className="mt-0.5 text-[8.5px] leading-relaxed text-ink-400">{stat.hint}</p>
+                    <p className="mt-0.5 text-[9.5px] leading-relaxed text-ink-500">{stat.hint}</p>
                   </div>
                 );
               })}
@@ -411,7 +411,7 @@ export function AccountDashboard() {
                   <h2 className="font-display text-[15px] font-extrabold tracking-tight text-ink-900">
                     Laporan terbaru Anda
                   </h2>
-                  <p className="mt-0.5 text-[10px] text-ink-400">
+                  <p className="mt-0.5 text-[10px] text-ink-500">
                     {loadingActivity
                       ? "Memuat riwayat kontribusi…"
                       : reports.length > 0
@@ -429,13 +429,13 @@ export function AccountDashboard() {
 
               {reports.length === 0 ? (
                 <div className="px-5 py-10 text-center">
-                  <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-ink-50 text-ink-400">
+                  <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-ink-50 text-ink-500">
                     <MessageSquare size={18} aria-hidden="true" />
                   </span>
                   <p className="mt-2.5 text-[12px] font-semibold text-ink-700">
                     Belum ada laporan lapangan
                   </p>
-                  <p className="mx-auto mt-1 max-w-sm text-[10.5px] leading-relaxed text-ink-400">
+                  <p className="mx-auto mt-1 max-w-sm text-[10.5px] leading-relaxed text-ink-500">
                     Pilih proyek di peta, buka bagian validasi, lalu kirim temuan Anda.
                     Nama akan disamarkan otomatis.
                   </p>
@@ -458,14 +458,14 @@ export function AccountDashboard() {
                         <div className="flex flex-wrap items-center gap-2">
                           <span
                             className={cn(
-                              "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold",
+                              "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9.5px] font-bold",
                               style.chip,
                             )}
                           >
                             <Icon size={9} aria-hidden="true" />
                             {report.suitability}
                           </span>
-                          <span className="text-[9.5px] text-ink-400">
+                          <span className="text-[9.5px] text-ink-500">
                             {timeAgo(report.createdAt)}
                           </span>
                           {project ? (
@@ -495,11 +495,11 @@ export function AccountDashboard() {
               <h2 className="font-display text-[15px] font-extrabold tracking-tight text-ink-900">
                 Sebaran laporan Anda
               </h2>
-              <p className="mt-0.5 text-[10px] text-ink-400">
+              <p className="mt-0.5 text-[10px] text-ink-500">
                 Berdasarkan status kesesuaian yang Anda pilih.
               </p>
               {reports.length === 0 ? (
-                <p className="mt-4 rounded-xl border border-dashed border-ink-200 bg-ink-50/50 px-4 py-5 text-center text-[10.5px] text-ink-400">
+                <p className="mt-4 rounded-xl border border-dashed border-ink-200 bg-ink-50/50 px-4 py-5 text-center text-[10.5px] text-ink-500">
                   Belum ada data untuk ditampilkan.
                 </p>
               ) : (
@@ -528,7 +528,7 @@ export function AccountDashboard() {
                         </p>
                         <p className="mt-1 font-display text-base font-extrabold text-ink-900">
                           {formatNumber(row.count)}
-                          <span className="ml-1 text-[9px] font-medium text-ink-400">
+                          <span className="ml-1 text-[9.5px] font-medium text-ink-500">
                             {row.pct}%
                           </span>
                         </p>
@@ -561,7 +561,7 @@ export function AccountDashboard() {
                           <span className="block text-[11.5px] font-semibold text-ink-800">
                             {action.label}
                           </span>
-                          <span className="mt-0.5 block text-[9.5px] leading-relaxed text-ink-400">
+                          <span className="mt-0.5 block text-[9.5px] leading-relaxed text-ink-500">
                             {action.description}
                           </span>
                         </span>
@@ -583,16 +583,16 @@ export function AccountDashboard() {
               </h2>
               <dl className="mt-3.5 space-y-3">
                 <div>
-                  <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <dt className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     Nama tampilan
                   </dt>
                   <dd className="mt-0.5 flex items-center gap-1.5 text-[11.5px] font-medium text-ink-800">
-                    <UserRound size={12} className="text-ink-400" aria-hidden="true" />
+                    <UserRound size={12} className="text-ink-500" aria-hidden="true" />
                     {user.name}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <dt className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     Email
                   </dt>
                   <dd className="mt-0.5 truncate text-[11.5px] font-medium text-ink-800">
@@ -600,7 +600,7 @@ export function AccountDashboard() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-ink-400">
+                  <dt className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
                     Penyimpanan
                   </dt>
                   <dd className="mt-0.5 flex items-start gap-1.5 text-[10.5px] leading-relaxed text-ink-500">
@@ -612,7 +612,7 @@ export function AccountDashboard() {
               </dl>
 
               <div className="mt-5 border-t border-ink-100 pt-4">
-                <p className="flex items-start gap-2 text-[9.5px] leading-relaxed text-ink-400">
+                <p className="flex items-start gap-2 text-[9.5px] leading-relaxed text-ink-500">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
                   Akun ini tersimpan di Firebase. Anda dapat menghapusnya kapan saja.
                 </p>
@@ -653,7 +653,7 @@ export function AccountDashboard() {
                   <button
                     type="button"
                     onClick={() => setConfirmDelete(true)}
-                    className="mt-3 inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-ink-400 transition-colors hover:text-rose-600"
+                    className="mt-3 inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-ink-500 transition-colors hover:text-rose-600"
                   >
                     <Trash2 size={12} aria-hidden="true" />
                     Hapus akun permanen

@@ -1,16 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  BadgeCheck,
-  ChartNoAxesCombined,
-  CheckCircle2,
-  MapPin,
-  MessageSquare,
-  ShieldCheck,
-  Wallet,
-} from "lucide-react";
+import { ArrowUpRight, MapPin, Wallet } from "lucide-react";
 import { useRegion } from "@/components/providers/region-provider";
 import { TOTAL_CITIZEN_REPORTS } from "@/lib/data";
 import {
@@ -49,14 +40,14 @@ export function HeroPreview() {
                 <Wallet size={17} strokeWidth={2.2} aria-hidden="true" />
               </span>
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-ink-400">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-300">
                   Ruang Pantau
                 </p>
                 <p className="text-[12px] font-semibold text-white">Ringkasan Wilayah</p>
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[9.5px] font-bold uppercase tracking-[0.1em] text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-soft" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
               Aktif
             </span>
           </div>
@@ -70,7 +61,7 @@ export function HeroPreview() {
               <p className="mt-2 font-display text-[34px] font-extrabold leading-none tracking-tight text-white">
                 {formatCompactIDR(summary.totalBudget)}
               </p>
-              <p className="mt-1.5 text-[10.5px] text-ink-400">
+              <p className="mt-1.5 text-[10.5px] text-ink-300">
                 Total pagu anggaran · TA 2026
               </p>
             </div>
@@ -87,7 +78,7 @@ export function HeroPreview() {
                   <span className="block font-display text-[16px] font-extrabold leading-none text-white">
                     {formatNumber(summary.accountabilityScore, 1)}
                   </span>
-                  <span className="mt-0.5 block text-[7px] font-bold uppercase tracking-[0.1em] text-ink-500">
+                  <span className="mt-0.5 block text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-300">
                     Skor
                   </span>
                 </span>
@@ -108,7 +99,7 @@ export function HeroPreview() {
                 style={{ width: `${summary.absorptionRate}%` }}
               />
             </div>
-            <div className="mt-2 flex items-center justify-between text-[9.5px] text-ink-500">
+            <div className="mt-2 flex items-center justify-between text-[9.5px] text-ink-300">
               <span>{formatCompactIDR(summary.absorbed)} terealisasi</span>
               <span>{formatCompactIDR(summary.totalBudget - summary.absorbed)} sisa</span>
             </div>
@@ -116,10 +107,10 @@ export function HeroPreview() {
 
           <div className="mt-4">
             <div className="flex items-center justify-between">
-              <p className="text-[9.5px] font-bold uppercase tracking-[0.13em] text-ink-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-ink-300">
                 Arus realisasi bulanan
               </p>
-              <span className="text-[9.5px] text-ink-500">Jan – Nov</span>
+              <span className="text-[10px] text-ink-300">Jan – Nov</span>
             </div>
             <div className="mt-2.5 flex h-[64px] items-end gap-1.5" aria-hidden="true">
               {summary.cashflow.map((point, index) => {
@@ -139,7 +130,7 @@ export function HeroPreview() {
                 );
               })}
             </div>
-            <div className="mt-1 flex justify-between text-[8px] font-medium text-ink-600">
+            <div className="mt-1 flex justify-between text-[9.5px] font-medium text-ink-300">
               <span>Jan</span>
               <span>{latestMonth?.month ?? "Nov"}</span>
             </div>
@@ -150,7 +141,7 @@ export function HeroPreview() {
               <p className="font-display text-[15px] font-extrabold text-white">
                 {summary.totalProjects}
               </p>
-              <p className="mt-0.5 text-[8.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
+              <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-300">
                 Proyek
               </p>
             </div>
@@ -158,7 +149,7 @@ export function HeroPreview() {
               <p className="font-display text-[15px] font-extrabold text-white">
                 {formatNumber(TOTAL_CITIZEN_REPORTS)}
               </p>
-              <p className="mt-0.5 text-[8.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
+              <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-300">
                 Laporan warga
               </p>
             </div>
@@ -166,7 +157,7 @@ export function HeroPreview() {
               <p className="font-display text-[15px] font-extrabold text-white">
                 {summary.verifiedProjects}
               </p>
-              <p className="mt-0.5 text-[8.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
+              <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-300">
                 Terverifikasi
               </p>
             </div>
@@ -174,57 +165,9 @@ export function HeroPreview() {
         </div>
       </div>
 
-      <div className="absolute -right-1 top-24 hidden w-[190px] rounded-2xl border border-ink-100 bg-white p-3 shadow-lifted animate-float sm:block">
-        <div className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-            <CheckCircle2 size={16} aria-hidden="true" />
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-[10.5px] font-bold text-ink-900">Laporan terverifikasi</p>
-            <p className="truncate text-[9px] text-ink-400">Drainase Merpati · 4 jam lalu</p>
-          </div>
-        </div>
-        <div className="mt-2 flex items-center gap-1 border-t border-ink-100 pt-2 text-[8.5px] font-medium text-ink-500">
-          <ShieldCheck size={11} className="text-emerald-500" aria-hidden="true" />
-          124 warga mendukung temuan
-        </div>
-      </div>
-
-      <div className="absolute -left-1 bottom-0 hidden w-[205px] rounded-2xl border border-ink-100 bg-white p-3.5 shadow-lifted sm:block">
-        <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-ink-400">
-          <ChartNoAxesCombined size={12} className="text-amber-500" aria-hidden="true" />
-          Akuntabilitas wilayah
-        </p>
-        <div className="mt-2 flex items-end justify-between">
-          <p className="font-display text-[22px] font-extrabold leading-none text-ink-900">
-            {formatNumber(summary.accountabilityScore, 1)}
-            <span className="text-[11px] font-semibold text-ink-400">/100</span>
-          </p>
-          <span className="inline-flex items-center gap-0.5 rounded-md bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
-            Baik
-          </span>
-        </div>
-        <div className="mt-2 h-1 overflow-hidden rounded-full bg-ink-100">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-300"
-            style={{ width: `${summary.accountabilityScore}%` }}
-          />
-        </div>
-        <p className="mt-2 flex items-center justify-between text-[8.5px] text-ink-400">
-          <span className="flex items-center gap-1">
-            <MessageSquare size={10} aria-hidden="true" />
-            {summary.totalProjects} proyek dipantau
-          </span>
-          <span className="flex items-center gap-0.5 font-semibold text-ink-600">
-            <BadgeCheck size={10} className="text-emerald-500" aria-hidden="true" />
-            {summary.verifiedProjects} tervalidasi
-          </span>
-        </p>
-      </div>
-
       <Link
         href="/anggaran"
-        className="absolute -bottom-1 right-3 hidden items-center gap-1 rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-ink-700 shadow-soft transition-colors hover:border-amber-300 hover:text-amber-700 sm:inline-flex"
+        className="absolute -bottom-1 right-3 hidden min-h-9 items-center gap-1 rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[11px] font-semibold text-ink-700 shadow-soft transition-colors hover:border-amber-300 hover:text-amber-700 sm:inline-flex"
       >
         Buka dashboard
         <ArrowUpRight size={12} aria-hidden="true" />

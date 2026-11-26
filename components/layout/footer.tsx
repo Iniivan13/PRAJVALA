@@ -66,7 +66,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[13px] text-ink-400 transition-colors hover:text-amber-400"
+                    className="inline-flex min-h-8 items-center text-[13px] text-ink-400 transition-colors hover:text-amber-400"
                   >
                     {link.label}
                   </Link>
@@ -84,7 +84,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[13px] text-ink-400 transition-colors hover:text-amber-400"
+                    className="inline-flex min-h-8 items-center text-[13px] text-ink-400 transition-colors hover:text-amber-400"
                   >
                     {link.label}
                   </Link>
@@ -100,7 +100,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[13px] text-ink-400 transition-colors hover:text-amber-400"
+                    className="inline-flex min-h-8 items-center text-[13px] text-ink-400 transition-colors hover:text-amber-400"
                   >
                     {link.label}
                   </Link>
@@ -118,11 +118,11 @@ export function Footer() {
                 <li key={region.id}>
                   <Link
                     href="/proyek"
-                    className="group flex items-center justify-between gap-2 text-[13px] text-ink-400 transition-colors hover:text-amber-400"
+                    className="group flex min-h-8 items-center justify-between gap-2 text-[13px] text-ink-400 transition-colors hover:text-amber-400"
                   >
                     <span>
                       {region.name}
-                      <span className="ml-1.5 text-[10px] text-ink-600">{region.level}</span>
+                      <span className="ml-1.5 text-[10px] text-ink-400">{region.level}</span>
                     </span>
                     <ArrowUpRight
                       size={13}
@@ -135,7 +135,7 @@ export function Footer() {
             </ul>
             <a
               href="mailto:halo@prajvala.id"
-              className="mt-5 inline-flex items-center gap-2 text-[12px] font-medium text-ink-300 transition-colors hover:text-amber-400"
+              className="mt-5 inline-flex min-h-8 items-center gap-2 text-[12px] font-medium text-ink-300 transition-colors hover:text-amber-400"
             >
               <Mail size={14} aria-hidden="true" />
               halo@prajvala.id
@@ -143,18 +143,18 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-[11px] text-ink-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-[11px] text-ink-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 PRAJVALA. Ruang publik untuk transparansi anggaran.</p>
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span>Dikembangkan oleh</span>
             <span className="font-semibold text-ink-300">Tim Aetherion Vanakei</span>
-            <span className="text-ink-700">—</span>
+            <span aria-hidden="true" className="text-ink-500">—</span>
             <span>Cyber University</span>
-            <span className="text-ink-700">·</span>
+            <span aria-hidden="true" className="text-ink-500">·</span>
             <span>Techcomfest 2027</span>
           </p>
         </div>
-        <p className="mt-3 text-[10px] leading-relaxed text-ink-600">
+        <p className="mt-3 text-[10.5px] leading-relaxed text-ink-400">
           Seluruh data pada versi ini merupakan data percontohan yang disusun untuk
           keperluan kompetisi. Nama proyek, penyedia, dan laporan warga tidak merujuk
           pada pihak tertentu.

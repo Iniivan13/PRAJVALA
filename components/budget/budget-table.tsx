@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  MoveHorizontal,
   Search,
   ShieldCheck,
   SlidersHorizontal,
@@ -64,8 +65,8 @@ function FairnessBadge({ item }: { item: BudgetItem }) {
       </span>
       <p
         className={cn(
-          "mt-1 font-mono text-[8.5px] tabular",
-          isReview ? "text-rose-500" : "text-ink-400",
+          "mt-1 font-mono text-[9.5px] tabular",
+          isReview ? "text-rose-500" : "text-ink-500",
         )}
       >
         Acuan {formatIDR(item.benchmarkUnitPrice)} · {difference > 0 ? "+" : ""}
@@ -243,7 +244,7 @@ export function BudgetTable() {
           <div className="relative flex-1">
             <Search
               size={14}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-400"
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-500"
               aria-hidden="true"
             />
             <label htmlFor="budget-search" className="sr-only">
@@ -255,14 +256,14 @@ export function BudgetTable() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Cari item, vendor, atau nama proyek…"
-              className="h-9 w-full rounded-lg border border-ink-200 bg-ink-50/50 pl-8 pr-3 text-[11.5px] text-ink-800 placeholder:text-ink-400 transition-colors focus:border-ink-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+              className="h-9 w-full rounded-lg border border-ink-200 bg-ink-50/50 pl-8 pr-3 text-[11.5px] text-ink-800 placeholder:text-ink-500 transition-colors focus:border-ink-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
             />
           </div>
           <div className="flex gap-2">
             <div className="relative">
               <SlidersHorizontal
                 size={13}
-                className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-400"
+                className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-500"
                 aria-hidden="true"
               />
               <label htmlFor="budget-category" className="sr-only">
@@ -307,18 +308,23 @@ export function BudgetTable() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[920px] border-collapse text-left">
+      <div className="relative">
+        <p className="flex items-center gap-1.5 px-5 pb-2 text-[10.5px] text-ink-500 lg:hidden">
+          <MoveHorizontal size={12} className="shrink-0 text-ink-500" aria-hidden="true" />
+          Geser tabel ke samping untuk melihat kolom lainnya.
+        </p>
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabel RAB dapat digeser">
+          <table className="w-full min-w-[920px] border-collapse text-left">
           <caption className="sr-only">
             Tabel rincian Rencana Anggaran Biaya dan Laporan Pertanggungjawaban
           </caption>
           <thead>
             <tr className="border-b border-ink-100 bg-ink-50/70">
-              <th scope="col" className="px-5 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-5 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 <button
                   type="button"
                   onClick={() => toggleSort("item")}
-                  className="inline-flex items-center gap-1.5 hover:text-ink-700"
+                  className="inline-flex min-h-8 items-center gap-1.5 hover:text-ink-700"
                   aria-label={`Urutkan berdasarkan nama item, saat ini ${
                     sortKey === "item" ? sortDirection : "tidak aktif"
                   }`}
@@ -327,20 +333,20 @@ export function BudgetTable() {
                   <SortIcon column="item" />
                 </button>
               </th>
-              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Kategori
               </th>
-              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Penyedia
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Volume
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 <button
                   type="button"
                   onClick={() => toggleSort("unitPrice")}
-                  className="inline-flex items-center gap-1.5 hover:text-ink-700"
+                  className="inline-flex min-h-8 items-center gap-1.5 hover:text-ink-700"
                   aria-label={`Urutkan berdasarkan harga satuan, saat ini ${
                     sortKey === "unitPrice" ? sortDirection : "tidak aktif"
                   }`}
@@ -349,11 +355,11 @@ export function BudgetTable() {
                   <SortIcon column="unitPrice" />
                 </button>
               </th>
-              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-right text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 <button
                   type="button"
                   onClick={() => toggleSort("total")}
-                  className="inline-flex items-center gap-1.5 hover:text-ink-700"
+                  className="inline-flex min-h-8 items-center gap-1.5 hover:text-ink-700"
                   aria-label={`Urutkan berdasarkan total, saat ini ${
                     sortKey === "total" ? sortDirection : "tidak aktif"
                   }`}
@@ -362,7 +368,7 @@ export function BudgetTable() {
                   <SortIcon column="total" />
                 </button>
               </th>
-              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-400">
+              <th scope="col" className="px-3 py-2.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 Indikator harga
               </th>
             </tr>
@@ -383,11 +389,11 @@ export function BudgetTable() {
                     <p className="text-[12px] font-semibold leading-snug text-ink-800">
                       {item.item}
                     </p>
-                    <p className="mt-0.5 truncate text-[9.5px] text-ink-400">
+                    <p className="mt-0.5 truncate text-[9.5px] text-ink-500">
                       {project?.name}
                     </p>
                     {item.note && isReview ? (
-                      <p className="mt-1 line-clamp-1 text-[9px] text-rose-500" title={item.note}>
+                      <p className="mt-1 line-clamp-1 text-[9.5px] text-rose-500" title={item.note}>
                         {item.note}
                       </p>
                     ) : null}
@@ -423,7 +429,7 @@ export function BudgetTable() {
                   <p className="text-[13px] font-semibold text-ink-700">
                     Tidak ada item yang cocok
                   </p>
-                  <p className="mt-1 text-[11px] text-ink-400">
+                  <p className="mt-1 text-[11px] text-ink-500">
                     Coba ubah kata kunci atau filter indikator harga.
                   </p>
                   {hasFilters ? (
@@ -440,10 +446,11 @@ export function BudgetTable() {
             ) : null}
           </tbody>
         </table>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 border-t border-ink-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[10.5px] text-ink-400">
+        <p className="text-[10.5px] text-ink-500">
           Menampilkan{" "}
           <span className="font-semibold text-ink-700">
             {filtered.length === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1}–
@@ -458,7 +465,7 @@ export function BudgetTable() {
             type="button"
             onClick={() => setPage((previous) => Math.max(previous - 1, 1))}
             disabled={safePage === 1}
-            className="grid h-7 w-7 place-items-center rounded-lg border border-ink-200 text-ink-600 transition-colors hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-ink-200 text-ink-600 transition-colors hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Halaman sebelumnya"
           >
             <ChevronLeft size={13} />
@@ -468,7 +475,7 @@ export function BudgetTable() {
             if (totalPages > 6 && Math.abs(pageNumber - safePage) > 1 && pageNumber !== 1 && pageNumber !== totalPages) {
               if (pageNumber === 2 || pageNumber === totalPages - 1) {
                 return (
-                  <span key={pageNumber} className="px-0.5 text-[10px] text-ink-400">
+                  <span key={pageNumber} className="px-0.5 text-[10px] text-ink-500">
                     …
                   </span>
                 );
@@ -482,7 +489,7 @@ export function BudgetTable() {
                 onClick={() => setPage(pageNumber)}
                 aria-current={safePage === pageNumber ? "page" : undefined}
                 className={cn(
-                  "grid h-7 min-w-7 place-items-center rounded-lg px-1.5 text-[10.5px] font-semibold transition-colors",
+                  "grid h-9 min-w-9 shrink-0 place-items-center rounded-lg px-2 text-[11px] font-semibold transition-colors",
                   safePage === pageNumber
                     ? "bg-ink-900 text-white"
                     : "border border-ink-200 text-ink-600 hover:bg-ink-50",
@@ -497,7 +504,7 @@ export function BudgetTable() {
             type="button"
             onClick={() => setPage((previous) => Math.min(previous + 1, totalPages))}
             disabled={safePage === totalPages}
-            className="grid h-7 w-7 place-items-center rounded-lg border border-ink-200 text-ink-600 transition-colors hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-ink-200 text-ink-600 transition-colors hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Halaman berikutnya"
           >
             <ChevronRight size={13} />

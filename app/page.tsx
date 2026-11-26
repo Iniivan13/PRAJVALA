@@ -31,7 +31,7 @@ import {
   TOTAL_CITIZEN_REPORTS,
   getProject,
 } from "@/lib/data";
-import { formatDateShort, formatNumber } from "@/lib/utils";
+import { formatDateShort, formatIDR, formatNumber } from "@/lib/utils";
 
 const FEATURED_IDS = [
   "revitalisasi-jalan-h-saidi",
@@ -62,7 +62,7 @@ const STEP_ITEMS = [
     title: "Verifikasi dari lapangan",
     description:
       "Kirim foto, koordinat, dan temuan Anda. Laporan warga memperkuat pengawasan dan membantu memprioritaskan audit.",
-    note: "782 laporan warga telah masuk",
+    note: `${TOTAL_CITIZEN_REPORTS} laporan warga telah masuk`,
   },
 ];
 
@@ -176,7 +176,7 @@ export default function HomePage() {
                       key={report.id}
                       className="grid h-8 w-8 place-items-center rounded-full border-2 border-white text-[9.5px] font-bold text-white shadow-sm"
                       style={{
-                        backgroundColor: ["#1E3A8A", "#B45309", "#047857", "#6D28D9"][index],
+                        backgroundColor: ["#1E3A8A", "#B45309", "#047857", "#1E293B"][index],
                       }}
                       aria-hidden="true"
                     >
@@ -188,7 +188,7 @@ export default function HomePage() {
                   <p className="text-[11px] font-bold text-ink-800">
                     {formatNumber(TOTAL_CITIZEN_REPORTS)} laporan warga
                   </p>
-                  <p className="text-[9.5px] text-ink-400">di 3 wilayah percontohan</p>
+                  <p className="text-[9.5px] text-ink-500">di 3 wilayah percontohan</p>
                 </div>
               </div>
 
@@ -208,10 +208,10 @@ export default function HomePage() {
 
         <div className="container-page relative pb-12 lg:pb-14">
           <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-500">
               Ringkasan langsung · Mengikuti wilayah terpilih
             </p>
-            <p className="flex items-center gap-1.5 text-[10px] font-medium text-ink-400">
+            <p className="flex items-center gap-1.5 text-[10px] font-medium text-ink-500">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
               Diperbarui November 2026
             </p>
@@ -234,7 +234,7 @@ export default function HomePage() {
               </span>
               <div>
                 <p className="text-[11.5px] font-semibold text-ink-800">{item.title}</p>
-                <p className="text-[9.5px] text-ink-400">{item.subtitle}</p>
+                <p className="text-[9.5px] text-ink-500">{item.subtitle}</p>
               </div>
             </div>
           ))}
@@ -260,7 +260,7 @@ export default function HomePage() {
               aria-hidden="true"
             />
             {STEP_ITEMS.map((step, index) => (
-              <Reveal key={step.number} delay={index * 90}>
+              <Reveal key={step.number}>
                 <div className="group relative h-full overflow-hidden rounded-2xl border border-ink-200/80 bg-ink-50/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-ink-300 hover:bg-white hover:shadow-lifted">
                   <span
                     className="pointer-events-none absolute right-4 top-2 font-display text-[54px] font-extrabold leading-none text-ink-900/[0.045] transition-colors group-hover:text-amber-500/15"
@@ -316,8 +316,8 @@ export default function HomePage() {
           </Reveal>
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {featured.map((project, index) => (
-              <Reveal key={project.id} delay={index * 80}>
+            {featured.map((project) => (
+              <Reveal key={project.id}>
                 <ProjectCard project={project} className="h-full" />
               </Reveal>
             ))}
@@ -328,12 +328,12 @@ export default function HomePage() {
               <Wallet size={14} className="text-amber-500" aria-hidden="true" />
               Total pagu tiga proyek sorotan:{" "}
               <span className="font-mono font-semibold text-ink-800">
-                Rp5.600.000.000
+                {formatIDR(featured.reduce((sum, project) => sum + project.budget, 0))}
               </span>
             </p>
             <Link
               href="/anggaran"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-navy hover:text-amber-600"
+              className="inline-flex min-h-8 items-center gap-1 text-[11.5px] font-semibold text-navy hover:text-amber-600"
             >
               Bandingkan dengan realisasi
               <ArrowRight size={12} aria-hidden="true" />
@@ -368,7 +368,7 @@ export default function HomePage() {
                   <p className="font-display text-lg font-extrabold text-ink-900">
                     {formatNumber(TOTAL_CITIZEN_REPORTS)}
                   </p>
-                  <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.06em] text-ink-400">
+                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
                     Laporan
                   </p>
                 </div>
@@ -376,13 +376,13 @@ export default function HomePage() {
                   <p className="font-display text-lg font-extrabold text-ink-900">
                     {PROJECTS.filter((project) => project.validationScore >= 85).length}
                   </p>
-                  <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.06em] text-ink-400">
+                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
                     Terverifikasi
                   </p>
                 </div>
                 <div className="rounded-xl border border-ink-200/80 bg-ink-50/70 px-3 py-2.5">
                   <p className="font-display text-lg font-extrabold text-ink-900">3</p>
-                  <p className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.06em] text-ink-400">
+                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
                     Wilayah
                   </p>
                 </div>
@@ -390,7 +390,7 @@ export default function HomePage() {
 
               <Link
                 href="/proyek"
-                className="mt-5 inline-flex items-center gap-1.5 text-[12px] font-semibold text-navy transition-colors hover:text-amber-600"
+                className="mt-5 inline-flex min-h-8 items-center gap-1.5 text-[12px] font-semibold text-navy transition-colors hover:text-amber-600"
               >
                 Baca laporan lapangan lainnya
                 <ArrowRight size={13} aria-hidden="true" />
@@ -399,10 +399,10 @@ export default function HomePage() {
           </Reveal>
 
           <div className="space-y-4">
-            {quotes.map((report, index) => {
+            {quotes.map((report) => {
               const project = getProject(report.projectId);
               return (
-                <Reveal key={report.id} delay={index * 90}>
+                <Reveal key={report.id}>
                   <figure className="group relative overflow-hidden rounded-2xl border border-ink-200/80 bg-white p-5 shadow-soft transition-all duration-300 hover:border-ink-300 hover:shadow-lifted sm:p-6">
                     <Quote
                       size={40}
@@ -411,7 +411,7 @@ export default function HomePage() {
                     />
                     <div className="flex items-center justify-between gap-2">
                       <StarRating rating={report.rating} />
-                      <span className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-ink-50 px-2 py-0.5 text-[9px] font-medium text-ink-500">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-ink-50 px-2 py-0.5 text-[9.5px] font-medium text-ink-500">
                         {report.suitability}
                       </span>
                     </div>
@@ -434,12 +434,12 @@ export default function HomePage() {
                               />
                             ) : null}
                           </p>
-                          <p className="text-[9px] text-ink-400">
+                          <p className="text-[9.5px] text-ink-500">
                             {formatDateShort(report.createdAt)} · {project?.name}
                           </p>
                         </div>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-ink-50 px-2 py-1 text-[9px] font-semibold text-ink-500">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-ink-50 px-2 py-1 text-[9.5px] font-semibold text-ink-500">
                         <ThumbsUp size={10} aria-hidden="true" />
                         {report.upvotes}
                       </span>
@@ -448,7 +448,7 @@ export default function HomePage() {
                 </Reveal>
               );
             })}
-            <p className="flex items-center gap-2 px-2 text-[9.5px] text-ink-400">
+            <p className="flex items-center gap-2 px-2 text-[9.5px] text-ink-500">
               <MessageSquare size={11} aria-hidden="true" />
               Nama pelapor telah disamarkan untuk melindungi privasi.
             </p>
@@ -496,14 +496,14 @@ export default function HomePage() {
                       <MapPinned size={16} aria-hidden="true" />
                     </Link>
                   </div>
-                  <p className="mt-5 text-[10px] text-ink-500">
+                  <p className="mt-5 text-[10.5px] text-ink-300">
                     100% data percontohan · Tidak memerlukan akun untuk menjelajah
                   </p>
                 </div>
 
                 <div className="relative">
                   <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-ink-400">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-300">
                       Komitmen PRAJVALA
                     </p>
                     <ul className="mt-3 space-y-3">
@@ -528,7 +528,7 @@ export default function HomePage() {
                         <p className="text-[10px] font-semibold text-white">
                           Dikembangkan untuk publik
                         </p>
-                        <p className="text-[8.5px] text-ink-500">
+                        <p className="text-[10px] text-ink-300">
                           Tim Aetherion Vanakei · Cyber University
                         </p>
                       </div>

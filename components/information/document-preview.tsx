@@ -64,7 +64,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
                 <FileText size={18} aria-hidden="true" />
               </span>
               <div className="min-w-0">
-                <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-amber-600">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-amber-600">
                   Pratinjau ringkasan
                 </p>
                 <h2
@@ -73,7 +73,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
                 >
                   {doc.title}
                 </h2>
-                <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] text-ink-400">
+                <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9.5px] text-ink-500">
                   <span className="inline-flex items-center gap-1">
                     <CalendarDays size={9} aria-hidden="true" />
                     {formatDateLong(doc.publishedAt)}
@@ -99,7 +99,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
           <div className="px-5 py-5 sm:px-6">
             <div className="grid gap-2 sm:grid-cols-3">
               <div className="rounded-xl border border-ink-100 bg-ink-50/60 px-3 py-2">
-                <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Kategori
                 </p>
                 <p className="mt-0.5 text-[10.5px] font-semibold text-ink-800">
@@ -107,7 +107,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
                 </p>
               </div>
               <div className="rounded-xl border border-ink-100 bg-ink-50/60 px-3 py-2">
-                <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Wilayah
                 </p>
                 <p className="mt-0.5 truncate text-[10.5px] font-semibold text-ink-800">
@@ -115,7 +115,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
                 </p>
               </div>
               <div className="rounded-xl border border-ink-100 bg-ink-50/60 px-3 py-2">
-                <p className="text-[8.5px] font-semibold uppercase tracking-[0.08em] text-ink-400">
+                <p className="text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ink-500">
                   Tahun anggaran
                 </p>
                 <p className="mt-0.5 text-[10.5px] font-semibold text-ink-800">{doc.year}</p>
@@ -123,7 +123,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
             </div>
 
             <div className="mt-4 rounded-xl border border-amber-200/80 bg-amber-50/70 p-4">
-              <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-amber-700">
+              <p className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-amber-700">
                 Inti dokumen dalam 30 detik
               </p>
               <p className="mt-1.5 text-[12px] font-semibold leading-relaxed text-amber-900">
@@ -136,7 +136,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
               <ol className="mt-2 space-y-2.5">
                 {doc.summaryPoints.map((point, index) => (
                   <li key={point} className="flex gap-2.5">
-                    <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-navy-soft text-[9px] font-bold text-navy">
+                    <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-navy-soft text-[9.5px] font-bold text-navy">
                       {index + 1}
                     </span>
                     <p className="text-[11px] leading-relaxed text-ink-600">{point}</p>
@@ -146,7 +146,7 @@ export function DocumentPreview({ doc, regionName, onClose }: DocumentPreviewPro
             </div>
 
             <div className="mt-4 rounded-xl border border-ink-200 bg-ink-50/50 p-3.5">
-              <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.08em] text-ink-500">
+              <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-ink-500">
                 <ShieldCheck size={10} className="text-emerald-600" aria-hidden="true" />
                 Catatan keterbukaan
               </p>

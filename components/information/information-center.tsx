@@ -46,7 +46,7 @@ const CATEGORIES: CategoryFilter[] = [
 const CATEGORY_STYLES: Record<DocumentCategory, string> = {
   "APBD/APBDes": "bg-navy-soft text-navy",
   RAB: "bg-amber-50 text-amber-700",
-  Tender: "bg-sky-50 text-sky-600",
+  Tender: "bg-sky-50 text-sky-700",
   LPJ: "bg-emerald-50 text-emerald-700",
   "Laporan Akhir": "bg-ink-100 text-ink-700",
 };
@@ -216,7 +216,7 @@ export function InformationCenter() {
               <span className="sr-only">Cari dokumen publik</span>
               <Search
                 size={16}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-400"
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
                 aria-hidden="true"
               />
               <input
@@ -231,7 +231,7 @@ export function InformationCenter() {
                   type="button"
                   onClick={() => setQuery("")}
                   aria-label="Hapus kata kunci pencarian"
-                  className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700"
+                  className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-700"
                 >
                   <X size={13} aria-hidden="true" />
                 </button>
@@ -259,7 +259,7 @@ export function InformationCenter() {
                   {item}
                   <span
                     className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[9px] font-bold",
+                      "rounded-full px-1.5 py-0.5 text-[9.5px] font-bold",
                       isActive ? "bg-white/15 text-white" : "bg-ink-100 text-ink-500",
                     )}
                   >
@@ -282,8 +282,8 @@ export function InformationCenter() {
 
           {filtered.length > 0 ? (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {filtered.map((doc, index) => (
-                <Reveal key={doc.id} delay={Math.min(index, 5) * 45}>
+              {filtered.map((doc) => (
+                <Reveal key={doc.id}>
                   <DocumentCard
                     document={doc}
                     onPreview={() => setPreviewDocument(doc)}
@@ -293,7 +293,7 @@ export function InformationCenter() {
             </div>
           ) : (
             <div className="mt-6 rounded-2xl border border-dashed border-ink-300 bg-white px-6 py-14 text-center">
-              <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-ink-100 text-ink-400">
+              <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-ink-100 text-ink-500">
                 <Search size={20} aria-hidden="true" />
               </span>
               <h3 className="mt-4 font-display text-lg font-bold text-ink-900">
@@ -314,7 +314,7 @@ export function InformationCenter() {
             </div>
           )}
 
-          <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] text-ink-400">
+          <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] text-ink-500">
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
               {formatNumber(filtered.length)} dari {formatNumber(documents.length)} dokumen
@@ -348,7 +348,7 @@ interface StatCardProps {
 const TONE_STYLES: Record<StatCardProps["tone"], string> = {
   navy: "bg-navy-soft text-navy",
   amber: "bg-amber-50 text-amber-600",
-  sky: "bg-sky-50 text-sky-600",
+  sky: "bg-sky-50 text-sky-700",
   emerald: "bg-emerald-50 text-emerald-600",
 };
 
@@ -359,13 +359,13 @@ function StatCard({ icon: Icon, tone, label, value, note }: StatCardProps) {
         <Icon size={17} aria-hidden="true" />
       </span>
       <div className="min-w-0">
-        <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-ink-400">
+        <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-ink-500">
           {label}
         </p>
         <p className="mt-0.5 font-display text-[17px] font-bold leading-tight text-ink-900">
           {value}
         </p>
-        <p className="mt-1 truncate text-[10px] text-ink-400">{note}</p>
+        <p className="mt-1 truncate text-[10px] text-ink-500">{note}</p>
       </div>
     </div>
   );
@@ -393,7 +393,7 @@ function DocumentCard({
           <Icon size={11} aria-hidden="true" />
           {doc.category}
         </span>
-        <span className="truncate text-[9.5px] font-medium text-ink-400">
+        <span className="truncate text-[9.5px] font-medium text-ink-500">
           {region ? region.name : "Wilayah percontohan"} · {doc.year}
         </span>
       </div>
@@ -412,7 +412,7 @@ function DocumentCard({
         </p>
       </button>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-ink-100 pt-3 text-[9.5px] text-ink-400">
+      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-ink-100 pt-3 text-[9.5px] text-ink-500">
         <span className="inline-flex items-center gap-1">
           <CalendarDays size={10} aria-hidden="true" />
           {formatDateLong(doc.publishedAt)}
@@ -428,7 +428,7 @@ function DocumentCard({
         <button
           type="button"
           onClick={onPreview}
-          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-navy transition-colors hover:text-navy-light"
+          className="inline-flex min-h-8 items-center gap-1.5 text-[11.5px] font-semibold text-navy transition-colors hover:text-navy-light"
         >
           Baca ringkasan
           <ArrowUpRight

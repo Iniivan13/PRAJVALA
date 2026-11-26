@@ -1,4 +1,4 @@
-import { CATEGORY_COLORS } from "@/lib/data";
+import { CATEGORY_COLORS, CATEGORY_TEXT_COLORS } from "@/lib/data";
 import type { ProjectCategory } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ export function CategoryBadge({
   onImage = false,
 }: CategoryBadgeProps) {
   const color = CATEGORY_COLORS[category] ?? "#1E3A8A";
+  const textColor = CATEGORY_TEXT_COLORS[category] ?? "#1E3A8A";
   return (
     <span
       className={cn(
@@ -23,7 +24,7 @@ export function CategoryBadge({
         onImage && "border border-white/50 bg-white/95 shadow-sm backdrop-blur",
         className,
       )}
-      style={onImage ? { color } : { backgroundColor: `${color}12`, color }}
+      style={onImage ? { color: textColor } : { backgroundColor: `${color}12`, color: textColor }}
     >
       {withDot ? (
         <span

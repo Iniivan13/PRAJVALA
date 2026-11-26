@@ -44,9 +44,9 @@ export function PageHero({
       <div className="container-page relative py-9 sm:py-12">
         {breadcrumb.length > 0 ? (
           <nav aria-label="Breadcrumb" className="mb-5">
-            <ol className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-400">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-500">
               <li>
-                <Link href="/" className="transition-colors hover:text-ink-700">
+                <Link href="/" className="inline-flex min-h-8 items-center transition-colors hover:text-ink-700">
                   Beranda
                 </Link>
               </li>
@@ -54,7 +54,7 @@ export function PageHero({
                 <li key={`${item.label}-${index}`} className="flex items-center gap-1.5">
                   <ChevronRight size={11} aria-hidden="true" />
                   {item.href ? (
-                    <Link href={item.href} className="transition-colors hover:text-ink-700">
+                    <Link href={item.href} className="inline-flex min-h-8 items-center transition-colors hover:text-ink-700">
                       {item.label}
                     </Link>
                   ) : (

@@ -57,6 +57,24 @@ export const CATEGORY_COLORS: Record<string, string> = {
   "Infrastruktur Umum": "#F43F5E",
 };
 
+/**
+ * Varian teks untuk badge kategori.
+ *
+ * `CATEGORY_COLORS` dipakai untuk titik, batang chart, dan penanda visual.
+ * Sebagian warna tersebut gagal kontras WCAG AA bila dipakai sebagai teks
+ * di atas tint 7% (Kesehatan 2,4:1 · Bantuan Sosial 2,6:1 · Pendidikan 2,0:1).
+ * Peta ini menyimpan varian gelap dari keluarga warna yang sama agar teks tetap
+ * terbaca (≥ 4,5:1) tanpa kehilangan identitas kategori.
+ */
+export const CATEGORY_TEXT_COLORS: Record<string, string> = {
+  "Infrastruktur Jalan": "#1E3A8A", // navy
+  Pendidikan: "#B45309", // amber-700
+  Kesehatan: "#047857", // emerald-700
+  "Pemberdayaan UMKM": "#6D28D9", // violet-700
+  "Bantuan Sosial": "#0369A1", // sky-700
+  "Infrastruktur Umum": "#B91C1C", // rose-700
+};
+
 export const SECTOR_COLORS: Record<string, string> = {
   "Infrastruktur Jalan": "#1E3A8A",
   Pendidikan: "#F59E0B",
