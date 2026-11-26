@@ -101,6 +101,8 @@ function mapAuthError(
       return "Demi keamanan, silakan masuk ulang sebelum menghapus akun.";
     case "auth/operation-not-allowed":
       return "Metode masuk email/kata sandi belum diaktifkan. Hubungi pengelola PRAJVALA.";
+    case "auth/configuration-not-found":
+      return "Layanan autentikasi Firebase belum diaktifkan untuk proyek ini. Hubungi pengelola PRAJVALA.";
     case "auth/user-disabled":
       return "Akun ini dinonaktifkan. Hubungi pengelola PRAJVALA.";
     case "permission-denied":
@@ -111,6 +113,9 @@ function mapAuthError(
 
   if (value.includes("network") || value.includes("offline")) {
     return "Server Firebase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
+  }
+  if (value.includes("configuration-not-found") || value.includes("configuration_not_found")) {
+    return "Layanan autentikasi Firebase belum diaktifkan untuk proyek ini. Hubungi pengelola PRAJVALA.";
   }
   if (value.includes("permission")) {
     return "Akses data ditolak. Pastikan aturan Firestore sudah dipasang.";
