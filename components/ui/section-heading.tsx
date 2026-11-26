@@ -8,8 +8,17 @@ interface SectionHeadingProps {
   className?: string;
   action?: React.ReactNode;
   titleClassName?: string;
+  /** Plaque surface — follows the world the section sits in. */
+  plaqueTone?: "panel" | "paper" | "sun";
 }
 
+/**
+ * Section opener rendered as a pixel village sign.
+ *
+ * The title sits inside a bordered plaque (as on the reference) instead of
+ * floating display type, which is what makes scroll feel like moving through a
+ * designed world rather than reading a dashboard.
+ */
 export function SectionHeading({
   eyebrow,
   title,
@@ -18,6 +27,7 @@ export function SectionHeading({
   className,
   action,
   titleClassName,
+  plaqueTone = "panel",
 }: SectionHeadingProps) {
   return (
     <div
@@ -29,21 +39,25 @@ export function SectionHeading({
     >
       <div className={cn("max-w-2xl", align === "center" && "mx-auto")}>
         {eyebrow ? (
-          <span className="eyebrow">
-            <span className="h-px w-6 bg-amber-500" aria-hidden="true" />
+          <p className="mb-3 flex w-fit items-center gap-2 border-2 border-pixel-line bg-pixel-sun px-2.5 py-1 font-pixel text-[8px] uppercase tracking-[0.06em] text-pixel-line shadow-chip">
             {eyebrow}
-          </span>
+          </p>
         ) : null}
         <h2
           className={cn(
-            "mt-3 font-display text-3xl font-extrabold tracking-tight text-ink-900 text-balance sm:text-[38px] sm:leading-[1.12]",
+            "inline-block border-4 border-pixel-line px-3.5 py-3 shadow-plaque",
+            plaqueTone === "panel" && "bg-pixel-panel",
+            plaqueTone === "paper" && "bg-pixel-cream",
+            plaqueTone === "sun" && "bg-pixel-sun",
             titleClassName,
           )}
         >
-          {title}
+          <span className="block font-pixel text-[11px] uppercase leading-[1.65] tracking-[0.03em] text-pixel-line sm:text-[13px]">
+            {title}
+          </span>
         </h2>
         {description ? (
-          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-ink-500">
+          <p className="mt-4 max-w-xl font-retro text-[17px] leading-snug text-pixel-ink">
             {description}
           </p>
         ) : null}

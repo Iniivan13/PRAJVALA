@@ -9,6 +9,12 @@ interface CategoryBadgeProps {
   onImage?: boolean;
 }
 
+/**
+ * Category tag.
+ *
+ * `CATEGORY_COLORS` is reserved for dots and chart bars; the text uses the
+ * darker `CATEGORY_TEXT_COLORS` family so labels clear 4.5:1 on their tint.
+ */
 export function CategoryBadge({
   category,
   className,
@@ -20,17 +26,21 @@ export function CategoryBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold",
-        onImage && "border border-white/50 bg-white/95 shadow-sm backdrop-blur",
+        "inline-flex items-center gap-1.5 border-2 border-pixel-line px-2 py-0.5 text-[10.5px] font-bold shadow-chip",
+        onImage && "bg-pixel-cream",
         className,
       )}
-      style={onImage ? { color: textColor } : { backgroundColor: `${color}12`, color: textColor }}
+      style={
+        onImage
+          ? { color: textColor }
+          : { backgroundColor: `${color}22`, color: textColor }
+      }
     >
       {withDot ? (
         <span
-          className="h-1.5 w-1.5 rounded-full"
-          style={{ backgroundColor: color }}
           aria-hidden="true"
+          className="h-2 w-2 shrink-0 border border-pixel-line"
+          style={{ backgroundColor: color }}
         />
       ) : null}
       {category}

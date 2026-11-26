@@ -2,13 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   PRAJVALA — pixel world foundations
+   Palette, frames and shadows are extracted from the owner's reference
+   (riskimivan.id). Diverging values are documented in tailwind.config.ts
+   and DESIGN.md §11 with the measured contrast that justified them.
+   ===================================================================== */
+
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --pixel-line: #2b2b2b;
+  --pixel-panel: #d6d9dd;
+  --pixel-panel-dark: #9aa0a8;
+  --pixel-cream: #fff6e0;
+  --pixel-cream-deep: #f4efe3;
+  --pixel-sun: #ffd700;
+  --pixel-ink: #3e2723;
+  --pixel-sky: #87ceeb;
+  --pixel-grass-deep: #2e6b33;
+  --pixel-dirt: #8b4513;
+  --background: #fff6e0;
+  --foreground: #3e2723;
 }
 
 * {
-  border-color: #e2e8f0;
+  border-color: var(--pixel-line);
 }
 
 html {
@@ -16,196 +33,6 @@ html {
   scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
 }
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-::selection {
-  background: #fde68a;
-  color: #0f172a;
-}
-
-:focus-visible {
-  outline: 2px solid #f59e0b;
-  outline-offset: 2px;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-  border: 2px solid #f8fafc;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-@layer components {
-  .container-page {
-    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8 lg:px-10;
-  }
-
-  .card-base {
-    @apply rounded-2xl border border-ink-200/80 bg-white shadow-soft;
-  }
-
-  .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:border-ink-300 hover:shadow-lifted;
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
-  }
-
-  .btn-primary {
-    @apply btn bg-ink-900 text-white shadow-sm hover:bg-ink-800 hover:shadow-md active:translate-y-px;
-  }
-
-  .btn-amber {
-    @apply btn bg-amber-500 text-ink-900 shadow-sm hover:bg-amber-400 hover:shadow-md active:translate-y-px;
-  }
-
-  .btn-secondary {
-    @apply btn border border-ink-200 bg-white text-ink-800 hover:border-ink-300 hover:bg-ink-50 active:translate-y-px;
-  }
-
-  .btn-ghost {
-    @apply btn text-ink-700 hover:bg-ink-100 hover:text-ink-900;
-  }
-
-  .input-base {
-    @apply w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-ink-400 focus:outline-none focus:ring-4 focus:ring-ink-900/5;
-  }
-
-  .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
-  }
-
-  .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-500;
-  }
-
-  .link-underline {
-    @apply relative font-semibold text-ink-900 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-amber-500 after:transition-all after:duration-300 hover:after:w-full;
-  }
-
-  .tabular {
-    font-variant-numeric: tabular-nums;
-  }
-
-  .surface-grid {
-    background-image: linear-gradient(to right, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-
-  .surface-grid-dark {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .text-pretty {
-    text-wrap: pretty;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .mask-fade-r {
-    mask-image: linear-gradient(to right, black 85%, transparent 100%);
-  }
-}
-
-/* Leaflet customisation */
-.leaflet-container {
-  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
-  background: #e8edf5;
-  z-index: 0;
-}
-
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 8px 24px -8px rgba(15, 23, 42, 0.28) !important;
-  border-radius: 12px !important;
-  overflow: hidden;
-}
-
-.leaflet-control-zoom a {
-  background: #fff !important;
-  color: #0f172a !important;
-  border-color: #e2e8f0 !important;
-  width: 32px !important;
-  height: 32px !important;
-  line-height: 32px !important;
-  font-weight: 500 !important;
-}
-
-.leaflet-control-zoom a:hover {
-  background: #f8fafc !important;
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 16px !important;
-  box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.35) !important;
-  border: 1px solid #e2e8f0;
-  padding: 2px;
-}
-
-.leaflet-popup-content {
-  margin: 12px 14px !important;
-  width: 234px !important;
-  font-size: 13px;
-  color: #0f172a;
-}
-
-.leaflet-popup-tip {
-  box-shadow: none !important;
-}
-
-.leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.82) !important;
-  font-size: 10px !important;
-  color: #64748b !important;
-  padding: 2px 6px !important;
-  border-radius: 6px 0 0 0;
-}
-
-.prajvala-marker {
-  background: transparent;
-  border: none;
-}
-
-.prajvala-marker .marker-pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  opacity: 0.22;
-  transform: scale(1.7);
-}
-
-/* Halo statis: penanda peta tidak berdenyut terus-menerus (DESIGN.md §6). */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -219,4 +46,337 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Pixel art must never be smoothed away. */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+::selection {
+  background: var(--pixel-sun);
+  color: var(--pixel-line);
+}
+
+/* Chunky focus ring, matching the reference's 3px sun outline. */
+:focus-visible {
+  outline: 3px solid #e0b400;
+  outline-offset: 2px;
+}
+
+/* Scrollbar as a stepped pixel rail. */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #efe6d2;
+  border-left: 2px solid var(--pixel-line);
+}
+::-webkit-scrollbar-thumb {
+  background: #b98249;
+  border: 2px solid var(--pixel-line);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8a5a2b;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  /* ---------------------------------------------------------------
+     Layout
+     --------------------------------------------------------------- */
+  .container-page {
+    @apply mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ---------------------------------------------------------------
+     Surfaces — three depth levels, never blurred
+     --------------------------------------------------------------- */
+  .pixel-panel {
+    @apply border-4 border-pixel-line bg-pixel-panel shadow-panel;
+    border-radius: 0;
+  }
+
+  .pixel-card {
+    @apply border-4 border-pixel-line bg-white shadow-card;
+    border-radius: 0;
+  }
+
+  .pixel-card-cream {
+    @apply border-4 border-pixel-line bg-pixel-cream shadow-card;
+    border-radius: 0;
+  }
+
+  .pixel-window {
+    @apply border-4 border-pixel-line bg-white;
+    border-radius: 0;
+  }
+
+  /* Legacy alias: every existing card becomes a pixel card in one place. */
+  .card-base {
+    @apply pixel-card;
+  }
+
+  .card-hover {
+    @apply transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-1;
+  }
+
+  /* ---------------------------------------------------------------
+     Typography
+     --------------------------------------------------------------- */
+  /* Section plaque — the reference frames every section title. */
+  .pixel-plaque {
+    @apply inline-block border-4 border-pixel-line bg-pixel-panel px-4 py-3 shadow-plaque;
+    border-radius: 0;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-pixel text-[9px] uppercase tracking-[0.1em] text-pixel-line;
+  }
+
+  /* ---------------------------------------------------------------
+     Buttons — pixel-bevelled, pressed state shifts 3px
+     --------------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border-4 border-pixel-line px-4 py-2 font-pixel text-[10px] uppercase transition-transform duration-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pixel-sun disabled:cursor-not-allowed disabled:opacity-50;
+    border-radius: 0;
+    min-height: 44px;
+  }
+
+  .btn-primary {
+    @apply btn bg-pixel-wood-cta text-pixel-cream shadow-btn-wood hover:-translate-y-0.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-btn-pressed;
+  }
+
+  .btn-secondary {
+    @apply btn bg-pixel-blue text-white shadow-btn-blue hover:-translate-y-0.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-btn-pressed;
+  }
+
+  .btn-amber {
+    @apply btn bg-pixel-sun text-pixel-line shadow-btn-sun hover:-translate-y-0.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-btn-pressed;
+  }
+
+  .btn-ghost {
+    @apply btn border-pixel-line bg-white text-pixel-line shadow-card hover:-translate-y-0.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-btn-pressed;
+  }
+
+  /* Small utility button for dense rows (tables, pagination). */
+  .btn-mini {
+    @apply inline-flex min-h-9 items-center justify-center gap-1.5 border-[3px] border-pixel-line bg-white px-2.5 font-pixel text-[9px] uppercase text-pixel-line shadow-chip transition-transform duration-100 hover:bg-pixel-sun active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:cursor-not-allowed disabled:opacity-40;
+    border-radius: 0;
+  }
+
+  /* ---------------------------------------------------------------
+     Chips and badges
+     --------------------------------------------------------------- */
+  .chip {
+    @apply inline-flex items-center gap-1.5 border-2 border-pixel-line px-2 py-0.5 text-[10.5px] font-semibold shadow-chip;
+    border-radius: 0;
+  }
+
+  .chip-sun {
+    @apply chip bg-pixel-sun text-pixel-line;
+  }
+
+  .chip-panel {
+    @apply chip bg-pixel-panel text-pixel-line;
+  }
+
+  .chip-paper {
+    @apply chip bg-white text-pixel-line;
+  }
+
+  /* ---------------------------------------------------------------
+     Forms — fields sit in an inset slot
+     --------------------------------------------------------------- */
+  .input-base {
+    @apply w-full border-[3px] border-pixel-line bg-white px-3 py-2.5 text-[13px] text-pixel-line shadow-inset-field placeholder:text-ink-500 focus:border-pixel-line focus:outline-none focus:ring-4 focus:ring-pixel-sun/40;
+    border-radius: 0;
+  }
+
+  /* ---------------------------------------------------------------
+     Data tables — paper surface, ruled rows
+     --------------------------------------------------------------- */
+  .pixel-table {
+    @apply w-full border-collapse text-left;
+  }
+
+  .pixel-table thead th {
+    @apply border-b-4 border-pixel-line bg-pixel-panel px-3 py-2.5 font-pixel text-[9px] uppercase text-pixel-line;
+  }
+
+  .pixel-table tbody td {
+    @apply border-b-2 border-pixel-line/25 px-3 py-3 align-middle text-[12px] text-pixel-line;
+  }
+
+  .pixel-table tbody tr:hover {
+    @apply bg-pixel-sun/20;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------------------------------------------------------------
+     Decorative surfaces
+     --------------------------------------------------------------- */
+  .surface-grid {
+    background-image: linear-gradient(
+        to right,
+        rgba(43, 43, 43, 0.07) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(43, 43, 43, 0.07) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .surface-grid-dark {
+    background-image: linear-gradient(
+        to right,
+        rgba(255, 246, 224, 0.08) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(255, 246, 224, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .surface-tiles {
+    background-image: linear-gradient(
+        90deg,
+        rgba(43, 43, 43, 0.16) 0 2px,
+        transparent 2px 40px
+      ),
+      linear-gradient(0deg, rgba(43, 43, 43, 0.16) 0 2px, transparent 2px 40px);
+    background-size: 40px 40px;
+  }
+
+  /* Screenshot-safe: dense numeric tables keep a sober paper background. */
+  .surface-paper {
+    @apply bg-pixel-cream-deep;
+  }
+
+  /* ---------------------------------------------------------------
+     Pixel framing for media (photos, documents, maps)
+     --------------------------------------------------------------- */
+  .pixel-frame {
+    @apply relative border-4 border-pixel-line bg-pixel-line;
+    border-radius: 0;
+  }
+
+  .pixel-frame-inner {
+    @apply relative overflow-hidden border-[3px] border-pixel-sun bg-pixel-panel;
+    border-radius: 0;
+  }
+
+  /* Corner "gem" studs, straight from the reference certificate frame. */
+  .pixel-gem {
+    @apply pointer-events-none absolute h-2.5 w-2.5 border-2 border-pixel-line;
+  }
+
+  /* ---------------------------------------------------------------
+     Dividers — stepped terrain edge between worlds
+     --------------------------------------------------------------- */
+  .pixel-divider {
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--pixel-line) 0 8px,
+      transparent 8px 16px
+    );
+  }
+
+  .pixel-grass-strip {
+    background: var(--pixel-grass-deep);
+    border-top: 4px solid var(--pixel-line);
+  }
+
+  .link-underline {
+    @apply font-semibold text-pixel-line underline decoration-2 underline-offset-4 hover:decoration-pixel-line;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Reserve space for the fixed mobile bar + iOS home indicator. */
+  .pb-mobile-nav {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 1024px) {
+    .pb-mobile-nav {
+      padding-bottom: 0;
+    }
+  }
+
+  .text-shadow-pixel {
+    text-shadow: 2px 2px 0 rgba(43, 43, 43, 0.25);
+  }
+
+  .text-shadow-pixel-light {
+    text-shadow: 2px 2px 0 #ffffff;
+  }
+}
+
+/* Leaflet: give the map controls a pixel treatment without breaking them. */
+.leaflet-container {
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  background: var(--pixel-panel);
+}
+
+.leaflet-control-zoom a {
+  border-radius: 0 !important;
+  border: 2px solid var(--pixel-line) !important;
+  box-shadow: 2px 2px 0 var(--pixel-line);
+  font-weight: 700;
+  color: var(--pixel-line) !important;
+  background: #fff !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--pixel-sun) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0 !important;
+  border: 3px solid var(--pixel-line);
+  box-shadow: 4px 4px 0 var(--pixel-line) !important;
+  padding: 2px;
+}
+
+.leaflet-popup-tip {
+  border: 2px solid var(--pixel-line);
+  box-shadow: none !important;
+}
+
+.leaflet-attribution-flag {
+  display: none !important;
+}
+
+/* Static halo behind map markers (no perpetual pulse — DESIGN.md §6). */
+.marker-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  opacity: 0.22;
+  transform: scale(1.7);
 }

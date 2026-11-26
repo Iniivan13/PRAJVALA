@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { SpriteChevronDown } from "@/components/ui/pixel-sprites";
 import { cn } from "@/lib/utils";
 
 interface PageHeroProps {
@@ -10,8 +10,17 @@ interface PageHeroProps {
   actions?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  /** Which world this page opens in. */
+  tone?: "sky" | "paper" | "dirt";
 }
 
+/**
+ * Page opener as a pixel sky/paper band.
+ *
+ * Replaces the blurred radial "glow" hero with flat world colour, a stepped
+ * grid, and a chunky plaque breadcrumb — the reference's section-transition
+ * language applied to inner routes.
+ */
 export function PageHero({
   eyebrow,
   title,
@@ -20,45 +29,56 @@ export function PageHero({
   actions,
   children,
   className,
+  tone = "sky",
 }: PageHeroProps) {
   return (
     <section
       className={cn(
-        "relative overflow-hidden border-b border-ink-200/70 bg-white",
+        "relative overflow-hidden border-b-4 border-pixel-line",
+        tone === "sky" && "bg-pixel-sky",
+        tone === "paper" && "bg-pixel-cream",
+        tone === "dirt" && "bg-pixel-dirt",
         className,
       )}
     >
       <div
-        className="surface-grid pointer-events-none absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full bg-amber-400/10 blur-[90px]"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-navy/[0.06] blur-[80px]"
+        className={cn(
+          "pointer-events-none absolute inset-0 opacity-40 surface-grid",
+          tone === "dirt" && "opacity-20",
+        )}
         aria-hidden="true"
       />
 
-      <div className="container-page relative py-9 sm:py-12">
+      <div className="container-page relative py-8 sm:py-10">
         {breadcrumb.length > 0 ? (
           <nav aria-label="Breadcrumb" className="mb-5">
-            <ol className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-500">
+            <ol className="inline-flex flex-wrap items-center gap-1 border-2 border-pixel-line bg-white px-2 py-1 shadow-chip">
               <li>
-                <Link href="/" className="inline-flex min-h-8 items-center transition-colors hover:text-ink-700">
+                <Link
+                  href="/"
+                  className="inline-flex min-h-7 items-center px-1 font-pixel text-[8px] uppercase text-pixel-line hover:bg-pixel-sun"
+                >
                   Beranda
                 </Link>
               </li>
               {breadcrumb.map((item, index) => (
-                <li key={`${item.label}-${index}`} className="flex items-center gap-1.5">
-                  <ChevronRight size={11} aria-hidden="true" />
+                <li key={`${item.label}-${index}`} className="flex items-center">
+                  <SpriteChevronDown
+                    size={9}
+                    className="-rotate-90 text-pixel-line"
+                  />
                   {item.href ? (
-                    <Link href={item.href} className="inline-flex min-h-8 items-center transition-colors hover:text-ink-700">
+                    <Link
+                      href={item.href}
+                      className="inline-flex min-h-7 items-center px-1 font-pixel text-[8px] uppercase text-pixel-line hover:bg-pixel-sun"
+                    >
                       {item.label}
                     </Link>
                   ) : (
-                    <span className="font-medium text-ink-600" aria-current="page">
+                    <span
+                      className="inline-flex min-h-7 items-center bg-pixel-panel px-1 font-pixel text-[8px] uppercase text-pixel-line"
+                      aria-current="page"
+                    >
                       {item.label}
                     </span>
                   )}
@@ -68,23 +88,29 @@ export function PageHero({
           </nav>
         ) : null}
 
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <span className="eyebrow">
-              <span className="h-px w-6 bg-amber-500" aria-hidden="true" />
+            <p className="inline-flex items-center gap-2 border-2 border-pixel-line bg-pixel-sun px-2.5 py-1 font-pixel text-[8px] uppercase tracking-[0.06em] text-pixel-line shadow-chip">
               {eyebrow}
-            </span>
-            <h1 className="mt-3 font-display text-[32px] font-extrabold leading-[1.1] tracking-tight text-ink-900 text-balance sm:text-[42px]">
+            </p>
+            <h1 className="mt-4 font-pixel text-[20px] uppercase leading-[1.55] text-pixel-line text-shadow-pixel-light sm:text-[26px] lg:text-[29px]">
               {title}
             </h1>
-            <p className="mt-3 max-w-2xl text-pretty text-[14px] leading-relaxed text-ink-500 sm:text-[15px]">
+            <p
+              className={cn(
+                "mt-4 max-w-2xl font-retro text-[17px] leading-snug sm:text-[18px]",
+                tone === "dirt" ? "text-pixel-cream" : "text-pixel-ink",
+              )}
+            >
               {description}
             </p>
           </div>
-          {actions ? <div className="flex flex-wrap items-center gap-2.5">{actions}</div> : null}
+          {actions ? (
+            <div className="flex flex-wrap items-center gap-2.5">{actions}</div>
+          ) : null}
         </div>
 
-        {children ? <div className="mt-7">{children}</div> : null}
+        {children ? <div className="mt-6">{children}</div> : null}
       </div>
     </section>
   );

@@ -2,55 +2,36 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ArrowUpRight,
-  ChevronDown,
-  LayoutDashboard,
-  LogIn,
-  LogOut,
-  Menu,
-  ShieldCheck,
-  UserRound,
-  X,
-} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
 import { RegionPicker } from "@/components/ui/region-picker";
+import { SpriteArrowRight, SpriteChevronDown, SpriteClose } from "@/components/ui/pixel-sprites";
 import { cn, initialsFor } from "@/lib/utils";
 
-const NAV_LINKS = [
+/**
+ * Desktop header: horizontal pixel navigation, no hamburger at any breakpoint.
+ *
+ * Below `lg` the link row is removed entirely — navigation moves to the fixed
+ * five-item bottom bar (components/layout/mobile-bottom-nav.tsx).
+ */
+export const PRIMARY_LINKS = [
   { href: "/", label: "Beranda" },
   { href: "/anggaran", label: "Anggaran" },
-  { href: "/proyek", label: "Peta Proyek" },
-  { href: "/informasi", label: "Informasi Publik" },
-];
+  { href: "/proyek", label: "Proyek" },
+  { href: "/laporan", label: "Laporan" },
+  { href: "/informasi", label: "Informasi" },
+] as const;
 
 export function Navbar() {
   const pathname = usePathname();
   const { user, isHydrated, logout } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMobileOpen(false);
     setAccountOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobileOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previous;
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [mobileOpen]);
 
   useEffect(() => {
     if (!accountOpen) return;
@@ -73,266 +54,160 @@ export function Navbar() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  const handleLogout = () => {
-    logout();
-    setAccountOpen(false);
-    setMobileOpen(false);
-  };
-
   return (
-    <>
-      <div className="bg-ink-900 text-white">
-        <div className="container-page flex h-8 items-center justify-between gap-4">
-          <p className="flex items-center gap-2 text-[10.5px] font-medium text-white/70">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            </span>
-            Pemantauan anggaran tahun 2026 aktif
-          </p>
-          <p className="hidden items-center gap-1.5 text-[10.5px] font-medium text-white/45 sm:flex">
-            <ShieldCheck size={12} className="text-amber-400" aria-hidden="true" />
-            Data percontohan · Techcomfest 2027
-          </p>
-        </div>
-      </div>
+    <header className="sticky top-0 z-40 border-b-4 border-pixel-line bg-pixel-panel">
+      {/* Thin pixel accent rail replaces the old SaaS utility bar. */}
+      <div className="h-2 border-b-[3px] border-pixel-line bg-pixel-sun" aria-hidden="true" />
 
-      <header className="sticky top-0 z-40 border-b border-ink-200/70 bg-white">
-        <div className="container-page flex h-[70px] items-center justify-between gap-5">
-          <Link
-            href="/"
-            className="shrink-0 rounded-lg focus-visible:outline-offset-4"
-            aria-label="PRAJVALA — kembali ke beranda"
-          >
-            <Logo />
-          </Link>
+      <div className="container-page flex h-[68px] items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="shrink-0 p-1 focus-visible:outline-offset-4"
+          aria-label="PRAJVALA — kembali ke beranda"
+        >
+          <Logo />
+        </Link>
 
-          <nav aria-label="Navigasi utama" className="hidden lg:block">
-            <ul className="flex items-center gap-1">
-              {NAV_LINKS.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      aria-current={active ? "page" : undefined}
-                      className={cn(
-                        "relative block rounded-lg px-3.5 py-2 text-[13px] font-medium transition-colors",
-                        active
-                          ? "text-ink-900"
-                          : "text-ink-500 hover:bg-ink-50 hover:text-ink-900",
-                      )}
-                    >
-                      {link.label}
-                      {active ? (
-                        <span
-                          className="absolute inset-x-3.5 -bottom-[19px] h-[2px] rounded-full bg-amber-500"
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-
-          <div className="flex items-center gap-2.5">
-            <RegionPicker className="hidden w-[218px] xl:block" label="Wilayah" />
-            <Link
-              href="/anggaran"
-              className="btn-primary hidden h-10 px-4 py-0 text-[13px] md:inline-flex"
-            >
-              Pantau Anggaran
-              <ArrowUpRight size={15} aria-hidden="true" />
-            </Link>
-
-            {!isHydrated ? (
-              <span
-                className="hidden h-10 w-[104px] animate-pulse rounded-xl bg-ink-100 md:block"
-                aria-hidden="true"
-              />
-            ) : user ? (
-              <div ref={accountRef} className="relative hidden md:block">
-                <button
-                  type="button"
-                  onClick={() => setAccountOpen((previous) => !previous)}
-                  aria-haspopup="menu"
-                  aria-expanded={accountOpen}
-                  aria-label={`Menu akun ${user.name}`}
-                  className="flex h-10 items-center gap-2 rounded-xl border border-ink-200 bg-white pl-1.5 pr-2.5 text-[12.5px] font-semibold text-ink-800 transition-colors hover:border-ink-300 hover:bg-ink-50"
-                >
-                  <span className="grid h-7 w-7 place-items-center rounded-lg bg-ink-900 text-[10.5px] font-bold text-amber-400">
-                    {initialsFor(user.name)}
-                  </span>
-                  <span className="max-w-[92px] truncate">{user.name.split(" ")[0]}</span>
-                  <ChevronDown
-                    size={14}
+        <nav aria-label="Navigasi utama" className="hidden lg:block">
+          <ul className="flex items-center gap-2">
+            {PRIMARY_LINKS.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
                     className={cn(
-                      "text-ink-500 transition-transform",
-                      accountOpen && "rotate-180",
+                      "inline-flex min-h-9 items-center border-[3px] border-pixel-line px-2.5 py-1.5 font-pixel text-[9px] uppercase leading-none transition-transform duration-100",
+                      active
+                        ? "bg-pixel-sun text-pixel-line shadow-chip"
+                        : "bg-white text-pixel-line hover:-translate-y-0.5 hover:bg-pixel-sun/60",
                     )}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                {accountOpen ? (
-                  <div
-                    role="menu"
-                    aria-label="Menu akun warga"
-                    className="absolute right-0 top-full mt-2 w-[264px] overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-lifted"
                   >
-                    <div className="flex items-center gap-2.5 border-b border-ink-100 bg-ink-50/60 px-4 py-3">
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink-900 text-[11px] font-bold text-amber-400">
-                        {initialsFor(user.name)}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-[12px] font-bold text-ink-900">
-                          {user.name}
-                        </p>
-                        <p className="truncate text-[10px] text-ink-500">{user.email}</p>
-                      </div>
-                    </div>
-                    <div className="p-1.5">
-                      <Link
-                        href="/akun"
-                        role="menuitem"
-                        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900"
-                      >
-                        <LayoutDashboard size={14} className="text-ink-500" aria-hidden="true" />
-                        Akun saya
-                      </Link>
-                      <Link
-                        href="/proyek"
-                        role="menuitem"
-                        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-900"
-                      >
-                        <UserRound size={14} className="text-ink-500" aria-hidden="true" />
-                        Jelajahi proyek
-                      </Link>
-                      <button
-                        type="button"
-                        role="menuitem"
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12px] font-medium text-rose-600 transition-colors hover:bg-rose-50"
-                      >
-                        <LogOut size={14} aria-hidden="true" />
-                        Keluar dari akun
-                      </button>
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <RegionPicker className="hidden w-[196px] xl:block" label="Wilayah" />
+
+          {!isHydrated ? (
+            <span
+              aria-hidden="true"
+              className="hidden h-10 w-[92px] border-[3px] border-pixel-line bg-pixel-panel-dark lg:block"
+            />
+          ) : user ? (
+            <div ref={accountRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setAccountOpen((previous) => !previous)}
+                aria-haspopup="menu"
+                aria-expanded={accountOpen}
+                aria-label={`Menu akun ${user.name}`}
+                className="flex min-h-10 items-center gap-2 border-[3px] border-pixel-line bg-white pl-1 pr-2 font-pixel text-[9px] uppercase text-pixel-line shadow-chip transition-transform duration-100 hover:-translate-y-0.5"
+              >
+                <span className="grid h-7 w-7 place-items-center bg-pixel-line text-[9px] text-pixel-sun">
+                  {initialsFor(user.name)}
+                </span>
+                <span className="hidden max-w-[84px] truncate sm:block">
+                  {user.name.split(" ")[0]}
+                </span>
+                <SpriteChevronDown
+                  size={12}
+                  className={cn(
+                    "text-pixel-line transition-transform",
+                    accountOpen && "rotate-180",
+                  )}
+                />
+              </button>
+
+              {accountOpen ? (
+                <div
+                  role="menu"
+                  aria-label="Menu akun warga"
+                  className="absolute right-0 top-full z-50 mt-2 w-[248px] border-4 border-pixel-line bg-white shadow-card"
+                >
+                  <div className="flex items-center gap-2.5 border-b-4 border-pixel-line bg-pixel-panel px-3 py-2.5">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center bg-pixel-line text-[10px] font-bold text-pixel-sun">
+                      {initialsFor(user.name)}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-[12px] font-bold text-pixel-line">
+                        {user.name}
+                      </p>
+                      <p className="truncate text-[10.5px] text-ink-600">{user.email}</p>
                     </div>
                   </div>
-                ) : null}
-              </div>
-            ) : (
-              <Link
-                href="/masuk"
-                className="hidden h-10 items-center gap-1.5 rounded-xl border border-ink-200 bg-white px-3.5 text-[12.5px] font-semibold text-ink-800 transition-colors hover:border-ink-300 hover:bg-ink-50 md:inline-flex"
-              >
-                <LogIn size={14} className="text-ink-500" aria-hidden="true" />
-                Masuk
-              </Link>
-            )}
-
-            <button
-              type="button"
-              onClick={() => setMobileOpen((previous) => !previous)}
-              className="grid h-10 w-10 place-items-center rounded-xl border border-ink-200 text-ink-700 transition-colors hover:bg-ink-50 lg:hidden"
-              aria-expanded={mobileOpen}
-              aria-controls="menu-mobile"
-              aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}
-            >
-              {mobileOpen ? <X size={19} /> : <Menu size={19} />}
-            </button>
-          </div>
-        </div>
-
-        {mobileOpen ? (
-          <div
-            id="menu-mobile"
-            className="absolute inset-x-0 top-full h-[calc(100dvh-70px)] overflow-y-auto border-b border-ink-200 bg-white shadow-lifted lg:hidden"
-          >
-            <div className="container-page space-y-4 py-5">
-              <RegionPicker label="Wilayah pantau" align="left" className="w-full" />
-
-              {isHydrated ? (
-                user ? (
-                  <div className="rounded-2xl border border-ink-200 bg-ink-50/60 p-3">
-                    <div className="flex items-center gap-2.5">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink-900 text-[12px] font-bold text-amber-400">
-                        {initialsFor(user.name)}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-bold text-ink-900">
-                          {user.name}
-                        </p>
-                        <p className="truncate text-[10.5px] text-ink-500">{user.email}</p>
-                      </div>
-                      <Link
-                        href="/akun"
-                        className="shrink-0 rounded-lg bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-navy shadow-sm"
-                      >
-                        Akun saya
-                      </Link>
-                    </div>
+                  <div className="p-1.5">
+                    <Link
+                      href="/akun"
+                      role="menuitem"
+                      className="flex min-h-9 items-center gap-2 px-2 py-1.5 text-[12px] font-semibold text-pixel-line hover:bg-pixel-sun"
+                    >
+                      Akun saya
+                    </Link>
+                    <Link
+                      href="/laporan"
+                      role="menuitem"
+                      className="flex min-h-9 items-center gap-2 px-2 py-1.5 text-[12px] font-semibold text-pixel-line hover:bg-pixel-sun"
+                    >
+                      Laporan saya
+                    </Link>
                     <button
                       type="button"
-                      onClick={handleLogout}
-                      className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-2 text-[11px] font-semibold text-rose-600 transition-colors hover:bg-rose-50"
+                      role="menuitem"
+                      onClick={() => {
+                        logout();
+                        setAccountOpen(false);
+                      }}
+                      className="flex min-h-9 w-full items-center gap-2 px-2 py-1.5 text-left text-[12px] font-semibold text-rose-700 hover:bg-rose-50"
                     >
-                      <LogOut size={13} aria-hidden="true" />
                       Keluar dari akun
                     </button>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/masuk" className="btn-secondary h-10 px-3 py-0 text-[12px]">
-                      <LogIn size={14} aria-hidden="true" />
-                      Masuk
-                    </Link>
-                    <Link href="/daftar" className="btn-primary h-10 px-3 py-0 text-[12px]">
-                      <UserRound size={14} aria-hidden="true" />
-                      Daftar
-                    </Link>
-                  </div>
-                )
+                </div>
               ) : null}
-
-              <nav aria-label="Navigasi seluler">
-                <ul className="space-y-1">
-                  {NAV_LINKS.map((link) => {
-                    const active = isActive(link.href);
-                    return (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          aria-current={active ? "page" : undefined}
-                          className={cn(
-                            "flex items-center justify-between rounded-xl px-3 py-3 text-sm font-medium transition-colors",
-                            active
-                              ? "bg-amber-50 text-ink-900"
-                              : "text-ink-600 hover:bg-ink-50",
-                          )}
-                        >
-                          {link.label}
-                          {active ? (
-                            <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
-                          ) : (
-                            <ArrowUpRight size={15} className="text-ink-300" aria-hidden="true" />
-                          )}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-              <Link href="/anggaran" className="btn-primary w-full">
-                Mulai Pantau Anggaran
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </Link>
             </div>
-          </div>
-        ) : null}
-      </header>
-    </>
+          ) : (
+            <Link
+              href="/masuk"
+              className="inline-flex min-h-10 items-center gap-1.5 border-[3px] border-pixel-line bg-white px-3 font-pixel text-[9px] uppercase text-pixel-line shadow-chip transition-transform duration-100 hover:-translate-y-0.5 hover:bg-pixel-sun"
+            >
+              Masuk
+              <SpriteArrowRight size={11} className="text-pixel-line" />
+            </Link>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/** Shared close affordance for pixel dialogs and sheets. */
+export function PixelCloseButton({
+  onClick,
+  label,
+  className,
+}: {
+  onClick: () => void;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={cn(
+        "grid h-9 w-9 place-items-center border-[3px] border-pixel-line bg-white text-pixel-line shadow-chip transition-transform duration-100 hover:bg-pixel-sun active:translate-x-[2px] active:translate-y-[2px] active:shadow-none",
+        className,
+      )}
+    >
+      <SpriteClose size={14} />
+    </button>
   );
 }

@@ -3,27 +3,19 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { CountUp } from "@/components/ui/count-up";
 import { cn } from "@/lib/utils";
 
+/**
+ * Inventory-style stat slot.
+ *
+ * The reference presents achievements as backpack slots: a small icon plate, a
+ * large pixel counter, and a label. This component keeps that shape and repurposes
+ * it for budget indicators.
+ */
 const TONES = {
-  navy: {
-    icon: "bg-navy-soft text-navy",
-    delta: "bg-emerald-50 text-emerald-700",
-  },
-  amber: {
-    icon: "bg-amber-50 text-amber-600",
-    delta: "bg-amber-50 text-amber-700",
-  },
-  emerald: {
-    icon: "bg-emerald-50 text-emerald-600",
-    delta: "bg-emerald-50 text-emerald-700",
-  },
-  sky: {
-    icon: "bg-sky-50 text-sky-700",
-    delta: "bg-sky-50 text-sky-700",
-  },
-  rose: {
-    icon: "bg-rose-50 text-rose-600",
-    delta: "bg-rose-50 text-rose-700",
-  },
+  navy: { plate: "bg-navy-soft text-navy" },
+  amber: { plate: "bg-amber-100 text-amber-800" },
+  emerald: { plate: "bg-emerald-100 text-emerald-800" },
+  sky: { plate: "bg-sky-100 text-sky-800" },
+  rose: { plate: "bg-rose-100 text-rose-800" },
 } as const;
 
 type Tone = keyof typeof TONES;
@@ -61,23 +53,25 @@ export function KpiCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-ink-200/80 bg-white p-5 shadow-soft transition-all duration-300 hover:border-ink-300 hover:shadow-lifted",
+        "relative border-4 border-pixel-line bg-white p-4 shadow-card",
         className,
       )}
     >
-      <div className="relative flex items-start justify-between gap-3">
-        <p className="text-[12px] font-semibold leading-snug text-ink-500">{label}</p>
+      <div className="flex items-start justify-between gap-3">
+        <p className="font-pixel text-[8px] uppercase leading-[1.7] tracking-[0.04em] text-pixel-line">
+          {label}
+        </p>
         <span
           className={cn(
-            "grid h-9 w-9 shrink-0 place-items-center rounded-xl",
-            style.icon,
+            "grid h-8 w-8 shrink-0 place-items-center border-[3px] border-pixel-line",
+            style.plate,
           )}
         >
-          <Icon size={17} strokeWidth={2} aria-hidden="true" />
+          <Icon size={14} strokeWidth={2.2} aria-hidden="true" />
         </span>
       </div>
 
-      <div className="relative mt-3 font-display text-[26px] font-extrabold leading-none tracking-tight text-ink-900 sm:text-[28px]">
+      <div className="mt-3 whitespace-nowrap font-pixel text-[10px] uppercase leading-[1.5] text-pixel-line min-[380px]:text-[12px] sm:text-[16px] xl:text-[18px]">
         <CountUp
           value={value}
           format={format}
@@ -86,19 +80,23 @@ export function KpiCard({
         />
       </div>
 
-      <div className="relative mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1">
         {delta ? (
           <span
             className={cn(
-              "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold",
-              style.delta,
+              "inline-flex items-center gap-0.5 border-2 border-pixel-line px-1.5 py-0.5 text-[10px] font-bold",
+              deltaDirection === "down"
+                ? "bg-rose-50 text-rose-800"
+                : deltaDirection === "neutral"
+                  ? "bg-pixel-panel text-pixel-line"
+                  : "bg-emerald-50 text-emerald-800",
             )}
           >
-            {deltaDirection !== "neutral" ? <DeltaIcon size={11} /> : null}
+            {deltaDirection !== "neutral" ? <DeltaIcon size={10} /> : null}
             {delta}
           </span>
         ) : null}
-        {hint ? <span className="text-[11px] text-ink-500">{hint}</span> : null}
+        {hint ? <span className="text-[11px] text-pixel-ink/80">{hint}</span> : null}
       </div>
     </div>
   );

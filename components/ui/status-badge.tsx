@@ -1,37 +1,52 @@
 import type { ProjectStatus } from "@/types";
 import { cn } from "@/lib/utils";
 
+/**
+ * Status vocabulary.
+ *
+ * `badge` keeps the semantic tint used in dense rows; `block` is the pixel
+ * stamp used on quest cards. Every status also carries an explicit label and a
+ * distinct shape, so colour is never the only signal (DESIGN.md §12).
+ */
 export const STATUS_STYLES: Record<
   ProjectStatus,
-  { badge: string; dot: string; label: string; marker: string; soft: string }
+  { badge: string; block: string; dot: string; label: string; marker: string; soft: string; short: string }
 > = {
   Terverifikasi: {
-    badge: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    dot: "bg-emerald-500",
+    badge: "border-emerald-700 bg-emerald-50 text-emerald-800",
+    block: "bg-emerald-50 text-emerald-800",
+    dot: "bg-emerald-600",
     label: "Terverifikasi",
-    marker: "#10B981",
-    soft: "bg-emerald-50 text-emerald-700",
+    marker: "#047857",
+    soft: "bg-emerald-50 text-emerald-800",
+    short: "OK",
   },
   "Dalam Pengerjaan": {
-    badge: "border-amber-200 bg-amber-50 text-amber-700",
-    dot: "bg-amber-500",
+    badge: "border-amber-700 bg-amber-50 text-amber-800",
+    block: "bg-amber-50 text-amber-800",
+    dot: "bg-amber-600",
     label: "Dalam Pengerjaan",
-    marker: "#F59E0B",
-    soft: "bg-amber-50 text-amber-700",
+    marker: "#B45309",
+    soft: "bg-amber-50 text-amber-800",
+    short: "JLN",
   },
   "Perlu Audit": {
-    badge: "border-rose-200 bg-rose-50 text-rose-700",
-    dot: "bg-rose-500",
+    badge: "border-rose-700 bg-rose-50 text-rose-800",
+    block: "bg-rose-50 text-rose-800",
+    dot: "bg-rose-600",
     label: "Perlu Audit",
-    marker: "#EF4444",
-    soft: "bg-rose-50 text-rose-700",
+    marker: "#B91C1C",
+    soft: "bg-rose-50 text-rose-800",
+    short: "AUD",
   },
   Direncanakan: {
-    badge: "border-sky-200 bg-sky-50 text-sky-700",
-    dot: "bg-sky-500",
+    badge: "border-sky-700 bg-sky-50 text-sky-800",
+    block: "bg-sky-50 text-sky-800",
+    dot: "bg-sky-700",
     label: "Direncanakan",
-    marker: "#0EA5E9",
-    soft: "bg-sky-50 text-sky-700",
+    marker: "#0369A1",
+    soft: "bg-sky-50 text-sky-800",
+    short: "RNC",
   },
 };
 
@@ -40,6 +55,8 @@ interface StatusBadgeProps {
   className?: string;
   dot?: boolean;
   withLabelPrefix?: boolean;
+  /** `block` renders the chunky pixel stamp used on quest cards. */
+  variant?: "chip" | "block";
 }
 
 export function StatusBadge({
@@ -47,18 +64,41 @@ export function StatusBadge({
   className,
   dot = true,
   withLabelPrefix = false,
+  variant = "chip",
 }: StatusBadgeProps) {
   const config = STATUS_STYLES[status];
+
+  if (variant === "block") {
+    return (
+      <span
+        className={cn(
+          "inline-flex items-center gap-1.5 border-[3px] border-pixel-line px-2 py-1 font-pixel text-[8px] uppercase leading-none shadow-chip",
+          config.block,
+          className,
+        )}
+      >
+        <span
+          aria-hidden="true"
+          className={cn("h-2 w-2 border border-pixel-line", config.dot)}
+        />
+        {config.label}
+      </span>
+    );
+  }
+
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+        "inline-flex items-center gap-1.5 border-2 border-pixel-line px-2 py-1 text-[10.5px] font-bold shadow-chip",
         config.badge,
         className,
       )}
     >
       {dot ? (
-        <span className={cn("h-1.5 w-1.5 rounded-full", config.dot)} aria-hidden="true" />
+        <span
+          className={cn("h-2 w-2 border border-pixel-line", config.dot)}
+          aria-hidden="true"
+        />
       ) : null}
       {withLabelPrefix ? <span className="font-medium opacity-70">Status:</span> : null}
       {config.label}
