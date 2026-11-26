@@ -28,11 +28,8 @@ export default function InformasiPage() {
         breadcrumb={[{ label: "Informasi Publik" }]}
         actions={
           <>
-            <RegionPicker className="w-[270px]" label="Wilayah dokumen" />
-            <Link
-              href="/anggaran"
-              className="btn-primary h-[54px] px-4 py-0 text-[12.5px]"
-            >
+            <RegionPicker className="w-full sm:w-[270px]" label="Wilayah dokumen" />
+            <Link href="/anggaran" className="btn-primary">
               <Library size={15} aria-hidden="true" />
               Lihat anggaran
             </Link>
@@ -46,22 +43,20 @@ export default function InformasiPage() {
               <Link
                 key={anchor.href}
                 href={anchor.href}
-                className="group inline-flex items-center gap-2.5 rounded-xl border border-ink-200 bg-white px-3 py-2 text-left transition-colors hover:border-ink-300 hover:bg-ink-50"
+                className="group inline-flex min-h-11 items-center gap-2.5 border-2 border-pixel-line bg-white px-2.5 py-1.5 shadow-chip transition-transform hover:-translate-y-0.5 hover:bg-pixel-sun"
               >
-                <span className="grid h-7 w-7 place-items-center rounded-lg bg-ink-100 text-ink-600 transition-colors group-hover:bg-amber-50 group-hover:text-amber-600">
+                <span className="grid h-7 w-7 place-items-center border-2 border-pixel-line bg-pixel-panel text-pixel-line">
                   <Icon size={13} aria-hidden="true" />
                 </span>
-                <span>
-                  <span className="block text-[11px] font-semibold text-ink-800">
+                <span className="text-left">
+                  <span className="block font-pixel text-[7.5px] uppercase leading-[1.7] text-pixel-line">
                     {anchor.label}
                   </span>
-                  <span className="block text-[9.5px] uppercase tracking-wide text-ink-500">
-                    {anchor.note}
-                  </span>
+                  <span className="block text-[9.5px] text-pixel-ink/65">{anchor.note}</span>
                 </span>
                 <ArrowRight
                   size={12}
-                  className="ml-1 text-ink-300 transition-transform group-hover:translate-x-0.5 group-hover:text-ink-500"
+                  className="ml-0.5 text-pixel-line/40 transition-transform group-hover:translate-x-0.5 group-hover:text-pixel-line"
                   aria-hidden="true"
                 />
               </Link>
@@ -70,9 +65,11 @@ export default function InformasiPage() {
         </div>
       </PageHero>
 
-      <InformationCenter />
-      <FaqSection />
-      <GlossarySection />
+      <div className="bg-pixel-cream">
+        <InformationCenter />
+        <FaqSection />
+        <GlossarySection />
+      </div>
     </>
   );
 }

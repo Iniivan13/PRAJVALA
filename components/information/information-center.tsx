@@ -45,10 +45,10 @@ const CATEGORIES: CategoryFilter[] = [
 
 const CATEGORY_STYLES: Record<DocumentCategory, string> = {
   "APBD/APBDes": "bg-navy-soft text-navy",
-  RAB: "bg-amber-50 text-amber-700",
-  Tender: "bg-sky-50 text-sky-700",
-  LPJ: "bg-emerald-50 text-emerald-700",
-  "Laporan Akhir": "bg-ink-100 text-ink-700",
+  RAB: "bg-amber-50 text-amber-800",
+  Tender: "bg-sky-50 text-sky-800",
+  LPJ: "bg-emerald-50 text-emerald-800",
+  "Laporan Akhir": "bg-pixel-panel text-pixel-line",
 };
 
 const CATEGORY_ICONS: Record<DocumentCategory, LucideIcon> = {
@@ -59,6 +59,10 @@ const CATEGORY_ICONS: Record<DocumentCategory, LucideIcon> = {
   "Laporan Akhir": Layers,
 };
 
+/**
+ * Document repository as a trophy case: each document is a framed plate, and
+ * the whole list sits on the paper band rather than a floating card grid.
+ */
 export function InformationCenter() {
   const { activeRegionId, activeRegion } = useRegion();
   const [query, setQuery] = useState("");
@@ -133,10 +137,10 @@ export function InformationCenter() {
 
   return (
     <>
-      <section id="dokumen" className="scroll-mt-24 bg-ink-50">
-        <div className="container-page py-10 sm:py-12">
+      <section id="dokumen" className="scroll-mt-24 py-10 sm:py-12">
+        <div className="container-page">
           <Reveal>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:gap-4 xl:grid-cols-4">
               <StatCard
                 icon={FolderOpen}
                 tone="navy"
@@ -171,13 +175,13 @@ export function InformationCenter() {
               />
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-ink-200/80 bg-white p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div className="mt-5 flex flex-col gap-3 border-4 border-pixel-line bg-white p-4 shadow-card sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-50 text-emerald-600">
-                  <ShieldCheck size={17} aria-hidden="true" />
+                <span className="grid h-9 w-9 shrink-0 place-items-center border-[3px] border-pixel-line bg-emerald-50 text-emerald-800">
+                  <ShieldCheck size={16} aria-hidden="true" />
                 </span>
-                <p className="text-[11.5px] leading-relaxed text-ink-500">
-                  <span className="font-semibold text-ink-800">
+                <p className="text-[11.5px] leading-relaxed text-pixel-ink/80">
+                  <span className="font-semibold text-pixel-line">
                     Ringkasan bahasa manusia, bukan pengganti dokumen resmi.
                   </span>{" "}
                   Setiap ringkasan mencantumkan poin utama dan tautan unduh agar warga bisa
@@ -188,7 +192,7 @@ export function InformationCenter() {
                 type="button"
                 onClick={() => downloadDocumentIndex(filtered, regionName)}
                 disabled={filtered.length === 0}
-                className="btn-secondary h-9 shrink-0 px-3 py-0 text-[11px] disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn-secondary shrink-0 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Download size={13} aria-hidden="true" />
                 Unduh indeks ({formatNumber(filtered.length)})
@@ -198,14 +202,13 @@ export function InformationCenter() {
 
           <div className="mt-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <span className="eyebrow">
-                <span className="h-px w-6 bg-amber-500" aria-hidden="true" />
+              <span className="inline-flex border-2 border-pixel-line bg-pixel-sun px-2 py-0.5 font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line shadow-chip">
                 Repositori dokumen
               </span>
-              <h2 className="mt-3 font-display text-[28px] font-extrabold tracking-tight text-ink-900 sm:text-[34px]">
+              <h2 className="mt-2 font-pixel text-[17px] uppercase leading-[1.75] text-pixel-line sm:text-[21px]">
                 Cari dokumen, baca intinya, lalu unduh ringkasannya.
               </h2>
-              <p className="mt-2 text-[14px] leading-relaxed text-ink-500">
+              <p className="mt-2.5 font-retro text-[17px] leading-snug text-pixel-ink/85">
                 {activeRegion
                   ? `Menampilkan dokumen publik untuk ${activeRegion.fullName}.`
                   : "Menampilkan dokumen publik dari tiga wilayah percontohan."}
@@ -216,7 +219,7 @@ export function InformationCenter() {
               <span className="sr-only">Cari dokumen publik</span>
               <Search
                 size={16}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-pixel-line/70"
                 aria-hidden="true"
               />
               <input
@@ -224,14 +227,14 @@ export function InformationCenter() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Cari judul, poin ringkasan, atau tahun…"
-                className="input-base h-11 py-0 pl-10 pr-9 text-[12.5px]"
+                className="h-11 w-full border-2 border-pixel-line bg-white pl-9 pr-9 text-[12px] text-pixel-line shadow-inset-field outline-none placeholder:text-ink-500 focus:border-pixel-wood-cta"
               />
               {query ? (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
                   aria-label="Hapus kata kunci pencarian"
-                  className="absolute right-2.5 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-md text-ink-500 transition-colors hover:bg-ink-100 hover:text-ink-700"
+                  className="absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center border border-pixel-line/40 text-pixel-line hover:bg-pixel-sun"
                 >
                   <X size={13} aria-hidden="true" />
                 </button>
@@ -250,17 +253,19 @@ export function InformationCenter() {
                   onClick={() => setCategory(item)}
                   aria-pressed={isActive}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors",
+                    "inline-flex min-h-9 items-center gap-1.5 border-2 border-pixel-line px-2.5 py-1 font-pixel text-[7px] uppercase leading-[1.6] shadow-chip",
                     isActive
-                      ? "border-ink-900 bg-ink-900 text-white"
-                      : "border-ink-200 bg-white text-ink-600 hover:border-ink-300 hover:text-ink-900",
+                      ? "bg-pixel-line text-pixel-sun"
+                      : "bg-white text-pixel-line hover:bg-pixel-sun",
                   )}
                 >
                   {item}
                   <span
                     className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[9.5px] font-bold",
-                      isActive ? "bg-white/15 text-white" : "bg-ink-100 text-ink-500",
+                      "border px-1 text-[9px] font-bold",
+                      isActive
+                        ? "border-pixel-cream/40 text-pixel-cream"
+                        : "border-pixel-line/30 text-pixel-line",
                     )}
                   >
                     {count}
@@ -272,9 +277,9 @@ export function InformationCenter() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-ink-500 transition-colors hover:text-ink-900"
+                className="inline-flex min-h-9 items-center gap-1 border-2 border-transparent px-2 py-1 font-pixel text-[7px] uppercase text-pixel-ink/60 hover:border-pixel-line hover:text-pixel-line"
               >
-                <RotateCcw size={11} aria-hidden="true" />
+                <RotateCcw size={10} aria-hidden="true" />
                 Reset
               </button>
             ) : null}
@@ -292,31 +297,30 @@ export function InformationCenter() {
               ))}
             </div>
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-ink-300 bg-white px-6 py-14 text-center">
-              <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-ink-100 text-ink-500">
-                <Search size={20} aria-hidden="true" />
+            <div className="mt-6 border-4 border-dashed border-pixel-line/50 bg-white px-6 py-14 text-center">
+              <span className="mx-auto grid h-12 w-12 place-items-center border-[3px] border-pixel-line bg-pixel-panel text-pixel-line">
+                <Search size={19} aria-hidden="true" />
               </span>
-              <h3 className="mt-4 font-display text-lg font-bold text-ink-900">
+              <h3 className="mt-4 font-pixel text-[10px] uppercase leading-[1.8] text-pixel-line">
                 Dokumen tidak ditemukan
               </h3>
-              <p className="mx-auto mt-1.5 max-w-md text-[12.5px] leading-relaxed text-ink-500">
+              <p className="mx-auto mt-1.5 max-w-md text-[12px] leading-relaxed text-pixel-ink/75">
                 Coba kata kunci yang lebih umum, pilih kategori lain, atau ubah wilayah
                 pantau pada pemilih di atas.
               </p>
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="btn-secondary mt-5 h-9 px-4 py-0 text-[11.5px]"
-              >
+              <button type="button" onClick={resetFilters} className="btn-secondary mt-5">
                 <RotateCcw size={13} aria-hidden="true" />
                 Tampilkan semua dokumen
               </button>
             </div>
           )}
 
-          <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] text-ink-500">
+          <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10.5px] text-pixel-ink/70">
             <span className="inline-flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 border border-pixel-line bg-pixel-sun"
+              />
               {formatNumber(filtered.length)} dari {formatNumber(documents.length)} dokumen
               ditampilkan
             </span>
@@ -347,25 +351,30 @@ interface StatCardProps {
 
 const TONE_STYLES: Record<StatCardProps["tone"], string> = {
   navy: "bg-navy-soft text-navy",
-  amber: "bg-amber-50 text-amber-600",
-  sky: "bg-sky-50 text-sky-700",
-  emerald: "bg-emerald-50 text-emerald-600",
+  amber: "bg-amber-50 text-amber-800",
+  sky: "bg-sky-50 text-sky-800",
+  emerald: "bg-emerald-50 text-emerald-800",
 };
 
 function StatCard({ icon: Icon, tone, label, value, note }: StatCardProps) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-ink-200/80 bg-white p-4 shadow-soft">
-      <span className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-xl", TONE_STYLES[tone])}>
-        <Icon size={17} aria-hidden="true" />
+    <div className="flex items-start gap-3 border-4 border-pixel-line bg-white p-3.5 shadow-card">
+      <span
+        className={cn(
+          "grid h-9 w-9 shrink-0 place-items-center border-[3px] border-pixel-line",
+          TONE_STYLES[tone],
+        )}
+      >
+        <Icon size={16} aria-hidden="true" />
       </span>
       <div className="min-w-0">
-        <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-ink-500">
+        <p className="font-pixel text-[6.5px] uppercase leading-[1.7] text-ink-600">
           {label}
         </p>
-        <p className="mt-0.5 font-display text-[17px] font-bold leading-tight text-ink-900">
+        <p className="mt-1 font-pixel text-[10.5px] leading-[1.6] text-pixel-line">
           {value}
         </p>
-        <p className="mt-1 truncate text-[10px] text-ink-500">{note}</p>
+        <p className="mt-1 text-[10px] leading-snug text-pixel-ink/70">{note}</p>
       </div>
     </div>
   );
@@ -382,18 +391,18 @@ function DocumentCard({
   const region = getRegion(doc.regionId);
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-ink-200/80 bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-lifted">
-      <div className="flex items-center justify-between gap-2">
+    <article className="group flex h-full flex-col border-4 border-pixel-line bg-white p-4 shadow-card transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-1 sm:p-5">
+      <div className="flex items-center justify-between gap-2 border-b-[3px] border-pixel-line/20 pb-2.5">
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[9.5px] font-bold",
+            "inline-flex items-center gap-1.5 border-2 border-pixel-line px-1.5 py-0.5 font-pixel text-[7px] uppercase leading-[1.6]",
             CATEGORY_STYLES[doc.category],
           )}
         >
-          <Icon size={11} aria-hidden="true" />
+          <Icon size={10} aria-hidden="true" />
           {doc.category}
         </span>
-        <span className="truncate text-[9.5px] font-medium text-ink-500">
+        <span className="truncate font-pixel text-[6.5px] uppercase leading-[1.7] text-ink-600">
           {region ? region.name : "Wilayah percontohan"} · {doc.year}
         </span>
       </div>
@@ -401,18 +410,18 @@ function DocumentCard({
       <button
         type="button"
         onClick={onPreview}
-        className="mt-3 text-left focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+        className="mt-3 text-left outline-offset-4"
         aria-label={`Baca ringkasan ${doc.title}`}
       >
-        <h3 className="font-display text-[15.5px] font-bold leading-snug text-ink-900 transition-colors group-hover:text-navy">
+        <h3 className="font-pixel text-[9.5px] uppercase leading-[1.85] text-pixel-line transition-colors group-hover:text-pixel-wood-cta">
           {doc.title}
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-[11.5px] leading-relaxed text-ink-500">
+        <p className="mt-2 line-clamp-2 text-[11.5px] leading-relaxed text-pixel-ink/80">
           {doc.highlight}
         </p>
       </button>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-ink-100 pt-3 text-[9.5px] text-ink-500">
+      <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t-2 border-pixel-line/20 pt-2.5 text-[9.5px] text-pixel-ink/65">
         <span className="inline-flex items-center gap-1">
           <CalendarDays size={10} aria-hidden="true" />
           {formatDateLong(doc.publishedAt)}
@@ -428,11 +437,11 @@ function DocumentCard({
         <button
           type="button"
           onClick={onPreview}
-          className="inline-flex min-h-8 items-center gap-1.5 text-[11.5px] font-semibold text-navy transition-colors hover:text-navy-light"
+          className="inline-flex min-h-9 items-center gap-1.5 font-pixel text-[7px] uppercase text-pixel-wood-cta hover:text-pixel-line"
         >
           Baca ringkasan
           <ArrowUpRight
-            size={12}
+            size={11}
             aria-hidden="true"
             className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
           />
@@ -441,9 +450,9 @@ function DocumentCard({
           type="button"
           onClick={() => downloadDocumentFile(doc, region?.name ?? "Wilayah percontohan")}
           aria-label={`Unduh ringkasan ${doc.title}`}
-          className="grid h-8 w-8 place-items-center rounded-lg border border-ink-200 text-ink-500 transition-colors hover:border-ink-300 hover:bg-ink-50 hover:text-ink-800"
+          className="grid h-8 w-8 place-items-center border-2 border-pixel-line bg-white text-pixel-line shadow-chip hover:bg-pixel-sun"
         >
-          <Download size={13} aria-hidden="true" />
+          <Download size={12} aria-hidden="true" />
         </button>
       </div>
     </article>

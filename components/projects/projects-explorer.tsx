@@ -17,6 +17,7 @@ import { useMemo, useState } from "react";
 import { useRegion } from "@/components/providers/region-provider";
 import { ProjectMap } from "@/components/maps/project-map";
 import { ProjectCard } from "@/components/projects/project-card";
+import { STATUS_STYLES } from "@/components/ui/status-badge";
 import { getProjectsForRegion } from "@/lib/data";
 import type { ProjectCategory, ProjectStatus } from "@/types";
 import { cn, formatCompactIDR, formatNumber } from "@/lib/utils";
@@ -144,7 +145,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
       value: formatCompactIDR(totalPagu),
       hint: "sesuai filter aktif",
       icon: Landmark,
-      color: "text-amber-600",
+      color: "text-pixel-wood-cta",
     },
     {
       label: "Rata-rata validasi",
@@ -166,46 +167,59 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
 
   return (
     <div className="container-page py-8 sm:py-10">
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink-200 bg-ink-200 shadow-soft sm:grid-cols-4">
+      {/* Inventory counters */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         {summaryStats.map((stat) => (
-          <div key={stat.label} className="bg-white px-4 py-3.5 sm:px-5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-[9.5px] font-semibold uppercase tracking-[0.07em] text-ink-500">
+          <div
+            key={stat.label}
+            className="border-4 border-pixel-line bg-white px-3 py-3 shadow-card"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <p className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line">
                 {stat.label}
               </p>
               <stat.icon size={13} className={stat.color} aria-hidden="true" />
             </div>
-            <p className="mt-1 font-display text-[17px] font-extrabold tracking-tight text-ink-900">
+            <p className="mt-2 font-pixel text-[12px] leading-[1.5] text-pixel-line">
               {stat.value}
             </p>
-            <p className="mt-0.5 text-[9.5px] text-ink-500">{stat.hint}</p>
+            <p className="mt-1 text-[9.5px] text-pixel-ink/70">{stat.hint}</p>
           </div>
         ))}
       </div>
 
+      {/* Status chips */}
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={() => setStatus("Semua status")}
+          aria-pressed={status === "Semua status"}
           className={cn(
-            "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[11.5px] font-semibold transition-colors",
+            "inline-flex min-h-9 items-center gap-1.5 border-2 border-pixel-line px-2.5 py-1.5 font-pixel text-[7.5px] uppercase leading-[1.6] shadow-chip transition-transform",
             status === "Semua status"
-              ? "border-ink-900 bg-ink-900 text-white"
-              : "border-ink-200 bg-white text-ink-600 hover:border-ink-300",
+              ? "bg-pixel-line text-pixel-sun"
+              : "bg-white text-pixel-line hover:bg-pixel-sun",
           )}
         >
           Semua
-          <span className="rounded-full bg-white/15 px-1.5 text-[9.5px]">
+          <span
+            className={cn(
+              "border px-1 text-[9px] font-bold",
+              status === "Semua status"
+                ? "border-pixel-cream/40 text-pixel-cream"
+                : "border-pixel-line/30 text-pixel-line",
+            )}
+          >
             {regionProjects.length}
           </span>
         </button>
         {(
           [
-            ["Terverifikasi", "#10B981"],
-            ["Dalam Pengerjaan", "#F59E0B"],
-            ["Perlu Audit", "#EF4444"],
+            "Terverifikasi",
+            "Dalam Pengerjaan",
+            "Perlu Audit",
           ] as const
-        ).map(([label, color]) => {
+        ).map((label) => {
           const isActive = status === label;
           return (
             <button
@@ -214,34 +228,34 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
               onClick={() => setStatus(isActive ? "Semua status" : label)}
               aria-pressed={isActive}
               className={cn(
-                "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[11.5px] font-semibold transition-colors",
+                "inline-flex min-h-9 items-center gap-1.5 border-2 border-pixel-line px-2.5 py-1.5 font-pixel text-[7.5px] uppercase leading-[1.6] shadow-chip transition-transform",
                 isActive
-                  ? "border-ink-300 bg-white text-ink-900 shadow-sm"
-                  : "border-ink-200 bg-white/70 text-ink-500 hover:border-ink-300",
+                  ? "bg-pixel-sun text-pixel-line"
+                  : "bg-white text-pixel-line hover:bg-pixel-panel",
               )}
             >
               <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: color }}
+                className={`h-2 w-2 border border-pixel-line ${STATUS_STYLES[label].dot}`}
                 aria-hidden="true"
               />
               {label}
-              <span className="text-[9.5px] text-ink-500">{statusCounts[label]}</span>
+              <span className="text-[9px] text-pixel-ink/60">{statusCounts[label]}</span>
             </button>
           );
         })}
-        <span className="ml-auto hidden items-center gap-1.5 text-[10px] text-ink-500 sm:flex">
+        <span className="ml-auto hidden items-center gap-1.5 text-[10px] text-pixel-ink/70 sm:flex">
           <MapPin size={11} aria-hidden="true" />
           {activeRegionId === "all" ? "3 wilayah percontohan" : summary.name} · peta interaktif
         </span>
       </div>
 
-      <div className="mt-3 rounded-2xl border border-ink-200 bg-white p-3 shadow-soft">
+      {/* Filter board */}
+      <div className="mt-3 border-4 border-pixel-line bg-pixel-panel p-3 shadow-card">
         <div className="flex flex-col gap-2 lg:flex-row">
           <div className="relative flex-1">
             <Search
               size={15}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500"
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-pixel-line/70"
               aria-hidden="true"
             />
             <label htmlFor="project-search" className="sr-only">
@@ -253,7 +267,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Cari nama proyek, alamat, atau penyedia…"
-              className="h-10 w-full rounded-xl border border-transparent bg-ink-50 pl-9 pr-4 text-[12.5px] text-ink-800 placeholder:text-ink-500 transition-colors focus:border-ink-200 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+              className="h-10 w-full border-2 border-pixel-line bg-white pl-9 pr-3 text-[12px] text-pixel-line shadow-inset-field outline-none placeholder:text-ink-500 focus:border-pixel-wood-cta"
             />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
@@ -267,7 +281,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
                 onChange={(event) =>
                   setCategory(event.target.value as ProjectCategory | "Semua kategori")
                 }
-                className="h-10 w-full min-w-[150px] appearance-none rounded-xl border border-ink-200 bg-white px-3 text-[11px] font-medium text-ink-700 focus:border-ink-300 focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+                className="h-10 w-full appearance-none border-2 border-pixel-line bg-white px-2 text-[11px] font-medium text-pixel-line outline-none focus:border-pixel-wood-cta sm:min-w-[150px] sm:px-3"
               >
                 {CATEGORIES.map((option) => (
                   <option key={option} value={option}>
@@ -286,7 +300,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
                 onChange={(event) =>
                   setStatus(event.target.value as ProjectStatus | "Semua status")
                 }
-                className="h-10 w-full min-w-[132px] appearance-none rounded-xl border border-ink-200 bg-white px-3 text-[11px] font-medium text-ink-700 focus:border-ink-300 focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+                className="h-10 w-full appearance-none border-2 border-pixel-line bg-white px-2 text-[11px] font-medium text-pixel-line outline-none focus:border-pixel-wood-cta sm:min-w-[132px] sm:px-3"
               >
                 {STATUSES.map((option) => (
                   <option key={option} value={option}>
@@ -303,7 +317,7 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
                 id="project-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortOption)}
-                className="h-10 w-full min-w-[150px] appearance-none rounded-xl border border-ink-200 bg-white px-3 text-[11px] font-medium text-ink-700 focus:border-ink-300 focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+                className="h-10 w-full appearance-none border-2 border-pixel-line bg-white px-2 text-[11px] font-medium text-pixel-line outline-none focus:border-pixel-wood-cta sm:min-w-[150px] sm:px-3"
               >
                 <option value="validasi">Validasi tertinggi</option>
                 <option value="pagu-desc">Anggaran terbesar</option>
@@ -316,9 +330,9 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
               type="button"
               onClick={reset}
               disabled={!hasFilters}
-              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-ink-200 px-3 text-[11px] font-semibold text-ink-500 transition-colors hover:bg-ink-50 hover:text-ink-800 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-10 items-center justify-center gap-1.5 border-2 border-pixel-line bg-white px-2.5 font-pixel text-[7.5px] uppercase text-pixel-line shadow-chip transition-transform hover:bg-pixel-sun disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none sm:px-3"
             >
-              <RotateCcw size={13} aria-hidden="true" />
+              <RotateCcw size={12} aria-hidden="true" />
               Reset
             </button>
           </div>
@@ -331,16 +345,16 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
 
       <div className="mt-7 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="font-display text-xl font-extrabold tracking-tight text-ink-900">
+          <h2 className="font-pixel text-[12px] uppercase leading-[1.8] text-pixel-line sm:text-[14px]">
             {hasFilters ? "Hasil pencarian proyek" : "Proyek di wilayah ini"}
           </h2>
-          <p className="mt-1 text-[11.5px] text-ink-500">
+          <p className="mt-1.5 text-[11.5px] text-pixel-ink/75">
             {filtered.length} proyek · total pagu {formatCompactIDR(totalPagu)} · klik kartu
             untuk melihat bukti fisik dan validasi warga.
           </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-white px-2.5 py-1 text-[10px] font-semibold text-ink-500">
-          <BadgeCheck size={11} className="text-emerald-500" aria-hidden="true" />
+        <span className="inline-flex items-center gap-1.5 border-2 border-pixel-line bg-white px-2 py-1 font-pixel text-[7px] uppercase text-pixel-line shadow-chip">
+          <BadgeCheck size={10} className="text-emerald-600" aria-hidden="true" />
           Data diperbarui November 2026
         </span>
       </div>
@@ -352,25 +366,25 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
           ))}
         </div>
       ) : (
-        <div className="mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-ink-200 bg-white px-6 py-16 text-center">
-          <span className="grid h-12 w-12 place-items-center rounded-full bg-ink-100 text-ink-500">
+        <div className="mt-4 flex flex-col items-center justify-center border-4 border-dashed border-pixel-line/50 bg-white px-6 py-16 text-center">
+          <span className="grid h-12 w-12 place-items-center border-[3px] border-pixel-line bg-pixel-panel text-pixel-line">
             <FolderSearch size={20} aria-hidden="true" />
           </span>
-          <h3 className="mt-3 font-display text-base font-bold text-ink-900">
+          <h3 className="mt-3 font-pixel text-[10px] uppercase leading-[1.8] text-pixel-line">
             Belum ada proyek yang cocok
           </h3>
-          <p className="mt-1 max-w-sm text-[11.5px] leading-relaxed text-ink-500">
+          <p className="mt-1.5 max-w-sm text-[11.5px] leading-relaxed text-pixel-ink/75">
             Coba kata kunci lain, ubah kategori, atau pilih wilayah berbeda melalui
             tombol wilayah di atas.
           </p>
-          <button type="button" onClick={reset} className="btn-secondary mt-4 h-9 px-4 py-0 text-[11.5px]">
-            <RotateCcw size={13} aria-hidden="true" />
+          <button type="button" onClick={reset} className="btn-secondary mt-4 h-9 px-3 py-0 text-[8px]">
+            <RotateCcw size={12} aria-hidden="true" />
             Tampilkan semua proyek
           </button>
         </div>
       )}
 
-      <div className="mt-8 grid gap-3 rounded-2xl border border-ink-200/70 bg-white/70 p-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 border-4 border-pixel-line bg-pixel-cream-deep p-4 shadow-card sm:grid-cols-3">
         {[
           {
             icon: Building2,
@@ -388,26 +402,26 @@ export function ProjectsExplorer({ initialQuery = "", initialCategory }: Project
             text: "Baca laporan lapangan atau kirim temuan Anda sendiri.",
           },
         ].map((item) => (
-          <div key={item.title} className="flex items-start gap-2.5 px-1 py-1">
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-ink-100 text-ink-600">
+          <div key={item.title} className="flex items-start gap-2.5">
+            <span className="grid h-8 w-8 shrink-0 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
               <item.icon size={14} aria-hidden="true" />
             </span>
             <div>
-              <p className="text-[11px] font-semibold text-ink-800">{item.title}</p>
-              <p className="mt-0.5 text-[9.5px] leading-relaxed text-ink-500">{item.text}</p>
+              <p className="text-[11px] font-semibold text-pixel-line">{item.title}</p>
+              <p className="mt-0.5 text-[9.5px] leading-relaxed text-pixel-ink/75">{item.text}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200/70 bg-amber-50/50 px-4 py-3 text-[10.5px] text-amber-900">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-4 border-pixel-line bg-pixel-sun/30 px-4 py-3 text-[10.5px] text-pixel-line shadow-card">
         <p className="flex items-center gap-2">
           <ShieldCheck size={13} aria-hidden="true" />
           Menemukan ketidaksesuaian? Bukti lapangan Anda membantu warga lain menilai.
         </p>
         <a
           href={filtered[0] ? `/proyek/${filtered[0].id}#validasi` : "/proyek"}
-          className="inline-flex min-h-8 items-center gap-1 font-semibold hover:underline"
+          className="inline-flex min-h-8 items-center gap-1 font-pixel text-[7.5px] uppercase underline decoration-2 underline-offset-4 hover:text-pixel-wood-cta"
         >
           Kirim laporan warga
           <ArrowRight size={11} aria-hidden="true" />

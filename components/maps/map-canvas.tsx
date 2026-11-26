@@ -24,13 +24,13 @@ interface MapCanvasProps {
 function createMarkerIcon(color: string) {
   return L.divIcon({
     className: "prajvala-marker",
-    html: `<div style="position:relative;width:32px;height:32px;display:grid;place-items:center;">
-      <span class="marker-pulse" style="background:${color};"></span>
-      <span style="position:relative;display:block;width:17px;height:17px;background:${color};border:3px solid #fff;border-radius:9999px;box-shadow:0 3px 10px rgba(15,23,42,0.4);"></span>
+    html: `<div style="position:relative;width:30px;height:30px;display:grid;place-items:center;">
+      <span class="marker-halo" style="background:${color};"></span>
+      <span style="position:relative;display:block;width:16px;height:16px;background:${color};border:3px solid #2B2B2B;box-shadow:2px 2px 0 rgba(43,43,43,0.55);"></span>
     </div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    popupAnchor: [0, -15],
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -14],
   });
 }
 
@@ -108,31 +108,31 @@ export function MapCanvas({ projects, activeRegionId }: MapCanvasProps) {
               <div>
                 <div className="flex items-center gap-1.5">
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="h-2 w-2 border border-pixel-line"
                     style={{ backgroundColor: STATUS_STYLES[project.status].marker }}
                     aria-hidden="true"
                   />
-                  <span className="text-[9.5px] font-bold uppercase tracking-[0.1em] text-ink-500">
+                  <span className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line">
                     {project.status}
                   </span>
-                  <span className="ml-auto rounded bg-ink-100 px-1 py-0.5 text-[9.5px] font-semibold text-ink-500">
+                  <span className="ml-auto border border-pixel-line/40 bg-pixel-panel px-1 py-0.5 text-[9px] font-semibold text-pixel-line">
                     {project.category}
                   </span>
                 </div>
-                <p className="mt-1.5 text-[12.5px] font-bold leading-snug text-ink-900">
+                <p className="mt-1.5 text-[12.5px] font-bold leading-snug text-pixel-line">
                   {project.name}
                 </p>
-                <p className="mt-1 text-[9.5px] text-ink-500">
+                <p className="mt-1 text-[9.5px] text-pixel-ink/65">
                   {region?.name} · {project.location.district}
                 </p>
-                <div className="mt-2 flex items-center justify-between text-[9.5px]">
-                  <span className="text-ink-500">Pagu</span>
-                  <span className="font-mono font-semibold text-ink-900">
+                <div className="mt-2 flex items-center justify-between border-t-2 border-pixel-line/20 pt-1.5 text-[9.5px]">
+                  <span className="text-pixel-ink/70">Pagu</span>
+                  <span className="font-mono font-semibold text-pixel-line">
                     {formatCompactIDR(project.budget)}
                   </span>
                 </div>
                 <div
-                  className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-ink-100"
+                  className="mt-1.5 h-2 w-full overflow-hidden border border-pixel-line bg-pixel-panel"
                   role="progressbar"
                   aria-label={`Progres ${project.name}`}
                   aria-valuenow={project.progress}
@@ -140,20 +140,20 @@ export function MapCanvas({ projects, activeRegionId }: MapCanvasProps) {
                   aria-valuemax={100}
                 >
                   <div
-                    className="h-full rounded-full"
+                    className="h-full"
                     style={{
                       width: `${project.progress}%`,
                       backgroundColor: STATUS_STYLES[project.status].marker,
                     }}
                   />
                 </div>
-                <div className="mt-1 flex justify-between text-[9.5px] text-ink-500">
+                <div className="mt-1 flex justify-between text-[9.5px] text-pixel-ink/70">
                   <span>Progres fisik</span>
-                  <span className="font-semibold text-ink-600">{project.progress}%</span>
+                  <span className="font-semibold text-pixel-line">{project.progress}%</span>
                 </div>
                 <Link
                   href={`/proyek/${project.id}`}
-                  className="mt-2.5 flex items-center justify-center gap-1 rounded-lg bg-ink-900 px-3 py-2 text-[10px] font-semibold !text-white no-underline transition-colors hover:bg-ink-800"
+                  className="mt-2.5 flex items-center justify-center gap-1 border-2 border-pixel-line bg-pixel-sun px-3 py-2 font-pixel text-[7.5px] uppercase !text-pixel-line no-underline shadow-chip transition-transform hover:-translate-y-0.5"
                 >
                   Lihat detail proyek
                 </Link>

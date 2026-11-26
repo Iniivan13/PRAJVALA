@@ -23,6 +23,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { prajvalaApi } from "@/lib/api";
 import { trapFocus } from "@/lib/focus-trap";
+import { PixelCloseButton } from "@/components/layout/navbar";
 import type { CitizenReport, Project, Suitability } from "@/types";
 import { cn, formatNumber, maskName } from "@/lib/utils";
 
@@ -45,24 +46,24 @@ const SUITABILITY_OPTIONS: {
     label: "Sesuai target",
     description: "Hasil sesuai RAB dan bermanfaat",
     icon: CheckCircle2,
-    tone: "text-emerald-600",
-    activeTone: "border-emerald-400 bg-emerald-50",
+    tone: "text-emerald-700",
+    activeTone: "bg-emerald-50",
   },
   {
     value: "Terlambat",
     label: "Terlambat",
     description: "Progres tidak sesuai jadwal",
     icon: Clock3,
-    tone: "text-amber-600",
-    activeTone: "border-amber-400 bg-amber-50",
+    tone: "text-amber-700",
+    activeTone: "bg-pixel-sun/45",
   },
   {
     value: "Indikasi Kejanggalan",
     label: "Indikasi kejanggalan",
     description: "Kualitas/volume dicurigai berbeda",
     icon: AlertTriangle,
-    tone: "text-rose-600",
-    activeTone: "border-rose-400 bg-rose-50",
+    tone: "text-rose-700",
+    activeTone: "bg-rose-50",
   },
 ];
 
@@ -179,7 +180,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
   return (
     <div className="fixed inset-0 z-[90]">
       <div
-        className="fixed inset-0 bg-ink-950/65 backdrop-blur-sm animate-fade-in"
+        className="fixed inset-0 bg-pixel-line/75 animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -191,42 +192,35 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
           aria-labelledby="report-form-title"
           aria-describedby="report-form-description"
           tabIndex={-1}
-          className="relative max-h-[94vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl border border-ink-200 bg-white shadow-2xl sm:max-h-[90vh] sm:rounded-3xl"
+          className="relative max-h-[94vh] w-full max-w-2xl overflow-y-auto border-4 border-pixel-line bg-pixel-cream shadow-panel sm:max-h-[90vh]"
         >
-          <div className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-ink-100 bg-white/95 px-5 py-4 backdrop-blur sm:px-6">
+          <div className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b-4 border-pixel-line bg-pixel-panel px-4 py-3 sm:px-5">
             <div>
               <div className="flex items-center gap-2">
-                <span className="grid h-8 w-8 place-items-center rounded-lg bg-amber-50 text-amber-600">
+                <span className="grid h-8 w-8 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
                   <Camera size={15} aria-hidden="true" />
                 </span>
                 <h2
                   id="report-form-title"
-                  className="font-display text-base font-extrabold tracking-tight text-ink-900"
+                  className="font-pixel text-[10px] uppercase leading-[1.8] text-pixel-line"
                 >
                   Kirim laporan lapangan
                 </h2>
               </div>
               <p
                 id="report-form-description"
-                className="mt-1 text-[10.5px] leading-relaxed text-ink-500"
+                className="mt-1 text-[10.5px] leading-relaxed text-pixel-ink/75"
               >
                 {project.name} · {project.location.district}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-ink-200 text-ink-500 transition-colors hover:bg-ink-50 hover:text-ink-800"
-              aria-label="Tutup formulir laporan"
-            >
-              <X size={16} />
-            </button>
+            <PixelCloseButton onClick={onClose} label="Tutup formulir laporan" />
           </div>
 
-          <form onSubmit={handleSubmit} className="px-5 py-5 sm:px-6">
-            <div className="flex items-start gap-2.5 rounded-xl border border-navy/10 bg-navy-soft/60 p-3">
-              <Info size={14} className="mt-0.5 shrink-0 text-navy" aria-hidden="true" />
-              <p className="text-[10.5px] leading-relaxed text-ink-600">
+          <form onSubmit={handleSubmit} className="px-4 py-4 sm:px-5">
+            <div className="flex items-start gap-2.5 border-2 border-pixel-line bg-white p-2.5">
+              <Info size={14} className="mt-0.5 shrink-0 text-pixel-line" aria-hidden="true" />
+              <p className="text-[10.5px] leading-relaxed text-pixel-ink/85">
                 Laporan akan tampil publik dengan nama yang disamarkan. Koordinat yang
                 dibagikan adalah lokasi proyek, bukan lokasi persis tempat tinggal Anda.
               </p>
@@ -235,16 +229,16 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
             {errors.form ? (
               <div
                 role="alert"
-                className="mt-4 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-[11px] text-rose-700"
+                className="mt-3 flex items-start gap-2 border-2 border-pixel-line bg-rose-50 p-2.5 text-[11px] text-rose-900"
               >
                 <AlertTriangle size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
                 {errors.form}
               </div>
             ) : null}
 
-            <fieldset className="mt-5">
-              <legend className="text-[11px] font-bold text-ink-800">
-                Status kesesuaian lapangan <span className="text-rose-500">*</span>
+            <fieldset className="mt-4">
+              <legend className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line">
+                Status kesesuaian lapangan <span className="text-rose-700">*</span>
               </legend>
               <div className="mt-2 grid gap-2 sm:grid-cols-3">
                 {SUITABILITY_OPTIONS.map((option) => {
@@ -253,10 +247,10 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     <label
                       key={option.value}
                       className={cn(
-                        "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 transition-all",
+                        "flex cursor-pointer items-start gap-2 border-2 p-2.5 transition-colors",
                         active
-                          ? option.activeTone
-                          : "border-ink-200 bg-white hover:border-ink-300 hover:bg-ink-50/50",
+                          ? cn("border-pixel-line shadow-chip", option.activeTone)
+                          : "border-pixel-line/35 bg-white hover:border-pixel-line hover:bg-pixel-panel",
                       )}
                     >
                       <input
@@ -271,38 +265,42 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                         className="sr-only"
                       />
                       <option.icon
-                        size={16}
+                        size={15}
                         className={cn("mt-0.5 shrink-0", option.tone)}
                         aria-hidden="true"
                       />
-                      <span>
-                        <span className="block text-[11px] font-semibold text-ink-900">
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[11px] font-bold text-pixel-line">
                           {option.label}
                         </span>
-                        <span className="mt-0.5 block text-[9.5px] leading-relaxed text-ink-500">
+                        <span className="mt-0.5 block text-[9.5px] leading-relaxed text-pixel-ink/75">
                           {option.description}
                         </span>
                       </span>
                       {active ? (
-                        <Check size={13} className="ml-auto mt-0.5 shrink-0 text-ink-600" aria-hidden="true" />
+                        <Check size={13} className="mt-0.5 shrink-0 text-pixel-line" aria-hidden="true" />
                       ) : null}
                     </label>
                   );
                 })}
               </div>
               {errors.suitability ? (
-                <p className="mt-1.5 text-[10px] font-medium text-rose-600" role="alert">
+                <p className="mt-1.5 text-[10px] font-medium text-rose-700" role="alert">
                   {errors.suitability}
                 </p>
               ) : null}
             </fieldset>
 
-            <fieldset className="mt-5">
-              <legend className="text-[11px] font-bold text-ink-800">
-                Kesesuaian hasil dengan RAB <span className="text-rose-500">*</span>
+            <fieldset className="mt-4">
+              <legend className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line">
+                Kesesuaian hasil dengan RAB <span className="text-rose-700">*</span>
               </legend>
               <div className="mt-2 flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1" role="radiogroup" aria-label="Rating kesesuaian hasil dengan RAB">
+                <div
+                  className="flex items-center gap-1"
+                  role="radiogroup"
+                  aria-label="Rating kesesuaian hasil dengan RAB"
+                >
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
                       key={value}
@@ -314,12 +312,14 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                         setRating(value);
                         setErrors((previous) => ({ ...previous, rating: "" }));
                       }}
-                      className="rounded-md p-0.5 transition-transform hover:scale-110 focus-visible:outline-offset-2"
+                      className="border border-transparent p-0.5 transition-transform hover:scale-110 hover:border-pixel-line focus-visible:border-pixel-line"
                     >
                       <Star
-                        size={24}
+                        size={23}
                         className={
-                          value <= rating ? "text-amber-500" : "text-ink-200 hover:text-amber-300"
+                          value <= rating
+                            ? "text-amber-600"
+                            : "text-pixel-line/25 hover:text-amber-500"
                         }
                         fill={value <= rating ? "#F59E0B" : "transparent"}
                         aria-hidden="true"
@@ -327,23 +327,26 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     </button>
                   ))}
                 </div>
-                <span className="text-[10.5px] font-medium text-ink-500">
+                <span className="text-[10.5px] font-medium text-pixel-ink/75">
                   {rating > 0 ? RATING_LABELS[rating] : "Belum dipilih"}
                 </span>
               </div>
               {errors.rating ? (
-                <p className="mt-1 text-[10px] font-medium text-rose-600" role="alert">
+                <p className="mt-1 text-[10px] font-medium text-rose-700" role="alert">
                   {errors.rating}
                 </p>
               ) : null}
             </fieldset>
 
-            <div className="mt-5">
-              <div className="flex items-center justify-between">
-                <label htmlFor="report-comment" className="text-[11px] font-bold text-ink-800">
-                  Uraian temuan lapangan <span className="text-rose-500">*</span>
+            <div className="mt-4">
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="report-comment"
+                  className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line"
+                >
+                  Uraian temuan lapangan <span className="text-rose-700">*</span>
                 </label>
-                <span className="text-[9.5px] tabular text-ink-500">{comment.length}/600</span>
+                <span className="tabular text-[9.5px] text-pixel-ink/60">{comment.length}/600</span>
               </div>
               <textarea
                 id="report-comment"
@@ -357,14 +360,14 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 aria-invalid={Boolean(errors.comment)}
                 aria-describedby={errors.comment ? "report-comment-error" : undefined}
                 className={cn(
-                  "mt-1.5 w-full resize-y rounded-xl border bg-ink-50/40 px-3.5 py-3 text-[12px] leading-relaxed text-ink-900 placeholder:text-ink-500 transition-colors focus:bg-white focus:outline-none focus:ring-4",
+                  "mt-1.5 w-full resize-y border-2 bg-white px-3 py-2.5 text-[12px] leading-relaxed text-pixel-line shadow-inset-field outline-none placeholder:text-ink-500",
                   errors.comment
-                    ? "border-rose-300 focus:border-rose-400 focus:ring-rose-500/10"
-                    : "border-ink-200 focus:border-ink-300 focus:ring-ink-900/5",
+                    ? "border-rose-700"
+                    : "border-pixel-line focus:border-pixel-wood-cta",
                 )}
               />
               {errors.comment ? (
-                <p id="report-comment-error" className="mt-1 text-[10px] font-medium text-rose-600" role="alert">
+                <p id="report-comment-error" className="mt-1 text-[10px] font-medium text-rose-700" role="alert">
                   {errors.comment}
                 </p>
               ) : null}
@@ -372,8 +375,8 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
 
             {isHydrated ? (
               user ? (
-                <div className="mt-5 flex flex-wrap items-center gap-2.5 rounded-xl border border-emerald-200/70 bg-emerald-50/60 px-3 py-2.5">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald-600 text-[10.5px] font-bold text-white">
+                <div className="mt-4 flex flex-wrap items-center gap-2.5 border-2 border-pixel-line bg-emerald-50 px-3 py-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center border-2 border-pixel-line bg-emerald-700 font-pixel text-[8px] text-white">
                     {user.name
                       .split(/\s+/)
                       .slice(0, 2)
@@ -381,38 +384,38 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                       .join("")}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-900">
+                    <p className="flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-950">
                       <BadgeCheck size={12} aria-hidden="true" />
                       Masuk sebagai {user.name}
                     </p>
-                    <p className="truncate text-[9.5px] text-emerald-800/80">
+                    <p className="truncate text-[9.5px] text-emerald-900/75">
                       Laporan ditautkan ke akun Firebase Anda · {user.email}
                     </p>
                   </div>
                   <Link
                     href="/akun"
-                    className="shrink-0 text-[9.5px] font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-950"
+                    className="shrink-0 border-2 border-pixel-line bg-white px-1.5 py-0.5 text-[9.5px] font-semibold text-pixel-line hover:bg-pixel-sun"
                   >
                     Kelola akun
                   </Link>
                 </div>
               ) : (
-                <div className="mt-5 flex flex-wrap items-center gap-2.5 rounded-xl border border-navy/10 bg-navy-soft/60 px-3 py-2.5">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-navy shadow-sm">
+                <div className="mt-4 flex flex-wrap items-center gap-2.5 border-2 border-pixel-line bg-white px-3 py-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
                     <LogIn size={13} aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10.5px] font-bold text-ink-800">
+                    <p className="text-[10.5px] font-bold text-pixel-line">
                       Ingin laporan tersimpan di akun Anda?
                     </p>
-                    <p className="text-[9.5px] leading-relaxed text-ink-500">
+                    <p className="text-[9.5px] leading-relaxed text-pixel-ink/75">
                       Masuk agar nama terisi otomatis dan kontribusi mudah ditelusuri.
                       Anda tetap bisa mengirim sebagai tamu.
                     </p>
                   </div>
                   <Link
                     href={`/masuk?redirect=${encodeURIComponent(`/proyek/${project.id}#validasi`)}`}
-                    className="shrink-0 rounded-lg bg-ink-900 px-2.5 py-1.5 text-[9.5px] font-semibold text-white transition-colors hover:bg-ink-800"
+                    className="shrink-0 border-2 border-pixel-line bg-pixel-sun px-2 py-1 font-pixel text-[7px] uppercase text-pixel-line shadow-chip hover:-translate-y-0.5"
                   >
                     Masuk
                   </Link>
@@ -420,10 +423,16 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
               )
             ) : null}
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
+            <div className="mt-4 grid gap-3 sm:grid-cols-[1.1fr_0.9fr]">
               <div>
-                <label htmlFor="report-author" className="text-[11px] font-bold text-ink-800">
-                  Nama atau inisial <span className="font-normal text-ink-500">(opsional)</span>
+                <label
+                  htmlFor="report-author"
+                  className="font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line"
+                >
+                  Nama atau inisial{" "}
+                  <span className="font-sans text-[9.5px] font-normal normal-case text-pixel-ink/60">
+                    (opsional)
+                  </span>
                 </label>
                 <input
                   id="report-author"
@@ -432,9 +441,9 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   maxLength={60}
                   onChange={(event) => setAuthor(event.target.value)}
                   placeholder="Contoh: Rina Kusuma"
-                  className="mt-1.5 h-10 w-full rounded-xl border border-ink-200 bg-ink-50/40 px-3.5 text-[12px] text-ink-900 placeholder:text-ink-500 transition-colors focus:border-ink-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-ink-900/5"
+                  className="mt-1.5 h-10 w-full border-2 border-pixel-line bg-white px-3 text-[12px] text-pixel-line shadow-inset-field outline-none placeholder:text-ink-500 focus:border-pixel-wood-cta"
                 />
-                <p className="mt-1 text-[9.5px] text-ink-500">
+                <p className="mt-1 text-[9.5px] leading-relaxed text-pixel-ink/70">
                   {user
                     ? `Terisi dari akun Anda dan tetap bisa diubah. Akan tampil sebagai “${maskName(
                         author.trim() || user.name,
@@ -443,34 +452,40 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 p-3">
-                <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-emerald-800">
-                  <MapPin size={10} aria-hidden="true" />
-                  Lokasi & waktu terdeteksi
+              <div className="border-2 border-pixel-line bg-emerald-50 p-2.5">
+                <p className="flex items-center gap-1.5 font-pixel text-[6.5px] uppercase leading-[1.7] text-emerald-900">
+                  <MapPin size={9} aria-hidden="true" />
+                  Lokasi &amp; waktu terdeteksi
                 </p>
-                <p className="mt-1.5 font-mono text-[10px] text-emerald-900">
+                <p className="mt-1.5 font-mono text-[10px] text-emerald-950">
                   {project.location.coordinates.lat.toFixed(5)},{" "}
                   {project.location.coordinates.lng.toFixed(5)}
                 </p>
-                <p className="mt-0.5 text-[9.5px] text-emerald-700">
-                  ± 8 m · {detectedAt.toLocaleDateString("id-ID", {
+                <p className="mt-0.5 text-[9.5px] leading-relaxed text-emerald-900/80">
+                  ± 8 m ·{" "}
+                  {detectedAt.toLocaleDateString("id-ID", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
                   })}
-                  , {detectedAt.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} WIB
+                  ,{" "}
+                  {detectedAt.toLocaleTimeString("id-ID", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}{" "}
+                  WIB
                 </p>
               </div>
             </div>
 
-            <div className="mt-5">
+            <div className="mt-4">
               <label
                 htmlFor={fileInputId}
                 className={cn(
-                  "group flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-5 text-center transition-colors",
+                  "group flex cursor-pointer flex-col items-center justify-center border-2 border-dashed px-4 py-4 text-center transition-colors",
                   photo
-                    ? "border-emerald-200 bg-emerald-50/30"
-                    : "border-ink-200 bg-ink-50/40 hover:border-amber-300 hover:bg-amber-50/30",
+                    ? "border-emerald-700 bg-emerald-50/40"
+                    : "border-pixel-line/50 bg-white hover:border-pixel-line hover:bg-pixel-panel",
                 )}
               >
                 <input
@@ -482,7 +497,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 />
                 {photo ? (
                   <>
-                    <span className="relative block h-28 w-full max-w-[280px] overflow-hidden rounded-lg border border-ink-200">
+                    <span className="relative block h-28 w-full max-w-[280px] overflow-hidden border-2 border-pixel-line">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={photo}
@@ -490,10 +505,10 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                         className="h-full w-full object-cover"
                       />
                     </span>
-                    <span className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[9.5px] text-ink-500">
+                    <span className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[9.5px] text-pixel-ink/75">
                       <ImageIcon size={11} aria-hidden="true" />
                       {photoName} · {(photoSize / 1024).toFixed(0)} KB
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[9.5px] font-semibold text-emerald-700">
+                      <span className="inline-flex items-center gap-1 border border-pixel-line bg-emerald-100 px-1 py-0.5 text-[9px] font-semibold text-emerald-900">
                         <ShieldCheck size={9} aria-hidden="true" />
                         EXIF dibersihkan
                       </span>
@@ -501,13 +516,13 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   </>
                 ) : (
                   <>
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-ink-500 shadow-sm">
-                      <UploadCloud size={17} aria-hidden="true" />
+                    <span className="grid h-9 w-9 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
+                      <UploadCloud size={16} aria-hidden="true" />
                     </span>
-                    <span className="mt-2 text-[11px] font-semibold text-ink-700">
+                    <span className="mt-2 text-[11px] font-bold text-pixel-line">
                       Unggah foto bukti (opsional)
                     </span>
-                    <span className="mt-0.5 text-[9.5px] text-ink-500">
+                    <span className="mt-0.5 text-[9.5px] text-pixel-ink/70">
                       JPG, PNG, atau WebP · maksimal 3 MB
                     </span>
                   </>
@@ -515,7 +530,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
               </label>
 
               <div className="mt-1.5 flex flex-wrap items-center justify-between gap-2">
-                <p className="flex items-center gap-1 text-[9.5px] text-emerald-700">
+                <p className="flex items-center gap-1 text-[9.5px] leading-relaxed text-emerald-900">
                   <ShieldCheck size={10} aria-hidden="true" />
                   Metadata GPS dan identitas perangkat dihapus otomatis sebelum publikasi.
                 </p>
@@ -523,7 +538,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   <button
                     type="button"
                     onClick={removePhoto}
-                    className="inline-flex items-center gap-1 text-[9.5px] font-semibold text-rose-600 hover:underline"
+                    className="inline-flex items-center gap-1 text-[9.5px] font-semibold text-rose-700 hover:underline"
                   >
                     <Trash2 size={10} aria-hidden="true" />
                     Hapus foto
@@ -531,13 +546,13 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 ) : null}
               </div>
               {photoError ? (
-                <p className="mt-1 text-[10px] font-medium text-rose-600" role="alert">
+                <p className="mt-1 text-[10px] font-medium text-rose-700" role="alert">
                   {photoError}
                 </p>
               ) : null}
             </div>
 
-            <div className="mt-5 rounded-xl border border-ink-200 bg-ink-50/50 p-3.5">
+            <div className="mt-4 border-2 border-pixel-line bg-white p-3">
               <label className="flex cursor-pointer items-start gap-2.5">
                 <input
                   type="checkbox"
@@ -549,44 +564,44 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   className="mt-0.5 h-4 w-4 shrink-0 accent-amber-500"
                   aria-invalid={Boolean(errors.consent)}
                 />
-                <span className="text-[10px] leading-relaxed text-ink-600">
+                <span className="text-[10px] leading-relaxed text-pixel-ink/85">
                   Saya menyatakan laporan ini berdasarkan pengamatan langsung dan
                   disampaikan dengan itikad baik. Saya memahami laporan dapat dikoreksi
                   warga lain atau ditindaklanjuti oleh pihak berwenang.
                 </span>
               </label>
               {errors.consent ? (
-                <p className="mt-1.5 text-[10px] font-medium text-rose-600" role="alert">
+                <p className="mt-1.5 text-[10px] font-medium text-rose-700" role="alert">
                   {errors.consent}
                 </p>
               ) : null}
             </div>
 
-            <div className="mt-5 flex flex-col-reverse gap-2 border-t border-ink-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="flex items-center gap-1.5 text-[9.5px] text-ink-500">
+            <div className="mt-4 flex flex-col-reverse gap-2 border-t-2 border-pixel-line/25 pt-3.5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="flex items-center gap-1.5 text-[9.5px] text-pixel-ink/65">
                 <ShieldCheck size={10} aria-hidden="true" />
                 Laporan tersimpan aman di Firebase.
               </p>
               <div className="flex gap-2">
-                <button type="button" onClick={onClose} className="btn-secondary h-10 flex-1 px-4 py-0 text-[11.5px] sm:flex-none">
+                <button type="button" onClick={onClose} className="btn-secondary flex-1 sm:flex-none">
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-primary h-10 flex-1 px-4 py-0 text-[11.5px] sm:flex-none"
+                  className="btn-primary flex-1 sm:flex-none"
                 >
                   {submitting ? (
-                    <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                    <Loader2 size={13} className="animate-spin" aria-hidden="true" />
                   ) : (
-                    <UploadCloud size={14} aria-hidden="true" />
+                    <UploadCloud size={13} aria-hidden="true" />
                   )}
                   {submitting ? "Mengirim…" : "Kirim laporan"}
                 </button>
               </div>
             </div>
 
-            <p className="mt-3 text-center text-[9.5px] text-ink-500">
+            <p className="mt-3 pb-2 text-center text-[9.5px] text-pixel-ink/60">
               Total karakter uraian: {formatNumber(comment.length)} · Laporan akan tampil
               segera setelah dikirim.
             </p>

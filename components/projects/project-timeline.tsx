@@ -1,4 +1,4 @@
-import { Check, Clock3, Loader2 } from "lucide-react";
+import { Check, Clock3 } from "lucide-react";
 import type { Milestone } from "@/types";
 import { cn, formatDateLong } from "@/lib/utils";
 
@@ -6,29 +6,39 @@ interface ProjectTimelineProps {
   milestones: Milestone[];
 }
 
+/**
+ * Mission path.
+ *
+ * Stages read as a trail of square waypoints joined by a dashed path. No
+ * perpetual spinners: the active stage is marked with a static sun tile.
+ */
 export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
   const completed = milestones.filter((milestone) => milestone.status === "selesai").length;
   const progress = milestones.length > 0 ? (completed / milestones.length) * 100 : 0;
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink-200/70 bg-ink-50/60 px-4 py-3">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-[3px] border-pixel-line bg-pixel-cream px-3 py-2.5">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+          <p className="font-pixel text-[7px] uppercase leading-[1.7] text-ink-600">
             Tahap pelaksanaan
           </p>
-          <p className="mt-0.5 text-[12px] font-semibold text-ink-800">
+          <p className="mt-1 text-[11.5px] font-semibold text-pixel-line">
             {completed} dari {milestones.length} tahap selesai
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-ink-200">
+          <div className="h-3 w-24 overflow-hidden border-2 border-pixel-line bg-pixel-panel">
             <div
-              className="h-full rounded-full bg-amber-500 transition-all duration-700"
-              style={{ width: `${progress}%` }}
+              className="h-full bg-pixel-grass-deep transition-all duration-700"
+              style={{
+                width: `${progress}%`,
+                backgroundImage:
+                  "repeating-linear-gradient(90deg, rgba(255,255,255,0.22) 0 2px, transparent 2px 5px)",
+              }}
             />
           </div>
-          <span className="font-mono text-[10.5px] font-semibold text-ink-700">
+          <span className="tabular font-mono text-[10.5px] font-bold text-pixel-line">
             {Math.round(progress)}%
           </span>
         </div>
@@ -45,26 +55,23 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
               {!isLast ? (
                 <span
                   className={cn(
-                    "absolute left-[13px] top-7 h-[calc(100%-1.5rem)] w-px",
-                    isDone ? "bg-emerald-200" : "bg-ink-200",
+                    "absolute left-[13px] top-7 h-[calc(100%-1.5rem)] w-[3px]",
+                    isDone ? "bg-pixel-grass-deep/50" : "bg-pixel-line/20",
                   )}
                   aria-hidden="true"
                 />
               ) : null}
               <span
                 className={cn(
-                  "relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center rounded-full border-2",
-                  isDone && "border-emerald-500 bg-emerald-500 text-white",
-                  isActive &&
-                    "border-amber-500 bg-amber-50 text-amber-600 ring-4 ring-amber-500/15",
-                  !isDone && !isActive && "border-ink-200 bg-white text-ink-300",
+                  "relative z-[1] grid h-[27px] w-[27px] shrink-0 place-items-center border-[3px] border-pixel-line",
+                  isDone && "bg-pixel-grass-deep text-white",
+                  isActive && "bg-pixel-sun text-pixel-line shadow-chip",
+                  !isDone && !isActive && "bg-white text-pixel-line/40",
                 )}
                 aria-hidden="true"
               >
                 {isDone ? (
                   <Check size={13} strokeWidth={3} />
-                ) : isActive ? (
-                  <Loader2 size={13} className="animate-spin" />
                 ) : (
                   <Clock3 size={12} />
                 )}
@@ -75,7 +82,7 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
                   <p
                     className={cn(
                       "text-[12px] font-semibold leading-snug",
-                      isDone || isActive ? "text-ink-900" : "text-ink-500",
+                      isDone || isActive ? "text-pixel-line" : "text-pixel-ink/55",
                     )}
                   >
                     {milestone.label}
@@ -84,20 +91,25 @@ export function ProjectTimeline({ milestones }: ProjectTimelineProps) {
                     dateTime={milestone.date}
                     className={cn(
                       "shrink-0 font-mono text-[9.5px]",
-                      isActive ? "font-semibold text-amber-600" : "text-ink-500",
+                      isActive
+                        ? "font-bold text-pixel-wood-cta"
+                        : "text-pixel-ink/60",
                     )}
                   >
                     {formatDateLong(milestone.date)}
                   </time>
                 </div>
                 {milestone.note ? (
-                  <p className="mt-1 text-[10.5px] leading-relaxed text-ink-500">
+                  <p className="mt-1 text-[10.5px] leading-relaxed text-pixel-ink/75">
                     {milestone.note}
                   </p>
                 ) : null}
                 {isActive ? (
-                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[9.5px] font-bold text-amber-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+                  <span className="mt-1.5 inline-flex items-center gap-1 border-2 border-pixel-line bg-pixel-sun px-1.5 py-0.5 font-pixel text-[6.5px] uppercase leading-[1.7] text-pixel-line">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 border border-pixel-line bg-pixel-wood-cta"
+                    />
                     Sedang berlangsung
                   </span>
                 ) : null}

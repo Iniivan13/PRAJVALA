@@ -46,7 +46,7 @@ function ReportStars({ rating }: { rating: number }) {
         <Star
           key={star}
           size={11}
-          className={star <= rating ? "text-amber-500" : "text-ink-200"}
+          className={star <= rating ? "text-amber-600" : "text-pixel-line/25"}
           fill={star <= rating ? "#F59E0B" : "transparent"}
           aria-hidden="true"
         />
@@ -157,21 +157,21 @@ export function ValidationSection({ project }: { project: Project }) {
       ? {
           color: "#10B981",
           label: "Sangat baik",
-          text: "text-emerald-400",
-          chip: "bg-emerald-400/10 text-emerald-300 border-emerald-400/20",
+          text: "text-emerald-800",
+          chip: "bg-emerald-100 text-emerald-900",
         }
       : score >= 70
         ? {
             color: "#FBBF24",
             label: "Cukup baik",
-            text: "text-amber-400",
-            chip: "bg-amber-400/10 text-amber-300 border-amber-400/20",
+            text: "text-amber-800",
+            chip: "bg-amber-100 text-amber-900",
           }
         : {
             color: "#EF4444",
             label: "Perlu perhatian",
-            text: "text-rose-400",
-            chip: "bg-rose-400/10 text-rose-300 border-rose-400/20",
+            text: "text-rose-800",
+            chip: "bg-rose-100 text-rose-900",
           };
 
   const handleUpvote = async (report: CitizenReport) => {
@@ -262,14 +262,13 @@ export function ValidationSection({ project }: { project: Project }) {
     <section id="validasi" className="scroll-mt-24">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <span className="eyebrow">
-            <span className="h-px w-6 bg-amber-500" aria-hidden="true" />
+          <span className="inline-flex border-2 border-pixel-line bg-pixel-sun px-2 py-0.5 font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line shadow-chip">
             Validasi partisipatif warga
           </span>
-          <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-ink-900 sm:text-[28px]">
+          <h2 className="mt-2 font-pixel text-[15px] uppercase leading-[1.8] text-pixel-line sm:text-[18px]">
             Apa kata warga di lapangan?
           </h2>
-          <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-ink-500">
+          <p className="mt-2 max-w-xl text-[12px] leading-relaxed text-pixel-ink/80">
             Laporan warga adalah bukti pendukung, bukan vonis. Setiap laporan dapat
             didukung, dikoreksi, dan ditindaklanjuti bersama.
           </p>
@@ -277,9 +276,9 @@ export function ValidationSection({ project }: { project: Project }) {
         <button
           type="button"
           onClick={() => setIsFormOpen(true)}
-          className="btn-amber h-11 shrink-0 px-4 py-0 text-[12px]"
+          className="btn-amber shrink-0"
         >
-          <Camera size={15} aria-hidden="true" />
+          <Camera size={14} aria-hidden="true" />
           Kirim laporan lapangan
         </button>
       </div>
@@ -287,19 +286,19 @@ export function ValidationSection({ project }: { project: Project }) {
       {voteError ? (
         <div
           role="alert"
-          className="mt-4 flex items-start justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3"
+          className="mt-4 flex items-start justify-between gap-3 border-4 border-pixel-line bg-amber-50 px-3.5 py-2.5 shadow-card"
         >
           <div className="flex items-start gap-2.5">
-            <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
-            <p className="text-[10.5px] leading-relaxed text-amber-800">{voteError}</p>
+            <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-700" aria-hidden="true" />
+            <p className="text-[10.5px] leading-relaxed text-amber-900">{voteError}</p>
           </div>
           <button
             type="button"
             onClick={() => setVoteError("")}
-            className="shrink-0 rounded-md p-1 text-amber-600 transition-colors hover:bg-amber-100"
+            className="shrink-0 border-2 border-pixel-line bg-white p-1 text-pixel-line hover:bg-pixel-sun"
             aria-label="Tutup peringatan"
           >
-            <X size={14} />
+            <X size={13} />
           </button>
         </div>
       ) : null}
@@ -307,17 +306,17 @@ export function ValidationSection({ project }: { project: Project }) {
       {success ? (
         <div
           role="status"
-          className="mt-4 flex items-start justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 animate-fade-in"
+          className="mt-4 flex items-start justify-between gap-3 border-4 border-pixel-line bg-emerald-50 px-3.5 py-2.5 shadow-card animate-fade-in"
         >
           <div className="flex items-start gap-2.5">
-            <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-500 text-white">
-              <CheckCircle2 size={14} aria-hidden="true" />
+            <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center border-2 border-pixel-line bg-emerald-600 text-white">
+              <CheckCircle2 size={13} aria-hidden="true" />
             </span>
             <div>
               <p className="text-[11.5px] font-bold text-emerald-900">
                 Laporan berhasil dikirim
               </p>
-              <p className="mt-0.5 text-[10.5px] leading-relaxed text-emerald-700">
+              <p className="mt-0.5 text-[10.5px] leading-relaxed text-emerald-800">
                 Terima kasih. Laporan Anda masuk ke feed dan skor validasi warga telah
                 diperbarui{delta !== 0 ? ` (${delta > 0 ? "+" : ""}${delta} poin)` : ""}.
               </p>
@@ -326,132 +325,134 @@ export function ValidationSection({ project }: { project: Project }) {
           <button
             type="button"
             onClick={() => setSuccess(false)}
-            className="shrink-0 rounded-md p-1 text-emerald-600 transition-colors hover:bg-emerald-100"
+            className="shrink-0 border-2 border-pixel-line bg-white p-1 text-pixel-line hover:bg-pixel-sun"
             aria-label="Tutup notifikasi"
           >
-            <X size={14} />
+            <X size={13} />
           </button>
         </div>
       ) : null}
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="relative overflow-hidden rounded-2xl bg-ink-900 p-5 text-white shadow-soft">
-          <div className="surface-grid-dark absolute inset-0 opacity-40" aria-hidden="true" />
-          <div
-            className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-amber-500/15 blur-[55px]"
-            aria-hidden="true"
-          />
-          <div className="relative flex items-center gap-4 sm:gap-5">
-            <div
-              className="relative grid h-[124px] w-[124px] shrink-0 place-items-center rounded-full transition-all duration-700"
-              style={{
-                background: `conic-gradient(${scoreTone.color} 0 ${score}%, rgba(255,255,255,0.08) ${score}% 100%)`,
-              }}
-              role="img"
-              aria-label={`Skor validasi warga ${score} dari 100, ${scoreTone.label}`}
-            >
-              <div className="grid h-[102px] w-[102px] place-items-center rounded-full bg-ink-900">
-                <div className="text-center">
-                  <p className="font-display text-[30px] font-extrabold leading-none text-white">
-                    {score}
-                  </p>
-                  <p className="mt-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-ink-300">
-                    dari 100
-                  </p>
-                </div>
+      <div className="mt-5 grid items-start gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+        {/* ---- Score board ---- */}
+        <div className="border-4 border-pixel-line bg-pixel-wood-darker p-1.5 shadow-panel">
+          <div className="border-[3px] border-pixel-line bg-pixel-cream p-4">
+            <div className="flex items-center gap-4 sm:gap-5">
+              <div className="shrink-0 border-[3px] border-pixel-line bg-white p-2 text-center shadow-chip">
+                <p className="font-pixel text-[26px] leading-none text-pixel-line">{score}</p>
+                <p className="mt-1.5 font-pixel text-[6px] uppercase leading-[1.6] text-ink-600">
+                  dari 100
+                </p>
               </div>
-            </div>
 
-            <div className="min-w-0">
-              <p className="flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink-300">
-                <ShieldCheck size={11} aria-hidden="true" />
-                Skor validasi warga
-              </p>
-              <p className={cn("mt-1 font-display text-xl font-extrabold", scoreTone.text)}>
-                {scoreTone.label}
-              </p>
-              <span
-                className={cn(
-                  "mt-2 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9.5px] font-semibold",
-                  scoreTone.chip,
-                )}
-              >
-                {userReports.length === 0
-                  ? "• Dihitung dari laporan warga terverifikasi"
-                  : delta === 0
-                    ? "• Skor tetap stabil setelah laporan Anda"
-                    : `${delta > 0 ? "↑" : "↓"} ${delta > 0 ? `+${delta}` : delta} poin dari laporan Anda`}
-              </span>
-              <p className="mt-2 text-[10px] leading-relaxed text-ink-300">
-                {formatNumber(distribution.total)} laporan warga ·{" "}
-                {formatNumber(distribution.sesuai)} sesuai target
-              </p>
-              <p className="mt-1 flex items-center gap-1 text-[9.5px] text-ink-300">
-                <Users size={10} aria-hidden="true" />
-                Skor diperbarui otomatis setiap laporan baru
-              </p>
+              <div className="min-w-0">
+                <p className="flex items-center gap-1.5 font-pixel text-[7px] uppercase leading-[1.7] text-ink-600">
+                  <ShieldCheck size={11} aria-hidden="true" />
+                  Skor validasi warga
+                </p>
+                <p className={cn("mt-1.5 font-pixel text-[13px] uppercase leading-[1.7]", scoreTone.text)}>
+                  {scoreTone.label}
+                </p>
+                <div
+                  className="mt-2 flex gap-[3px]"
+                  role="img"
+                  aria-label={`Skor validasi warga ${score} dari 100, ${scoreTone.label}`}
+                >
+                  {Array.from({ length: 10 }).map((_, index) => (
+                    <span
+                      key={index}
+                      aria-hidden="true"
+                      className={
+                        index < Math.round(score / 10)
+                          ? "h-3 flex-1 border border-pixel-line"
+                          : "h-3 flex-1 border border-pixel-line bg-pixel-panel"
+                      }
+                      style={
+                        index < Math.round(score / 10)
+                          ? { backgroundColor: scoreTone.color }
+                          : undefined
+                      }
+                    />
+                  ))}
+                </div>
+                <span
+                  className={cn(
+                    "mt-2 inline-flex items-center gap-1 border-2 border-pixel-line px-1.5 py-0.5 text-[9.5px] font-semibold",
+                    scoreTone.chip,
+                  )}
+                >
+                  {userReports.length === 0
+                    ? "Dihitung dari laporan terverifikasi"
+                    : delta === 0
+                      ? "Skor stabil setelah laporan Anda"
+                      : `${delta > 0 ? "↑" : "↓"} ${delta > 0 ? `+${delta}` : delta} poin dari laporan Anda`}
+                </span>
+                <p className="mt-2 text-[10px] leading-relaxed text-pixel-ink/80">
+                  {formatNumber(distribution.total)} laporan warga ·{" "}
+                  {formatNumber(distribution.sesuai)} sesuai target
+                </p>
+                <p className="mt-1 flex items-center gap-1 text-[9.5px] text-pixel-ink/70">
+                  <Users size={10} aria-hidden="true" />
+                  Skor diperbarui otomatis setiap laporan baru
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="card-base p-5">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="font-display text-[14px] font-bold text-ink-900">
+        {/* ---- Distribution board ---- */}
+        <div className="border-4 border-pixel-line bg-white p-4 shadow-card">
+          <div className="flex items-center justify-between gap-3 border-b-[3px] border-pixel-line/20 pb-2">
+            <h3 className="font-pixel text-[8.5px] uppercase leading-[1.8] text-pixel-line">
               Sebaran penilaian warga
             </h3>
-            <span className="text-[9.5px] font-medium text-ink-500">
+            <span className="text-[9.5px] font-medium text-pixel-ink/70">
               {formatNumber(distribution.total)} laporan
             </span>
           </div>
-          <div className="mt-4 space-y-3.5">
+          <div className="mt-3.5 space-y-3.5">
             {[
               {
                 label: "Sesuai target",
                 count: distribution.sesuai,
                 pct: distribution.sesuaiPct,
                 color: "#10B981",
-                track: "#D1FAE5",
               },
               {
                 label: "Terlambat",
                 count: distribution.terlambat,
                 pct: distribution.terlambatPct,
                 color: "#F59E0B",
-                track: "#FEF3C7",
               },
               {
                 label: "Indikasi kejanggalan",
                 count: distribution.kejanggalan,
                 pct: distribution.kejanggalanPct,
                 color: "#EF4444",
-                track: "#FFE4E6",
               },
             ].map((row) => (
               <div key={row.label}>
                 <div className="flex items-center justify-between text-[10.5px]">
-                  <span className="flex items-center gap-1.5 font-medium text-ink-600">
+                  <span className="flex items-center gap-1.5 font-medium text-pixel-ink/85">
                     <span
-                      className="h-1.5 w-1.5 rounded-full"
+                      className="h-2 w-2 border border-pixel-line"
                       style={{ backgroundColor: row.color }}
                       aria-hidden="true"
                     />
                     {row.label}
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="font-mono text-[9.5px] text-ink-500">
+                    <span className="font-mono text-[9.5px] text-pixel-ink/60">
                       {formatNumber(row.count)}
                     </span>
-                    <span className="w-10 text-right font-mono font-semibold tabular text-ink-800">
+                    <span className="w-10 text-right font-mono font-bold tabular text-pixel-line">
                       {formatPercent(row.pct)}
                     </span>
                   </span>
                 </div>
-                <div
-                  className="mt-1.5 h-1.5 overflow-hidden rounded-full"
-                  style={{ backgroundColor: row.track }}
-                >
+                <div className="mt-1.5 h-2 overflow-hidden border-2 border-pixel-line bg-pixel-panel">
                   <div
-                    className="h-full rounded-full transition-all duration-700"
+                    className="h-full transition-all duration-700"
                     style={{
                       width: `${row.pct}%`,
                       backgroundColor: row.color,
@@ -461,7 +462,7 @@ export function ValidationSection({ project }: { project: Project }) {
               </div>
             ))}
           </div>
-          <p className="mt-3.5 border-t border-ink-100 pt-2.5 text-[9.5px] leading-relaxed text-ink-500">
+          <p className="mt-3.5 border-t-2 border-pixel-line/20 pt-2.5 text-[9.5px] leading-relaxed text-pixel-ink/70">
             Persentase dihitung dari seluruh laporan terverifikasi, termasuk laporan
             yang tidak ditampilkan di feed terbaru.
           </p>
@@ -479,17 +480,19 @@ export function ValidationSection({ project }: { project: Project }) {
                 onClick={() => setFilter(option.value)}
                 aria-pressed={active}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10.5px] font-semibold transition-colors",
+                  "inline-flex min-h-9 items-center gap-1.5 border-2 border-pixel-line px-2.5 py-1.5 font-pixel text-[7px] uppercase leading-[1.6] shadow-chip",
                   active
-                    ? "border-ink-900 bg-ink-900 text-white"
-                    : "border-ink-200 bg-white text-ink-600 hover:border-ink-300",
+                    ? "bg-pixel-line text-pixel-sun"
+                    : "bg-white text-pixel-line hover:bg-pixel-sun",
                 )}
               >
                 {option.shortLabel}
                 <span
                   className={cn(
-                    "rounded-full px-1.5 text-[9.5px]",
-                    active ? "bg-white/15 text-white" : "bg-ink-100 text-ink-500",
+                    "border px-1 text-[9px] font-bold",
+                    active
+                      ? "border-pixel-cream/40 text-pixel-cream"
+                      : "border-pixel-line/30 text-pixel-line",
                   )}
                 >
                   {counts[option.value]}
@@ -498,7 +501,7 @@ export function ValidationSection({ project }: { project: Project }) {
             );
           })}
         </div>
-        <p className="flex items-center gap-1.5 text-[9.5px] text-ink-500">
+        <p className="flex items-center gap-1.5 text-[9.5px] text-pixel-ink/70">
           {loading ? (
             <Loader2 size={11} className="animate-spin" aria-hidden="true" />
           ) : (
@@ -519,31 +522,31 @@ export function ValidationSection({ project }: { project: Project }) {
             <article
               key={report.id}
               className={cn(
-                "card-base overflow-hidden p-4 sm:p-5",
-                report.isUserSubmitted && "border-amber-300/80 ring-1 ring-amber-500/10",
+                "overflow-hidden border-4 border-pixel-line bg-white p-4 shadow-card sm:p-5",
+                report.isUserSubmitted && "border-amber-700",
               )}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-navy to-ink-800 text-[10px] font-bold text-white">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center border-2 border-pixel-line bg-pixel-wood-cta font-pixel text-[8px] text-pixel-cream">
                     {report.initials}
                   </span>
                   <div className="min-w-0">
-                    <p className="flex flex-wrap items-center gap-1.5 text-[11.5px] font-bold text-ink-900">
+                    <p className="flex flex-wrap items-center gap-1.5 text-[11.5px] font-bold text-pixel-line">
                       <span className="truncate">{report.author}</span>
                       {report.verified ? (
-                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9.5px] font-semibold text-emerald-700">
+                        <span className="inline-flex items-center gap-0.5 border border-pixel-line bg-emerald-50 px-1 py-0.5 text-[9px] font-semibold text-emerald-900">
                           <BadgeCheck size={9} aria-hidden="true" />
                           Terverifikasi
                         </span>
                       ) : null}
                       {report.isUserSubmitted ? (
-                        <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-800">
+                        <span className="border border-pixel-line bg-pixel-sun px-1 py-0.5 text-[9px] font-bold text-pixel-line">
                           Laporan Anda
                         </span>
                       ) : null}
                     </p>
-                    <p className="mt-0.5 text-[9.5px] text-ink-500">
+                    <p className="mt-0.5 text-[9.5px] text-pixel-ink/65">
                       {formatDateShort(report.createdAt)} ·{" "}
                       {report.source === "firebase" ? "Tersinkron Firebase" : "Laporan warga"}
                     </p>
@@ -551,13 +554,13 @@ export function ValidationSection({ project }: { project: Project }) {
                 </div>
                 <span
                   className={cn(
-                    "shrink-0 rounded-full border px-2 py-0.5 text-[9.5px] font-semibold",
+                    "shrink-0 border-2 border-pixel-line px-1.5 py-0.5 text-[9px] font-semibold",
                     report.suitability === "Sesuai Target" &&
-                      "border-emerald-200 bg-emerald-50 text-emerald-700",
+                      "bg-emerald-50 text-emerald-900",
                     report.suitability === "Terlambat" &&
-                      "border-amber-200 bg-amber-50 text-amber-700",
+                      "bg-amber-50 text-amber-900",
                     report.suitability === "Indikasi Kejanggalan" &&
-                      "border-rose-200 bg-rose-50 text-rose-700",
+                      "bg-rose-50 text-rose-900",
                   )}
                 >
                   {report.suitability}
@@ -566,38 +569,40 @@ export function ValidationSection({ project }: { project: Project }) {
 
               <div className="mt-3 flex items-center gap-2">
                 <ReportStars rating={report.rating} />
-                <span className="text-[9.5px] text-ink-500">
+                <span className="text-[9.5px] text-pixel-ink/70">
                   Kesesuaian dengan RAB: {report.rating}/5
                 </span>
               </div>
 
-              <p className="mt-2 whitespace-pre-line text-[12px] leading-relaxed text-ink-700">
+              <p className="mt-2 whitespace-pre-line text-[12px] leading-relaxed text-pixel-ink/90">
                 {report.comment}
               </p>
 
               {report.photoUrl ? (
-                <div className="relative mt-3 h-[190px] w-full overflow-hidden rounded-xl border border-ink-200 bg-ink-100 sm:h-[230px]">
-                  <Image
-                    src={report.photoUrl}
-                    alt={`Foto bukti laporan dari ${report.author}`}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 65vw"
-                    className="object-cover"
-                    unoptimized={report.photoUrl.startsWith("data:")}
-                  />
-                  <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[9.5px] font-semibold text-white backdrop-blur">
-                    <ImageIcon size={9} aria-hidden="true" />
-                    Bukti foto warga
-                  </span>
-                  <span className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 rounded-full border border-white/20 bg-ink-950/60 px-2 py-0.5 text-[9.5px] font-medium text-white/90 backdrop-blur">
-                    <ShieldCheck size={9} className="text-emerald-400" aria-hidden="true" />
-                    Metadata dibersihkan
-                  </span>
+                <div className="mt-3 border-[3px] border-pixel-line bg-pixel-panel p-1">
+                  <div className="relative h-[180px] w-full overflow-hidden border-2 border-pixel-line bg-pixel-panel sm:h-[220px]">
+                    <Image
+                      src={report.photoUrl}
+                      alt={`Foto bukti laporan dari ${report.author}`}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 65vw"
+                      className="pixelated object-cover"
+                      unoptimized={report.photoUrl.startsWith("data:")}
+                    />
+                    <span className="absolute left-2 top-2 inline-flex items-center gap-1 border-2 border-pixel-line bg-pixel-line/90 px-1.5 py-0.5 text-[9px] font-semibold text-pixel-cream">
+                      <ImageIcon size={9} aria-hidden="true" />
+                      Bukti foto warga
+                    </span>
+                    <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 border-2 border-pixel-line bg-pixel-cream px-1.5 py-0.5 text-[9px] font-medium text-pixel-line">
+                      <ShieldCheck size={9} className="text-emerald-700" aria-hidden="true" />
+                      Metadata dibersihkan
+                    </span>
+                  </div>
                 </div>
               ) : null}
 
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-ink-100 pt-3">
-                <div className="flex items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-2 border-pixel-line/20 pt-3">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleUpvote(report)}
@@ -605,35 +610,35 @@ export function ValidationSection({ project }: { project: Project }) {
                     aria-pressed={isUpvoted}
                     aria-label={`Tandai laporan ini membantu. Saat ini ${upvoteCount} dukungan`}
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9.5px] font-semibold transition-colors disabled:opacity-60",
+                      "inline-flex min-h-8 items-center gap-1.5 border-2 border-pixel-line px-2 py-1 text-[9.5px] font-semibold shadow-chip disabled:opacity-60",
                       isUpvoted
-                        ? "border-amber-300 bg-amber-50 text-amber-800"
-                        : "border-ink-200 bg-white text-ink-500 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700",
+                        ? "bg-pixel-sun text-pixel-line"
+                        : "bg-white text-pixel-line hover:bg-pixel-sun/50",
                     )}
                   >
                     <ThumbsUp
                       size={11}
-                      className={isUpvoted ? "fill-amber-500 text-amber-600" : ""}
+                      className={isUpvoted ? "fill-amber-600 text-amber-700" : ""}
                       aria-hidden="true"
                     />
                     Membantu · {formatNumber(upvoteCount)}
                   </button>
                   {report.isUserSubmitted ? (
                     deleteTarget === report.id ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9.5px] font-semibold text-rose-700">
+                      <span className="inline-flex items-center gap-1.5 border-2 border-rose-700 bg-rose-50 px-1.5 py-0.5 text-[9.5px] font-semibold text-rose-900">
                         Hapus laporan?
                         <button
                           type="button"
                           onClick={() => handleDelete(report)}
                           disabled={deletingId === report.id}
-                          className="rounded-full bg-rose-600 px-1.5 py-0.5 text-[9.5px] font-bold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
+                          className="border border-pixel-line bg-rose-700 px-1.5 py-0.5 text-[9px] font-bold text-white hover:bg-rose-800 disabled:opacity-60"
                         >
                           {deletingId === report.id ? "Menghapus…" : "Ya, hapus"}
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(null)}
-                          className="text-[9.5px] font-semibold text-rose-700/70 underline underline-offset-2 hover:text-rose-900"
+                          className="text-[9px] font-semibold text-rose-900/75 underline underline-offset-2 hover:text-rose-950"
                         >
                           Batal
                         </button>
@@ -642,7 +647,7 @@ export function ValidationSection({ project }: { project: Project }) {
                       <button
                         type="button"
                         onClick={() => setDeleteTarget(report.id)}
-                        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9.5px] font-semibold text-ink-500 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                        className="inline-flex min-h-8 items-center gap-1 border-2 border-transparent px-2 py-1 text-[9.5px] font-semibold text-pixel-ink/60 hover:border-rose-700 hover:bg-rose-50 hover:text-rose-800"
                         aria-label={`Hapus laporan Anda tentang ${project.name}`}
                       >
                         <Trash2 size={10} aria-hidden="true" />
@@ -650,13 +655,13 @@ export function ValidationSection({ project }: { project: Project }) {
                       </button>
                     )
                   ) : null}
-                  <span className="hidden items-center gap-1 text-[9.5px] text-ink-500 sm:inline-flex">
+                  <span className="hidden items-center gap-1 text-[9.5px] text-pixel-ink/60 sm:inline-flex">
                     <MapPin size={9} aria-hidden="true" />
                     Lokasi sesuai proyek
                   </span>
                 </div>
-                <span className="flex items-center gap-1 text-[9.5px] text-ink-500">
-                  <ShieldCheck size={9} className="text-emerald-500" aria-hidden="true" />
+                <span className="flex items-center gap-1 text-[9.5px] text-pixel-ink/60">
+                  <ShieldCheck size={9} className="text-emerald-700" aria-hidden="true" />
                   Diverifikasi kecocokan lokasi
                 </span>
               </div>
@@ -665,14 +670,14 @@ export function ValidationSection({ project }: { project: Project }) {
         })}
 
         {filteredReports.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-ink-200 bg-white px-5 py-10 text-center">
-            <p className="text-[12px] font-semibold text-ink-700">
+          <div className="border-4 border-dashed border-pixel-line/50 bg-white px-5 py-10 text-center">
+            <p className="text-[12px] font-semibold text-pixel-line">
               Belum ada laporan dengan kategori ini
             </p>
             <button
               type="button"
               onClick={() => setFilter("Semua")}
-              className="mt-2 text-[10.5px] font-semibold text-amber-700 underline underline-offset-4"
+              className="mt-2 border-2 border-pixel-line bg-pixel-sun px-2.5 py-1 font-pixel text-[7px] uppercase text-pixel-line shadow-chip"
             >
               Tampilkan semua laporan
             </button>
@@ -680,7 +685,7 @@ export function ValidationSection({ project }: { project: Project }) {
         ) : null}
       </div>
 
-      <p className="mt-3 flex items-start gap-1.5 text-[9.5px] leading-relaxed text-ink-500">
+      <p className="mt-3 flex items-start gap-1.5 text-[9.5px] leading-relaxed text-pixel-ink/70">
         <AlertTriangle size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
         Laporan warga tidak menggantikan audit resmi. Status “Perlu Audit” adalah
         penanda untuk ditindaklanjuti, bukan pernyataan bersalah.

@@ -27,31 +27,36 @@ export default async function ProyekPage({ searchParams }: ProyekPageProps) {
         breadcrumb={[{ label: "Peta Proyek" }]}
         actions={
           <>
-            <RegionPicker className="w-[270px]" label="Wilayah proyek" />
-            <Link href="/anggaran" className="btn-secondary h-[54px] px-4 py-0 text-[12.5px]">
+            <RegionPicker className="w-full sm:w-[270px]" label="Wilayah proyek" />
+            <Link href="/anggaran" className="btn-secondary">
               Lihat anggaran
               <ArrowUpRight size={14} aria-hidden="true" />
             </Link>
           </>
         }
       >
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-ink-500">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-pixel-ink/80">
           <span className="inline-flex items-center gap-1.5">
-            <MapPinned size={12} className="text-ink-500" aria-hidden="true" />
+            <MapPinned size={12} aria-hidden="true" />
             Peta OpenStreetMap
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 border border-pixel-line bg-amber-600"
+            />
             Koordinat langsung dari lokasi proyek
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <ShieldCheck size={12} className="text-ink-500" aria-hidden="true" />
+            <ShieldCheck size={12} aria-hidden="true" />
             Laporan warga terverifikasi
           </span>
         </div>
       </PageHero>
 
-      <ProjectsExplorer initialQuery={params.q ?? ""} initialCategory={params.category} />
+      <div className="bg-pixel-cream">
+        <ProjectsExplorer initialQuery={params.q ?? ""} initialCategory={params.category} />
+      </div>
     </>
   );
 }
