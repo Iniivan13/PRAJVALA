@@ -134,20 +134,27 @@ Do not copy personal biography, identity details, portfolio text, photos, person
 ### Navigation wireframe
 
 ```text
-DESKTOP
-┌─────────────────────────────────────────────────────────────────┐
-│ [pixel PRAJVALA mark]  Beranda  Anggaran  Proyek  Informasi  Akun │
-└─────────────────────────────────────────────────────────────────┘
-│                         Page content                             │
+DESKTOP (>= 1024px)
+┌──────────────────────────────────────────────────────────────────────────┐
+│ [pixel PRAJVALA mark]  Beranda  Anggaran  Proyek  Laporan  Informasi  ⌄Akun │
+└──────────────────────────────────────────────────────────────────────────┘
+│                            Page content                                  │
+│                                                                          │
+│                           Pixel footer                                   │
+└──────────────────────────────────────────────────────────────────────────┘
 
-MOBILE
+MOBILE (< 1024px) — single row, five items, icon + label, no hamburger
 ┌───────────────────────────────┐
 │          Page content         │
 │                               │
-├───────────────────────────────┤
-│ Beranda Anggaran Proyek       │
-│ Laporan  Lainnya              │
+│         Pixel footer          │
+├───────────────────────────────┤  <- fixed, 68px, z-40
+│  ⌂      ▤       ⚑      ✉      ⋯  │
+│Beranda Anggaran Proyek Laporan Lainnya│
 └───────────────────────────────┘
+     Lainnya -> pixel bottom sheet: Dokumen, Informasi, Write Up, Akun
+
+Each item measures 78x64 CSS px at 390px width (>= 44px tap target).
 ```
 
 ## 7. Information architecture and route patterns
@@ -164,6 +171,23 @@ Inspect existing routes first; preserve them and map them to these patterns. Do 
 | Write Up/explainers | Journal layout optimized for long-form readability, pixel-framed headings/wayfinding |
 | Citizen reports | Message-board-inspired report flow with privacy, validation, upload, and feedback states |
 | Account | Citizen profile and contribution history, adapted to actual authentication |
+
+### Implemented route map
+
+| Route | Pattern implemented |
+|---|---|
+| `/` | Sky hero with clouds and stepped terrain, inventory KPI grid, quest-step plaques, featured quest cards, message board on dirt, wood CTA |
+| `/anggaran` | Paper hero, inventory KPI grid, wood-framed cashflow board, sector board, notes, RAB anchor and table |
+| `/proyek` | Paper hero with region picker, status chips, filter board, wood-bezel map, quest card grid |
+| `/proyek/[id]` | Sky header band, photo frame before/after, mission-path timeline, RAB table, citizen validation, wood ledger aside |
+| `/informasi` | Pocket page: document trophy case (`#dokumen`), pixel FAQ accordion (`#faq`), dark glossary board (`#glosarium`) |
+| `/laporan` | Citizen report board built only from `CITIZEN_REPORTS`, with region scoping, search, suitability filters, and per-project links |
+| `/write-up` | Journal page built only from `FAQS` (chapters) and `GLOSSARY` (appendix), with a sticky table of contents |
+| `/masuk`, `/daftar` | Wood-chassis auth gate; desktop ledger aside hidden below `lg`; all Firebase flows unchanged |
+| `/akun` | Sky account header, inventory stat slots, report history, distribution board, quick actions, account detail and deletion |
+| `not-found` | Signpost empty state on the sky band with three waymarked routes back |
+
+`/laporan` and `/write-up` are derived exclusively from existing seed data (`CITIZEN_REPORTS`, `FAQS`, `GLOSSARY`). No editorial copy or aggregate figures are invented; all counters are computed at render time.
 
 Avoid forcing every page into the same card grid. Use distinct compositions that still share the same pixel design language.
 
@@ -213,22 +237,61 @@ Never:
 
 ## 11. Token extraction and implementation
 
-Do not finalize tokens from memory. Inspect the live reference and the current PRAJVALA CSS/Tailwind configuration. Record actual choices and source/uncertainty here.
+Tokens are implemented in `tailwind.config.ts` (design tokens) and `app/globals.css` (component classes and CSS variables). Values below are the measured/chosen values currently in code.
 
-| Token family | Decision | Status/source |
+### Reference measurement
+
+The reference was measured in Firefox at 1440×1000 and 390×844, and its `style.css` (23,420 B) and `script.js` (10,338 B) were downloaded and read.
+
+**Verified from the reference:** palette hex values, `border-radius: 0` everywhere, `max-width: 1100px` content column, 68 px navigation bar, plaque-style headings, layered `inset` box shadows, two-column layouts with 26 px gaps, certificate “gem” frames, and `IntersectionObserver` reveal animations.
+
+**Adapted (not copied):** three reference colour pairings fail WCAG AA, so PRAJVALA uses hue-preserving, darkened variants instead. The adaptations are not presented as reference values.
+
+| Reference pairing | Measured contrast | PRAJVALA token | Measured contrast |
+|---|---|---|---|
+| `#4CAF50` on white | 2.78:1 (fails) | `pixel.grass-deep` `#2E6B33` | 6.43:1 |
+| `#4A90D9` on white | 3.34:1 (fails) | `pixel.blue` `#1D5FA8` | 6.45:1 |
+| `#B98249` with cream text | 3.07:1 (fails) | `pixel.wood-cta` `#8A5A2B` | 5.45:1 |
+
+### Token table
+
+| Token family | Implemented decision | Source / status |
 |---|---|---|
-| Pixel/display font | Extract from reference; use only for short display/UI accents | Pending live inspection |
-| Body font | Choose for Indonesian UI and dense data readability | Pending |
-| Brand palette | Extract actual reference palette; add civic semantic states carefully | Pending |
-| Pixel grid scale | Derive a consistent sprite/icon/border grid from reference | Pending |
-| Border treatment | Reproduce the reference's hard-edged/pixel framing | Pending |
-| Shadow treatment | Match its block/offset shadow character where verified | Pending |
-| Surface/background | Extract reference contrast and adapt to data readability | Pending |
-| Radius/shape | Prefer observed square/stepped geometry where reference uses it | Pending |
-| Desktop breakpoint | Inspect current project breakpoints and navigation fit | Pending |
-| Bottom-nav height | Measure after implementation, include safe area | Pending |
+| Pixel/display font | `Press Start 2P` (`font-pixel`), for labels, chips, buttons, counters, short headings only | Measured — loaded and verified via `document.fonts.check` |
+| Retro accent font | `VT323` (`font-retro`), for short intros and quotes, max ~3 lines | Measured |
+| Body font | `Inter Variable`, with Plus Jakarta Sans retained for `font-display` | Chosen for Indonesian body-copy and dense data readability |
+| Brand palette | `ink`, `navy`, `amber`, `emerald`, `rose`, `sky` scales plus `pixel.*` world surfaces | Measured from reference, adapted where contrast failed |
+| World surfaces | `line #2B2B2B`, `sky #87CEEB`, `grass #4CAF50`, `grass-deep #2E6B33`, `dirt #8B4513`, `sun #FFD700`, `wood #B98249`, `wood-cta #8A5A2B`, `wood-dark #7A4E28`, `wood-darker #4E342E`, `panel #D6D9DD`, `cream #FFF6E0`, `cream-deep #F4EFE3`, `ink #3E2723`, `blue #1D5FA8` | Measured (`--outline`, `--sky`, `--grass`, `--dirt`, `--sun`, `--wood`, `--panel`, `--cream`, `--ink`) |
+| Pixel grid scale | Icons are inline SVG on a 16×16 grid with `shape-rendering="crispEdges"`; decorative tile pattern at 40 px; fine grid at 8 px | Chosen to match the reference's block-icon character |
+| Border treatment | Global `border-radius: 0`; frames at 2–4 px; table section rules at 3 px | Measured reference `border-radius: 0` |
+| Shadow treatment | Three non-blurred levels: `shadow-chip` (2 px), `shadow-card`/`shadow-plaque` (5 px), `shadow-panel` (6 px + layered inset) | Measured layered inset shadow character |
+| Surface/background | Flat world bands (`sky`, `cream`, `panel`, `dirt`, `wood-darker`) + `surface-tiles` / `surface-grid` overlays | Adapted for data readability; no blur or gradient mesh |
+| Radius/shape | `rounded-*` removed from chrome; `rounded-full` retained only for map markers | Measured reference `border-radius: 0` |
+| Content width | `container-page` = `max-width: 1180px`, padding 16/24/32 px | Adapted from reference `max-width: 1100px` for denser tables |
+| Desktop breakpoint | Horizontal nav shown from `lg` (1024 px); bottom bar below | Measured: nav fits at 1024 px, does not fit at 768 px |
+| Bottom-nav height | **68 px** fixed bar, `z-40`, plus `env(safe-area-inset-bottom)`; content offset with `.pb-mobile-nav` | Measured in Firefox at 390 px |
+| More sheet | `z-60` pixel bottom sheet with scroll lock, Escape, focus trap, focus moved into sheet | Implemented, key-tested |
+| Focus ring | 3 px `pixel.sun` outline, offset 2 px | Chosen for visibility on both cream and wood surfaces |
+| Motion | `fade-in`, `step-up`, `sheet-up`, `pop-in`, all `steps()`-based; global `prefers-reduced-motion` guard | Chosen; perpetual `idle-bob`/`drift` from the reference rejected |
 
-When token values are measured or chosen, update this document and actual CSS variables/Tailwind tokens together. Do not allow documentation and implementation to drift.
+### Deliberate divergences from the reference
+
+| Reference trait | Decision | Reason |
+|---|---|---|
+| Emoji used as icons | Rejected — replaced by `components/ui/pixel-sprites.tsx` (17 inline sprites) | Emoji rendering varies by OS/font and lacks a consistent grid |
+| Hamburger menu on mobile | Rejected — five-item labelled bottom nav | Mandated by §6 |
+| WebAudio sound effects | Not implemented | No audio requirement; unexpected sound harms usability |
+| Perpetual `idle-bob` / `drift` / auto-advancing photo carousel | Rejected | Continuous motion conflicts with `prefers-reduced-motion` and distracts from data |
+| `conic-gradient` score ring | Replaced by a 10-step square bar meter plus a framed numeric plate | Keeps the circle-free pixel language while preserving the same numeric value |
+
+### Data-visualisation specifics
+
+- `sector-donut.tsx`: Recharts `Pie` uses `strokeLinejoin`/line caps set to butt, a `pixel.panel` track, and an inset cream centre plate; the legend uses block bars, not coloured dots.
+- `cashflow-chart.tsx`: square bars, dotted grid lines, pixel-plaque tooltip, dark axis line; all axis labels, units, and legends retained.
+- `progress-bar.tsx`: stepped striped meter; no rounded track or gradient fill.
+- `validation-section.tsx`: the score meter is 10 discrete blocks, filled `round(score / 10)`, with the numeric score repeated in a bordered plate and `aria-label` on the meter container.
+
+When token values change, update this document and the actual CSS variables/Tailwind tokens together. Do not allow documentation and implementation to drift.
 
 ## 12. Accessibility and responsive quality
 
