@@ -9,6 +9,14 @@ interface SectorDonutProps {
   total: number;
 }
 
+/**
+ * Sector composition ring.
+ *
+ * Recharts/Chart-free SVG. The arcs keep square line caps and the legend bars
+ * are solid blocks, so the chart belongs to the pixel language without losing
+ * an accurate read of the proportions. Hover and focus still drive the centre
+ * readout, and the whole graphic keeps its text alternative.
+ */
 export function SectorDonut({ sectors, total }: SectorDonutProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const centerSectors = sectors.slice(0, 6);
@@ -35,7 +43,7 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
             cy={radius}
             r={radius - strokeWidth / 2 - 4}
             fill="none"
-            stroke="#F1F5F9"
+            stroke="#D6D9DD"
             strokeWidth={strokeWidth}
           />
           {centerSectors.map((sector, index) => {
@@ -50,7 +58,7 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
                 fill="none"
                 stroke={sector.color}
                 strokeWidth={activeIndex === index ? strokeWidth + 5 : strokeWidth}
-                strokeLinecap="round"
+                strokeLinecap="butt"
                 strokeDasharray={`${dash} ${circumference - dash}`}
                 strokeDashoffset={-offset}
                 opacity={activeIndex === null || activeIndex === index ? 1 : 0.28}
@@ -63,33 +71,34 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
             return circle;
           })}
         </svg>
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+        {/* Centre plate sits on a solid pixel window, not bare canvas. */}
+        <div className="pointer-events-none absolute inset-[38px] flex flex-col items-center justify-center border-2 border-pixel-line bg-pixel-cream px-3 text-center">
           {active ? (
             <>
               <span
-                className="h-2 w-2 rounded-full"
+                className="h-2 w-2 border border-pixel-line"
                 style={{ backgroundColor: active.color }}
                 aria-hidden="true"
               />
-              <span className="mt-1.5 line-clamp-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-500">
+              <span className="mt-1 line-clamp-2 font-pixel text-[6.5px] uppercase leading-[1.6] text-pixel-ink/70">
                 {active.sector}
               </span>
-              <span className="mt-0.5 font-display text-[21px] font-extrabold tracking-tight text-ink-900">
+              <span className="mt-1 font-pixel text-[11px] leading-none tabular text-pixel-line">
                 {formatCompactIDR(active.pagu)}
               </span>
-              <span className="text-[10px] font-semibold text-ink-500">
+              <span className="mt-1 text-[10px] font-semibold tabular text-pixel-ink/70">
                 {formatPercent(activePercentage)}
               </span>
             </>
           ) : (
             <>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-500">
-                Total Pagu
+              <span className="font-pixel text-[6px] uppercase leading-[1.6] tracking-[0.04em] text-pixel-ink/60">
+                Total pagu
               </span>
-              <span className="mt-1 font-display text-[23px] font-extrabold tracking-tight text-ink-900">
+              <span className="mt-1 font-pixel text-[11px] leading-none tabular text-pixel-line">
                 {formatCompactIDR(total)}
               </span>
-              <span className="mt-0.5 text-[10px] text-ink-500">
+              <span className="mt-1 text-[10px] tabular text-pixel-ink/70">
                 {sectors.length} sektor
               </span>
             </>
@@ -111,37 +120,37 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
                 onBlur={() => setActiveIndex(null)}
                 onClick={() => setActiveIndex(isActive ? null : index)}
                 aria-pressed={isActive}
-                className="group block w-full rounded-lg text-left outline-offset-4"
+                className="group block w-full text-left outline-offset-4"
               >
-                <div className="flex items-center justify-between gap-3 text-[12px]">
+                <div className="flex items-center justify-between gap-3 text-[11.5px]">
                   <span className="flex min-w-0 items-center gap-2">
                     <span
-                      className="h-2 w-2 shrink-0 rounded-full transition-transform group-hover:scale-125"
+                      className="h-2 w-2 shrink-0 border border-pixel-line"
                       style={{ backgroundColor: sector.color }}
                       aria-hidden="true"
                     />
                     <span
                       className={
                         isActive
-                          ? "truncate font-semibold text-ink-900"
-                          : "truncate text-ink-600 group-hover:text-ink-900"
+                          ? "truncate font-bold text-pixel-line"
+                          : "truncate text-pixel-ink/80 group-hover:text-pixel-line"
                       }
                     >
                       {sector.sector}
                     </span>
                   </span>
-                  <span className="shrink-0 font-mono text-[11px] font-semibold tabular text-ink-900">
+                  <span className="shrink-0 tabular font-mono text-[11px] font-semibold text-pixel-line">
                     {formatPercent(percentage)}
                   </span>
                 </div>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <div className="h-1 flex-1 overflow-hidden rounded-full bg-ink-100">
+                  <div className="h-2 flex-1 overflow-hidden border border-pixel-line bg-pixel-panel">
                     <div
-                      className="h-full rounded-full transition-all duration-500"
+                      className="h-full transition-all duration-500"
                       style={{ width: `${percentage}%`, backgroundColor: sector.color }}
                     />
                   </div>
-                  <span className="w-[70px] shrink-0 text-right text-[10px] font-medium text-ink-500">
+                  <span className="w-[70px] shrink-0 text-right tabular font-mono text-[10px] font-medium text-pixel-ink/70">
                     {formatCompactIDR(sector.pagu)}
                   </span>
                 </div>

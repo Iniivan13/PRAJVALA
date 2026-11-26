@@ -11,11 +11,15 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { TOTAL_CITIZEN_REPORTS } from "@/lib/data";
 import { formatCompactIDR, formatNumber } from "@/lib/utils";
 
+/**
+ * Budget indicators as a 2×2 inventory on mobile (matching the reference's
+ * backpack grid) and a single row of four slots on wide screens.
+ */
 export function LandingKpis() {
   const { summary } = useRegion();
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:gap-4 xl:grid-cols-4">
       <KpiCard
         label="Total Anggaran Terpantau"
         value={summary.totalBudget}

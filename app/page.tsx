@@ -1,23 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BadgeCheck,
-  Camera,
-  CheckCircle2,
-  Database,
-  FileText,
-  MapPin,
-  MapPinned,
-  MessageSquare,
-  Quote,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  ThumbsUp,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { BadgeCheck, Quote, ThumbsUp } from "lucide-react";
 import { HeroSearch } from "@/components/landing/hero-search";
 import { HeroPreview } from "@/components/landing/hero-preview";
 import { LandingKpis } from "@/components/landing/landing-kpis";
@@ -25,6 +7,18 @@ import { LandingSnapshot } from "@/components/landing/landing-snapshot";
 import { ProjectCard } from "@/components/projects/project-card";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
+import {
+  PixelClouds,
+  PixelTerrain,
+} from "@/components/ui/pixel-landscape";
+import {
+  SpriteBudget,
+  SpriteChest,
+  SpriteDocument,
+  SpriteQuest,
+  SpriteReport,
+  SpriteSun,
+} from "@/components/ui/pixel-sprites";
 import {
   CITIZEN_REPORTS,
   PROJECTS,
@@ -42,7 +36,7 @@ const FEATURED_IDS = [
 const STEP_ITEMS = [
   {
     number: "01",
-    icon: MapPin,
+    Sprite: SpriteQuest,
     title: "Pilih wilayah Anda",
     description:
       "Telusuri kelurahan, desa, atau kecamatan. Setiap wilayah memiliki ringkasan anggaran, serapan, dan skor akuntabilitasnya sendiri.",
@@ -50,7 +44,7 @@ const STEP_ITEMS = [
   },
   {
     number: "02",
-    icon: Database,
+    Sprite: SpriteBudget,
     title: "Bandingkan angka dengan bukti",
     description:
       "Lihat pagu, realisasi, harga satuan, dan progres fisik. Indikator kewajaran harga membantu Anda menemukan hal yang perlu ditanyakan.",
@@ -58,7 +52,7 @@ const STEP_ITEMS = [
   },
   {
     number: "03",
-    icon: Camera,
+    Sprite: SpriteReport,
     title: "Verifikasi dari lapangan",
     description:
       "Kirim foto, koordinat, dan temuan Anda. Laporan warga memperkuat pengawasan dan membantu memprioritaskan audit.",
@@ -68,22 +62,22 @@ const STEP_ITEMS = [
 
 const TRUST_ITEMS = [
   {
-    icon: FileText,
+    Sprite: SpriteDocument,
     title: "Dokumen terbuka",
     subtitle: "APBD, APBDes, RAB & LPJ",
   },
   {
-    icon: MapPinned,
+    Sprite: SpriteQuest,
     title: "Peta geospasial",
     subtitle: "Koordinat & bukti fisik",
   },
   {
-    icon: Users,
+    Sprite: SpriteReport,
     title: "Verifikasi warga",
     subtitle: "Laporan komunitas",
   },
   {
-    icon: ShieldCheck,
+    Sprite: SpriteChest,
     title: "Privasi terjaga",
     subtitle: "Metadata foto dibersihkan",
   },
@@ -94,16 +88,18 @@ const QUOTE_IDS = ["rep-01", "rep-19", "rep-09"];
 function StarRating({ rating }: { rating: number }) {
   return (
     <span
-      className="flex items-center gap-0.5"
+      className="flex items-center gap-1"
       aria-label={`Penilaian ${rating} dari 5 bintang`}
     >
       {[1, 2, 3, 4, 5].map((star) => (
-        <Star
+        <span
           key={star}
-          size={12}
-          className={star <= rating ? "text-amber-500" : "text-ink-200"}
-          fill={star <= rating ? "#F59E0B" : "transparent"}
           aria-hidden="true"
+          className={
+            star <= rating
+              ? "h-2.5 w-2.5 border border-pixel-line bg-pixel-sun"
+              : "h-2.5 w-2.5 border border-pixel-line bg-pixel-panel"
+          }
         />
       ))}
     </span>
@@ -111,56 +107,49 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function HomePage() {
-  const featured = FEATURED_IDS.map((id) => PROJECTS.find((project) => project.id === id)).filter(
-    (project): project is NonNullable<typeof project> => Boolean(project),
-  );
+  const featured = FEATURED_IDS.map((id) =>
+    PROJECTS.find((project) => project.id === id),
+  ).filter((project): project is NonNullable<typeof project> => Boolean(project));
 
-  const quotes = QUOTE_IDS.map((id) => CITIZEN_REPORTS.find((report) => report.id === id)).filter(
-    (report): report is NonNullable<typeof report> => Boolean(report),
-  );
+  const quotes = QUOTE_IDS.map((id) =>
+    CITIZEN_REPORTS.find((report) => report.id === id),
+  ).filter((report): report is NonNullable<typeof report> => Boolean(report));
 
   return (
     <>
-      <section className="relative overflow-hidden bg-white">
-        <div
-          className="surface-grid pointer-events-none absolute inset-0 opacity-70 [mask-image:linear-gradient(to_bottom,black_20%,transparent_92%)]"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -left-40 top-10 h-[420px] w-[420px] rounded-full bg-amber-400/10 blur-[100px]"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute right-0 top-0 h-[520px] w-[520px] rounded-full bg-navy/[0.05] blur-[110px]"
-          aria-hidden="true"
-        />
+      {/* ================= HERO — pixel sky world ================= */}
+      <section className="relative overflow-hidden border-b-4 border-pixel-line bg-pixel-sky">
+        <PixelClouds />
 
-        <div className="container-page relative grid items-center gap-10 pb-10 pt-10 sm:pt-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-6 lg:pb-8 lg:pt-16">
+        <div className="container-page relative grid items-center gap-10 pb-8 pt-9 sm:pt-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8 lg:pb-6 lg:pt-14">
           <div className="relative z-10">
-            <div className="inline-flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-700">
-                <Sparkles size={12} aria-hidden="true" />
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 border-[3px] border-pixel-line bg-pixel-sun px-2.5 py-1.5 font-pixel text-[8px] uppercase text-pixel-line shadow-chip">
+                <SpriteSun size={12} className="text-pixel-line" />
                 Smart Governance · SDG 16
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-ink-500">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 border-[3px] border-pixel-line bg-white px-2.5 py-1.5 font-pixel text-[8px] uppercase text-pixel-line shadow-chip">
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 border border-pixel-line bg-emerald-600"
+                />
                 Data anggaran 2026
               </span>
             </div>
 
-            <h1 className="mt-5 max-w-[640px] font-display text-[40px] font-extrabold leading-[1.04] tracking-[-0.03em] text-ink-900 text-balance sm:text-[54px] lg:text-[58px]">
+            <h1 className="mt-5 max-w-[640px] font-pixel text-[23px] uppercase leading-[1.75] text-pixel-line text-shadow-pixel-light sm:text-[30px] lg:text-[33px]">
               Menyinari Setiap{" "}
               <span className="relative inline-block whitespace-nowrap">
                 <span className="relative z-10">Rupiah</span>
                 <span
-                  className="absolute inset-x-0 bottom-[0.08em] h-[0.26em] -rotate-[1.2deg] rounded-sm bg-amber-300/80"
                   aria-hidden="true"
+                  className="absolute inset-x-0 bottom-[0.06em] h-[0.34em] bg-pixel-sun"
                 />
               </span>{" "}
               Anggaran Publik.
             </h1>
 
-            <p className="mt-5 max-w-[560px] text-pretty text-[15px] leading-relaxed text-ink-500 sm:text-[16px]">
+            <p className="mt-5 max-w-[540px] font-retro text-[19px] leading-snug text-pixel-ink sm:text-[20px]">
               PRAJVALA membuka jalur langsung antara warga dan anggaran publik.
               Pantau Dana Desa dan APBD, telusuri bukti proyek, lalu verifikasi
               sendiri kondisi di lapangan.
@@ -170,49 +159,63 @@ export default function HomePage() {
 
             <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="flex -space-x-2">
+                <div className="flex">
                   {CITIZEN_REPORTS.slice(0, 4).map((report, index) => (
                     <span
                       key={report.id}
-                      className="grid h-8 w-8 place-items-center rounded-full border-2 border-white text-[9.5px] font-bold text-white shadow-sm"
-                      style={{
-                        backgroundColor: ["#1E3A8A", "#B45309", "#047857", "#1E293B"][index],
-                      }}
                       aria-hidden="true"
+                      className={cnIndex(index)}
                     >
                       {report.initials}
                     </span>
                   ))}
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold text-ink-800">
+                  <p className="font-pixel text-[8px] uppercase leading-[1.6] text-pixel-line">
                     {formatNumber(TOTAL_CITIZEN_REPORTS)} laporan warga
                   </p>
-                  <p className="text-[9.5px] text-ink-500">di 3 wilayah percontohan</p>
+                  <p className="mt-1 text-[11.5px] text-pixel-ink/80">
+                    di 3 wilayah percontohan
+                  </p>
                 </div>
               </div>
 
-              <span className="hidden h-8 w-px bg-ink-200 sm:block" aria-hidden="true" />
+              <span
+                aria-hidden="true"
+                className="hidden h-9 w-1 bg-pixel-line/30 sm:block"
+              />
 
-              <div className="flex items-center gap-1.5 text-[10.5px] font-medium text-ink-500">
-                <ShieldCheck size={14} className="text-emerald-600" aria-hidden="true" />
+              <p className="flex items-center gap-2 text-[11.5px] font-medium text-pixel-ink/85">
+                <span
+                  aria-hidden="true"
+                  className="h-2.5 w-2.5 border border-pixel-line bg-emerald-600"
+                />
                 Terbuka, dapat diaudit, dan dikoreksi bersama
-              </div>
+              </p>
             </div>
           </div>
 
-          <div className="relative lg:pl-4">
+          <div className="relative lg:pl-2">
             <HeroPreview />
           </div>
         </div>
 
-        <div className="container-page relative pb-12 lg:pb-14">
-          <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-500">
-              Ringkasan langsung · Mengikuti wilayah terpilih
+        <PixelTerrain />
+      </section>
+
+      {/* ================= KPI BAND — inventory slots ================= */}
+      <section className="bg-pixel-cream">
+        <div className="container-page py-10 sm:py-12">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <p className="inline-flex items-center gap-2 border-2 border-pixel-line bg-white px-2.5 py-1 font-pixel text-[8px] uppercase tracking-[0.04em] text-pixel-line shadow-chip">
+              <SpriteChest size={11} />
+              Ringkasan langsung · Wilayah terpilih
             </p>
-            <p className="flex items-center gap-1.5 text-[10px] font-medium text-ink-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" aria-hidden="true" />
+            <p className="flex items-center gap-2 text-[11px] font-medium text-pixel-ink/75">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 border border-pixel-line bg-pixel-sun"
+              />
               Diperbarui November 2026
             </p>
           </div>
@@ -220,102 +223,120 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-ink-200/70 bg-ink-50/70">
-        <div className="container-page grid grid-cols-2 gap-x-4 gap-y-5 py-5 sm:grid-cols-4">
-          {TRUST_ITEMS.map((item, index) => (
-            <div
-              key={item.title}
-              className={`flex items-center gap-3 ${
-                index > 0 ? "sm:border-l sm:border-ink-200/80 sm:pl-5" : ""
-              }`}
-            >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-ink-200/80 bg-white text-ink-600 shadow-sm">
-                <item.icon size={15} aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-[11.5px] font-semibold text-ink-800">{item.title}</p>
-                <p className="text-[9.5px] text-ink-500">{item.subtitle}</p>
+      {/* ================= TRUST STRIP ================= */}
+      <section className="border-y-4 border-pixel-line bg-pixel-panel">
+        <div className="container-page grid grid-cols-2 gap-x-4 gap-y-5 py-6 sm:grid-cols-4">
+          {TRUST_ITEMS.map((item, index) => {
+            const Sprite = item.Sprite;
+            return (
+              <div
+                key={item.title}
+                className={
+                  index > 0
+                    ? "flex items-center gap-3 sm:border-l-[3px] sm:border-pixel-line/25 sm:pl-5"
+                    : "flex items-center gap-3"
+                }
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center border-[3px] border-pixel-line bg-pixel-sun text-pixel-line shadow-chip">
+                  <Sprite size={18} />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-pixel text-[8px] uppercase leading-[1.7] text-pixel-line">
+                    {item.title}
+                  </p>
+                  <p className="mt-1 text-[11px] text-pixel-ink/80">{item.subtitle}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <LandingSnapshot />
 
-      <section id="cara-kerja" className="border-y border-ink-200/70 bg-white py-16 sm:py-20">
-        <div className="container-page">
+      {/* ================= CARA KERJA — quest plaques ================= */}
+      <section
+        id="cara-kerja"
+        className="relative border-y-4 border-pixel-line bg-pixel-cream py-16 sm:py-20"
+      >
+        <div
+          className="surface-grid pointer-events-none absolute inset-0 opacity-30"
+          aria-hidden="true"
+        />
+        <div className="container-page relative">
           <Reveal>
             <SectionHeading
               eyebrow="Cara kerja"
               title="Dari angka anggaran menjadi bukti nyata."
               description="Tiga langkah sederhana untuk memahami dan mengawasi penggunaan uang publik — tanpa perlu latar belakang akuntansi."
               align="center"
+              plaqueTone="panel"
             />
           </Reveal>
 
-          <div className="relative mt-10 grid gap-4 md:grid-cols-3">
-            <div
-              className="pointer-events-none absolute left-[16%] right-[16%] top-[3.1rem] hidden border-t border-dashed border-ink-200 md:block"
-              aria-hidden="true"
-            />
-            {STEP_ITEMS.map((step, index) => (
-              <Reveal key={step.number}>
-                <div className="group relative h-full overflow-hidden rounded-2xl border border-ink-200/80 bg-ink-50/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-ink-300 hover:bg-white hover:shadow-lifted">
-                  <span
-                    className="pointer-events-none absolute right-4 top-2 font-display text-[54px] font-extrabold leading-none text-ink-900/[0.045] transition-colors group-hover:text-amber-500/15"
-                    aria-hidden="true"
-                  >
-                    {step.number}
-                  </span>
-                  <div className="relative flex items-center justify-between">
-                    <span className="grid h-11 w-11 place-items-center rounded-xl border border-ink-200 bg-white text-navy shadow-sm">
-                      <step.icon size={19} aria-hidden="true" />
-                    </span>
-                    {index < STEP_ITEMS.length - 1 ? (
-                      <ArrowRight
-                        size={15}
-                        className="text-ink-300 md:hidden"
+          <div className="relative mt-10 grid gap-5 md:grid-cols-3">
+            {STEP_ITEMS.map((step, index) => {
+              const Sprite = step.Sprite;
+              return (
+                <Reveal key={step.number}>
+                  <div className="group relative flex h-full flex-col border-4 border-pixel-line bg-white p-5 shadow-card transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-1 sm:p-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="grid h-11 w-11 place-items-center border-[3px] border-pixel-line bg-pixel-sun text-pixel-line shadow-chip">
+                        <Sprite size={20} />
+                      </span>
+                      <span className="border-[3px] border-pixel-line bg-pixel-panel px-2 py-1 font-pixel text-[13px] leading-none text-pixel-line shadow-chip">
+                        {step.number}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-4 font-pixel text-[11px] uppercase leading-[1.8] text-pixel-line">
+                      {step.title}
+                    </h3>
+                    <p className="mt-2.5 flex-1 text-[12.5px] leading-relaxed text-pixel-ink/85">
+                      {step.description}
+                    </p>
+
+                    <p className="mt-4 inline-flex w-fit items-center gap-2 border-2 border-pixel-line bg-pixel-cream px-2 py-1 text-[10.5px] font-semibold text-pixel-line">
+                      <span
                         aria-hidden="true"
+                        className="h-2 w-2 border border-pixel-line bg-pixel-wood-cta"
                       />
-                    ) : (
-                      <CheckCircle2 size={16} className="text-emerald-500" aria-hidden="true" />
-                    )}
+                      {step.note}
+                    </p>
                   </div>
-                  <h3 className="relative mt-4 font-display text-[17px] font-bold tracking-tight text-ink-900">
-                    {step.title}
-                  </h3>
-                  <p className="relative mt-2 text-[12.5px] leading-relaxed text-ink-500">
-                    {step.description}
-                  </p>
-                  <p className="relative mt-4 inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-white px-2.5 py-1 text-[9.5px] font-semibold text-ink-500">
-                    <span className="h-1 w-1 rounded-full bg-amber-500" aria-hidden="true" />
-                    {step.note}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Link href="/laporan" className="btn-ghost">
+              Lihat papan laporan warga
+              <SpriteReport size={13} />
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="py-16 sm:py-20">
+      {/* ================= FEATURED PROJECTS ================= */}
+      <section className="bg-pixel-cream-deep py-16 sm:py-20">
         <div className="container-page">
           <Reveal>
             <SectionHeading
               eyebrow="Proyek sorotan"
               title="Bukti yang bisa dilihat, bukan janji."
               description="Setiap proyek memiliki peta lokasi, perbandingan kondisi sebelum-sesudah, rincian anggaran, dan catatan warga."
+              plaqueTone="paper"
               action={
-                <Link href="/proyek" className="btn-secondary h-10 px-4 py-0 text-[12.5px]">
+                <Link href="/proyek" className="btn-secondary">
                   Lihat semua proyek
-                  <ArrowUpRight size={14} aria-hidden="true" />
+                  <SpriteQuest size={13} />
                 </Link>
               }
             />
           </Reveal>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {featured.map((project) => (
               <Reveal key={project.id}>
                 <ProjectCard project={project} className="h-full" />
@@ -323,77 +344,75 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-ink-200 bg-white/60 px-4 py-3">
-            <p className="flex items-center gap-2 text-[11px] text-ink-500">
-              <Wallet size={14} className="text-amber-500" aria-hidden="true" />
+          <div className="mt-7 flex flex-col gap-3 border-4 border-pixel-line bg-white px-4 py-3 shadow-card sm:flex-row sm:items-center sm:justify-between">
+            <p className="flex flex-wrap items-center gap-2 text-[11.5px] text-pixel-ink/85">
+              <SpriteBudget size={14} className="text-pixel-wood-cta" />
               Total pagu tiga proyek sorotan:{" "}
-              <span className="font-mono font-semibold text-ink-800">
+              <span className="tabular font-mono text-[12.5px] font-semibold text-pixel-line">
                 {formatIDR(featured.reduce((sum, project) => sum + project.budget, 0))}
               </span>
             </p>
             <Link
               href="/anggaran"
-              className="inline-flex min-h-8 items-center gap-1 text-[11.5px] font-semibold text-navy hover:text-amber-600"
+              className="inline-flex min-h-9 w-fit items-center gap-1.5 border-[3px] border-pixel-line bg-pixel-sun px-2.5 font-pixel text-[8px] uppercase text-pixel-line shadow-chip transition-transform hover:-translate-y-0.5"
             >
-              Bandingkan dengan realisasi
-              <ArrowRight size={12} aria-hidden="true" />
+              Bandingkan realisasi
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-y border-ink-200/70 bg-white py-16 sm:py-20">
+      {/* ================= CITIZEN REPORTS — message board on dirt ================= */}
+      <section className="relative overflow-hidden border-y-4 border-pixel-line bg-pixel-dirt py-16 text-pixel-cream sm:py-20">
         <div
-          className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-amber-400/[0.08] blur-[90px]"
+          className="pointer-events-none absolute inset-0 opacity-20 surface-tiles"
           aria-hidden="true"
         />
+
         <div className="container-page relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
           <Reveal>
             <div className="lg:sticky lg:top-28">
-              <span className="eyebrow">
-                <span className="h-px w-6 bg-amber-500" aria-hidden="true" />
+              <span className="inline-flex border-[3px] border-pixel-line bg-pixel-sun px-2.5 py-1 font-pixel text-[8px] uppercase text-pixel-line shadow-chip">
                 Suara warga
               </span>
-              <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight tracking-tight text-ink-900 text-balance sm:text-[38px]">
+              <h2 className="mt-4 font-pixel text-[18px] uppercase leading-[1.75] text-pixel-cream sm:text-[22px]">
                 Yang melihat langsung, tahu lebih banyak.
               </h2>
-              <p className="mt-3 text-[14px] leading-relaxed text-ink-500">
+              <p className="mt-4 font-retro text-[18px] leading-snug text-pixel-cream/90">
                 Laporan warga kami tampilkan apa adanya: lengkap dengan foto,
                 waktu, koordinat, dan dukungan komunitas. Bukan untuk menghakimi,
-                tetapi untuk memastikan pertanyaan yang tepat sampai ke meja yang tepat.
+                tetapi untuk memastikan pertanyaan yang tepat sampai ke meja yang
+                tepat.
               </p>
 
               <div className="mt-6 grid grid-cols-3 gap-3">
-                <div className="rounded-xl border border-ink-200/80 bg-ink-50/70 px-3 py-2.5">
-                  <p className="font-display text-lg font-extrabold text-ink-900">
-                    {formatNumber(TOTAL_CITIZEN_REPORTS)}
-                  </p>
-                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
-                    Laporan
-                  </p>
-                </div>
-                <div className="rounded-xl border border-ink-200/80 bg-ink-50/70 px-3 py-2.5">
-                  <p className="font-display text-lg font-extrabold text-ink-900">
-                    {PROJECTS.filter((project) => project.validationScore >= 85).length}
-                  </p>
-                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
-                    Terverifikasi
-                  </p>
-                </div>
-                <div className="rounded-xl border border-ink-200/80 bg-ink-50/70 px-3 py-2.5">
-                  <p className="font-display text-lg font-extrabold text-ink-900">3</p>
-                  <p className="mt-0.5 text-[9.5px] font-medium uppercase tracking-[0.06em] text-ink-500">
-                    Wilayah
-                  </p>
-                </div>
+                {[
+                  { value: formatNumber(TOTAL_CITIZEN_REPORTS), label: "Laporan" },
+                  {
+                    value: PROJECTS.filter((project) => project.validationScore >= 85).length,
+                    label: "Terverifikasi",
+                  },
+                  { value: 3, label: "Wilayah" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="border-[3px] border-pixel-line bg-pixel-cream px-2.5 py-2.5 text-pixel-line shadow-chip"
+                  >
+                    <p className="font-pixel text-[12px] leading-none">{stat.value}</p>
+                    <p className="mt-1.5 font-pixel text-[6.5px] uppercase leading-[1.6] tracking-[0.04em]">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
               </div>
 
               <Link
-                href="/proyek"
-                className="mt-5 inline-flex min-h-8 items-center gap-1.5 text-[12px] font-semibold text-navy transition-colors hover:text-amber-600"
+                href="/laporan"
+                className="mt-6 inline-flex min-h-11 items-center gap-2 border-4 border-pixel-line bg-pixel-sun px-3.5 font-pixel text-[9px] uppercase text-pixel-line shadow-btn-sun transition-transform hover:-translate-y-0.5"
               >
                 Baca laporan lapangan lainnya
-                <ArrowRight size={13} aria-hidden="true" />
+                <span aria-hidden="true">→</span>
               </Link>
             </div>
           </Reveal>
@@ -403,43 +422,45 @@ export default function HomePage() {
               const project = getProject(report.projectId);
               return (
                 <Reveal key={report.id}>
-                  <figure className="group relative overflow-hidden rounded-2xl border border-ink-200/80 bg-white p-5 shadow-soft transition-all duration-300 hover:border-ink-300 hover:shadow-lifted sm:p-6">
+                  <figure className="relative border-4 border-pixel-line bg-pixel-cream p-5 text-pixel-line shadow-card transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-1 sm:p-6">
                     <Quote
-                      size={40}
-                      className="absolute right-5 top-4 text-ink-900/[0.04]"
+                      size={36}
+                      className="absolute right-4 top-3 text-pixel-line/10"
                       aria-hidden="true"
                     />
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                       <StarRating rating={report.rating} />
-                      <span className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-ink-50 px-2 py-0.5 text-[9.5px] font-medium text-ink-500">
+                      <span className="inline-flex items-center gap-1.5 border-2 border-pixel-line bg-white px-2 py-0.5 text-[10px] font-semibold text-pixel-line">
                         {report.suitability}
                       </span>
                     </div>
-                    <blockquote className="relative mt-3 text-[13px] leading-relaxed text-ink-700">
+
+                    <blockquote className="mt-3 text-[13px] leading-relaxed text-pixel-ink">
                       “{report.comment}”
                     </blockquote>
-                    <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-ink-100 pt-3.5">
+
+                    <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t-[3px] border-pixel-line/20 pt-3.5">
                       <div className="flex items-center gap-2.5">
-                        <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-navy to-ink-800 text-[10px] font-bold text-white">
+                        <span className="grid h-8 w-8 place-items-center border-2 border-pixel-line bg-pixel-wood-cta font-pixel text-[8px] text-pixel-cream">
                           {report.initials}
                         </span>
                         <div>
-                          <p className="flex items-center gap-1 text-[11px] font-semibold text-ink-900">
+                          <p className="flex items-center gap-1 text-[11.5px] font-semibold text-pixel-line">
                             {report.author}
                             {report.verified ? (
                               <BadgeCheck
                                 size={12}
-                                className="text-emerald-500"
+                                className="text-emerald-700"
                                 aria-label="Warga terverifikasi"
                               />
                             ) : null}
                           </p>
-                          <p className="text-[9.5px] text-ink-500">
+                          <p className="text-[10px] text-pixel-ink/70">
                             {formatDateShort(report.createdAt)} · {project?.name}
                           </p>
                         </div>
                       </div>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-ink-50 px-2 py-1 text-[9.5px] font-semibold text-ink-500">
+                      <span className="inline-flex items-center gap-1 border-2 border-pixel-line bg-white px-1.5 py-0.5 text-[10px] font-semibold text-pixel-line">
                         <ThumbsUp size={10} aria-hidden="true" />
                         {report.upvotes}
                       </span>
@@ -448,90 +469,87 @@ export default function HomePage() {
                 </Reveal>
               );
             })}
-            <p className="flex items-center gap-2 px-2 text-[9.5px] text-ink-500">
-              <MessageSquare size={11} aria-hidden="true" />
+            <p className="flex items-center gap-2 px-1 text-[10px] text-pixel-cream/80">
+              <SpriteReport size={12} className="text-pixel-sun" />
               Nama pelapor telah disamarkan untuk melindungi privasi.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="py-16 sm:py-20">
+      {/* ================= CTA — wooden board ================= */}
+      <section className="bg-pixel-cream py-16 sm:py-20">
         <div className="container-page">
           <Reveal>
-            <div className="relative overflow-hidden rounded-[28px] bg-ink-900 px-6 py-10 text-white shadow-lifted sm:px-10 lg:px-12 lg:py-14">
-              <div className="surface-grid-dark absolute inset-0 opacity-50" aria-hidden="true" />
+            <div className="relative border-4 border-pixel-line bg-pixel-wood-darker p-6 text-pixel-cream shadow-panel sm:p-10 lg:p-12">
               <div
-                className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full bg-amber-500/20 blur-[90px]"
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute -bottom-28 left-1/3 h-72 w-72 rounded-full bg-navy/50 blur-[100px]"
+                className="pointer-events-none absolute inset-0 opacity-[0.14] surface-tiles"
                 aria-hidden="true"
               />
 
               <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
                 <div>
-                  <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-400">
-                    <Sparkles size={13} aria-hidden="true" />
+                  <span className="inline-flex items-center gap-2 border-[3px] border-pixel-line bg-pixel-sun px-2.5 py-1 font-pixel text-[8px] uppercase text-pixel-line shadow-chip">
+                    <SpriteSun size={11} />
                     Mulai hari ini
                   </span>
-                  <h2 className="mt-3 max-w-xl font-display text-3xl font-extrabold leading-[1.12] tracking-tight text-balance sm:text-[40px]">
+                  <h2 className="mt-4 max-w-xl font-pixel text-[20px] uppercase leading-[1.75] sm:text-[24px]">
                     Transparansi dimulai dari satu pertanyaan.
                   </h2>
-                  <p className="mt-3 max-w-lg text-[13.5px] leading-relaxed text-ink-300">
+                  <p className="mt-4 max-w-lg font-retro text-[18px] leading-snug text-pixel-cream/90">
                     Tanyakan anggaran di sekitar Anda. Cocokkan dengan bukti di
                     lapangan. Bagikan temuan agar publik dapat menilai bersama.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2.5">
                     <Link href="/anggaran" className="btn-amber">
                       Jelajahi Anggaran
-                      <ArrowRight size={16} aria-hidden="true" />
+                      <span aria-hidden="true">→</span>
                     </Link>
-                    <Link
-                      href="/proyek"
-                      className="btn border border-white/15 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
-                    >
+                    <Link href="/proyek" className="btn-ghost">
                       Buka Peta Proyek
-                      <MapPinned size={16} aria-hidden="true" />
+                      <SpriteQuest size={13} />
                     </Link>
                   </div>
-                  <p className="mt-5 text-[10.5px] text-ink-300">
+                  <p className="mt-5 text-[11px] text-pixel-cream/75">
                     100% data percontohan · Tidak memerlukan akun untuk menjelajah
                   </p>
                 </div>
 
-                <div className="relative">
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink-300">
-                      Komitmen PRAJVALA
-                    </p>
-                    <ul className="mt-3 space-y-3">
-                      {[
-                        "Menyajikan sumber angka dan waktu pembaruan",
-                        "Menyamarkan identitas serta metadata pelapor",
-                        "Menandai temuan tanpa menyimpulkan bersalah",
-                      ].map((item) => (
-                        <li key={item} className="flex items-start gap-2.5 text-[11.5px] leading-relaxed text-ink-300">
-                          <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-emerald-400/15 text-emerald-400">
-                            <CheckCircle2 size={11} aria-hidden="true" />
-                          </span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-5 flex items-center gap-2 border-t border-white/10 pt-4">
-                      <span className="grid h-8 w-8 place-items-center rounded-lg bg-amber-500/15 text-amber-400">
-                        <ShieldCheck size={15} aria-hidden="true" />
-                      </span>
-                      <div>
-                        <p className="text-[10px] font-semibold text-white">
-                          Dikembangkan untuk publik
-                        </p>
-                        <p className="text-[10px] text-ink-300">
-                          Tim Aetherion Vanakei · Cyber University
-                        </p>
-                      </div>
+                <div className="border-4 border-pixel-line bg-pixel-cream p-5 text-pixel-line shadow-card">
+                  <p className="font-pixel text-[8px] uppercase tracking-[0.04em]">
+                    Komitmen PRAJVALA
+                  </p>
+                  <ul className="mt-3.5 space-y-3">
+                    {[
+                      "Menyajikan sumber angka dan waktu pembaruan",
+                      "Menyamarkan identitas serta metadata pelapor",
+                      "Menandai temuan tanpa menyimpulkan bersalah",
+                    ].map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-2.5 text-[12px] leading-relaxed text-pixel-ink"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center border-2 border-pixel-line bg-emerald-100 text-[9px] font-bold text-emerald-800"
+                        >
+                          ✓
+                        </span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-4 flex items-center gap-2.5 border-t-[3px] border-pixel-line/20 pt-3.5">
+                    <span className="grid h-8 w-8 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
+                      <SpriteChest size={15} />
+                    </span>
+                    <div>
+                      <p className="text-[11px] font-bold text-pixel-line">
+                        Dikembangkan untuk publik
+                      </p>
+                      <p className="text-[10px] text-pixel-ink/70">
+                        Tim Aetherion Vanakei · Cyber University
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -542,4 +560,17 @@ export default function HomePage() {
       </section>
     </>
   );
+}
+
+/** Square pixel avatar stacked in the hero proof row. */
+function cnIndex(index: number) {
+  const tones = [
+    "bg-pixel-blue text-white",
+    "bg-pixel-wood-cta text-pixel-cream",
+    "bg-pixel-grass-deep text-white",
+    "bg-pixel-line text-pixel-sun",
+  ];
+  return `grid h-8 w-8 place-items-center border-2 border-pixel-line font-pixel text-[7px] ${tones[index % tones.length]} ${
+    index > 0 ? "-ml-1.5" : ""
+  }`;
 }
