@@ -1,4 +1,18 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  increment,
+  query,
+  runTransaction,
+  setDoc,
+  Timestamp,
+  where,
+  type DocumentData,
+} from "firebase/firestore";
 import type {
   CitizenReport,
   NewReportInput,
@@ -6,7 +20,7 @@ import type {
   UserProfile,
 } from "@/types";
 import { clamp, initialsFor, maskName } from "@/lib/utils";
-import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
+import { createFirebaseClient } from "@/utils/firebase/client";
 
 export const SCORE_EFFECT: Record<Suitability, number> = {
   "Sesuai Target": 3,
@@ -31,80 +45,56 @@ type StoredReport = NewReportInput & {
   authorId?: string;
 };
 
-interface RemoteReportRow {
-  id: string;
-  project_id: string;
-  author_id: string | null;
-  author_name: string;
-  suitability: Suitability;
-  rating: number;
-  comment: string;
-  photo_url: string | null;
-  created_at: string;
-}
-
-interface VoteRow {
-  report_id: string;
-  votes: number;
-}
-
-const REPORT_COLUMNS =
-  "id, project_id, author_id, author_name, suitability, rating, comment, photo_url, created_at";
-
 const NOT_CONFIGURED =
-  "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.";
+  "Firebase belum dikonfigurasi. Hubungi pengelola PRAJVALA.";
 
-function requireClient(): SupabaseClient {
-  if (!isSupabaseConfigured) {
-    throw new Error(NOT_CONFIGURED);
-  }
-  const client = createClient();
+function requireClient() {
+  const client = createFirebaseClient();
   if (!client) {
     throw new Error(NOT_CONFIGURED);
   }
   return client;
 }
 
-function mapRemoteReport(row: RemoteReportRow): StoredReport {
+function toIso(value: unknown): string {
+  if (value instanceof Timestamp) return value.toDate().toISOString();
+  if (typeof value === "string") return value;
+  return new Date().toISOString();
+}
+
+function mapReport(id: string, data: DocumentData): StoredReport {
   return {
-    id: row.id,
-    projectId: row.project_id,
-    author: row.author_name,
-    authorId: row.author_id ?? undefined,
-    suitability: row.suitability,
-    rating: row.rating,
-    comment: row.comment,
-    photoUrl: row.photo_url ?? undefined,
-    createdAt: row.created_at,
-    upvotes: 0,
+    id,
+    projectId: typeof data.projectId === "string" ? data.projectId : "",
+    author: typeof data.authorName === "string" ? data.authorName : "Warga Anonim",
+    authorId: typeof data.authorId === "string" ? data.authorId : undefined,
+    suitability: data.suitability as Suitability,
+    rating: typeof data.rating === "number" ? data.rating : 0,
+    comment: typeof data.comment === "string" ? data.comment : "",
+    photoUrl: typeof data.photoUrl === "string" ? data.photoUrl : undefined,
+    createdAt: toIso(data.createdAt),
+    upvotes: typeof data.upvoteCount === "number" ? data.upvoteCount : 0,
   };
 }
 
-function toRemoteRow(value: unknown): RemoteReportRow | null {
-  if (!value || typeof value !== "object") return null;
-  const row = value as Record<string, unknown>;
-  if (typeof row.id !== "string" || typeof row.project_id !== "string") return null;
-  if (typeof row.comment !== "string" || typeof row.author_name !== "string") return null;
-  return row as unknown as RemoteReportRow;
+function sortNewestFirst(reports: StoredReport[]): StoredReport[] {
+  return reports
+    .slice()
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 export const prajvalaApi = {
   async getReports(projectId: string): Promise<StoredReport[]> {
-    const client = createClient();
+    const client = createFirebaseClient();
     if (!client) return [];
 
-    const { data, error } = await client
-      .from("reports")
-      .select(REPORT_COLUMNS)
-      .eq("project_id", projectId)
-      .order("created_at", { ascending: false });
+    const snapshot = await getDocs(
+      query(collection(client.db, "reports"), where("projectId", "==", projectId)),
+    );
 
-    if (error || !Array.isArray(data)) return [];
-
-    return data
-      .map(toRemoteRow)
-      .filter((row): row is RemoteReportRow => row !== null)
-      .map(mapRemoteReport);
+    return sortNewestFirst(
+      snapshot.docs.map((item) => mapReport(item.id, item.data())),
+    );
   },
 
   async submitReport(input: NewReportInput): Promise<StoredReport> {
@@ -113,73 +103,66 @@ export const prajvalaApi = {
     const maskedAuthor = maskName(rawAuthor);
     const safeAuthorName = maskedAuthor.length >= 3 ? maskedAuthor : "Warga Anonim";
 
-    const { data: userData } = await client.auth.getUser();
-    const { data, error } = await client
-      .from("reports")
-      .insert({
-        project_id: input.projectId,
-        author_id: userData.user?.id ?? null,
-        author_name: safeAuthorName,
-        suitability: input.suitability,
-        rating: input.rating,
-        comment: input.comment.trim(),
-        photo_url: input.photoUrl ?? null,
-      })
-      .select(REPORT_COLUMNS)
-      .single();
+    const payload = {
+      projectId: input.projectId,
+      authorId: client.auth.currentUser?.uid ?? null,
+      authorName: safeAuthorName,
+      suitability: input.suitability,
+      rating: input.rating,
+      comment: input.comment.trim(),
+      photoUrl: input.photoUrl ?? null,
+      upvoteCount: 0,
+      createdAt: Timestamp.now(),
+    };
 
-    if (error) {
+    try {
+      const created = await addDoc(collection(client.db, "reports"), payload);
+      return mapReport(created.id, payload);
+    } catch (error) {
       throw new Error(
-        "Laporan gagal disimpan. Periksa koneksi Anda lalu coba lagi.",
+        error instanceof Error && error.message.includes("permission")
+          ? "Laporan gagal disimpan karena akses ditolak. Masuk ulang lalu coba lagi."
+          : "Laporan gagal disimpan. Periksa koneksi Anda lalu coba lagi.",
       );
     }
-
-    const row = toRemoteRow(data);
-    if (!row) {
-      throw new Error("Laporan tersimpan, tetapi respons server tidak dikenali.");
-    }
-    return mapRemoteReport(row);
   },
 
   async toggleUpvote(reportId: string): Promise<boolean> {
     const client = requireClient();
-    const { data: userData } = await client.auth.getUser();
-    const userId = userData.user?.id;
+    const userId = client.auth.currentUser?.uid;
 
     if (!userId) {
       throw new Error("Masuk ke akun Anda terlebih dahulu untuk mendukung laporan.");
     }
 
-    const { data: existing, error: readError } = await client
-      .from("report_votes")
-      .select("report_id")
-      .eq("report_id", reportId)
-      .eq("voter_id", userId)
-      .maybeSingle();
+    const reportRef = doc(client.db, "reports", reportId);
+    const voteRef = doc(client.db, "reports", reportId, "votes", userId);
+    const userVoteRef = doc(client.db, "userVotes", userId, "reports", reportId);
 
-    if (readError) {
-      throw new Error("Dukungan belum dapat diperiksa. Coba lagi.");
-    }
+    try {
+      return await runTransaction(client.db, async (transaction) => {
+        const voteSnapshot = await transaction.get(voteRef);
+        const alreadyVoted = voteSnapshot.exists();
 
-    if (existing) {
-      const { error } = await client
-        .from("report_votes")
-        .delete()
-        .eq("report_id", reportId)
-        .eq("voter_id", userId);
-      if (error) {
-        throw new Error("Dukungan belum dapat dibatalkan. Coba lagi.");
-      }
-      return false;
-    }
+        if (alreadyVoted) {
+          transaction.delete(voteRef);
+          transaction.delete(userVoteRef);
+          transaction.update(reportRef, { upvoteCount: increment(-1) });
+          return false;
+        }
 
-    const { error } = await client
-      .from("report_votes")
-      .insert({ report_id: reportId, voter_id: userId });
-    if (error) {
-      throw new Error("Dukungan belum dapat disimpan. Coba lagi.");
+        transaction.set(voteRef, { uid: userId, createdAt: Timestamp.now() });
+        transaction.set(userVoteRef, { reportId, createdAt: Timestamp.now() });
+        transaction.update(reportRef, { upvoteCount: increment(1) });
+        return true;
+      });
+    } catch (error) {
+      throw new Error(
+        error instanceof Error && error.message.includes("permission")
+          ? "Dukungan belum dapat disimpan karena akses ditolak. Masuk ulang lalu coba lagi."
+          : "Dukungan belum dapat disimpan. Coba lagi.",
+      );
     }
-    return true;
   },
 
   async getVoteSummary(reportIds: string[]): Promise<{
@@ -190,54 +173,47 @@ export const prajvalaApi = {
     const voted: string[] = [];
     if (reportIds.length === 0) return { counts, voted };
 
-    const client = createClient();
+    const client = createFirebaseClient();
     if (!client) return { counts, voted };
 
-    const { data: countData } = await client
-      .from("report_vote_counts")
-      .select("report_id, votes")
-      .in("report_id", reportIds);
+    const userId = client.auth.currentUser?.uid;
 
-    if (Array.isArray(countData)) {
-      (countData as VoteRow[]).forEach((row) => {
-        counts[row.report_id] = row.votes;
-      });
-    }
+    await Promise.all(
+      reportIds.map(async (reportId) => {
+        const reportSnapshot = await getDoc(doc(client.db, "reports", reportId));
+        if (reportSnapshot.exists()) {
+          const value = reportSnapshot.data().upvoteCount;
+          counts[reportId] = typeof value === "number" ? value : 0;
+        }
 
-    const { data: userData } = await client.auth.getUser();
-    const userId = userData.user?.id;
-    if (userId) {
-      const { data: mine } = await client
-        .from("report_votes")
-        .select("report_id")
-        .eq("voter_id", userId)
-        .in("report_id", reportIds);
-
-      if (Array.isArray(mine)) {
-        (mine as { report_id: string }[]).forEach((row) => voted.push(row.report_id));
-      }
-    }
+        if (userId) {
+          const voteSnapshot = await getDoc(
+            doc(client.db, "userVotes", userId, "reports", reportId),
+          );
+          if (voteSnapshot.exists()) voted.push(reportId);
+        }
+      }),
+    );
 
     return { counts, voted };
   },
 
   async deleteReport(reportId: string): Promise<boolean> {
     const client = requireClient();
-    const { data: userData } = await client.auth.getUser();
-    if (!userData.user) {
+    if (!client.auth.currentUser) {
       throw new Error("Masuk ke akun Anda terlebih dahulu untuk menghapus laporan.");
     }
 
-    const { error } = await client
-      .from("reports")
-      .delete()
-      .eq("id", reportId)
-      .eq("author_id", userData.user.id);
-
-    if (error) {
-      throw new Error("Laporan belum dapat dihapus. Coba lagi.");
+    try {
+      await deleteDoc(doc(client.db, "reports", reportId));
+      return true;
+    } catch (error) {
+      throw new Error(
+        error instanceof Error && error.message.includes("permission")
+          ? "Laporan belum dapat dihapus. Anda hanya dapat menghapus laporan sendiri."
+          : "Laporan belum dapat dihapus. Coba lagi.",
+      );
     }
-    return true;
   },
 
   toFeedItem(stored: StoredReport, currentUserId?: string): CitizenReport {
@@ -257,7 +233,7 @@ export const prajvalaApi = {
       upvotes: stored.upvotes,
       photoUrl: stored.photoUrl,
       isUserSubmitted: isOwn,
-      source: "supabase",
+      source: "firebase",
     };
   },
 };
@@ -305,43 +281,31 @@ export interface AccountSnapshot {
 }
 
 /**
- * Riwayat kontribusi akun, dibaca langsung dari Supabase.
+ * Riwayat kontribusi akun, dibaca langsung dari Firestore.
  */
 export async function getAccountData(
   user: Pick<UserProfile, "id" | "source">,
 ): Promise<AccountSnapshot> {
-  const client = createClient();
+  const client = createFirebaseClient();
   let remoteReports: StoredReport[] = [];
   let remoteVotes = 0;
 
-  if (client && user.source === "supabase") {
-    const { data } = await client
-      .from("reports")
-      .select(REPORT_COLUMNS)
-      .eq("author_id", user.id)
-      .order("created_at", { ascending: false });
+  if (client && user.source === "firebase") {
+    const snapshot = await getDocs(
+      query(collection(client.db, "reports"), where("authorId", "==", user.id)),
+    );
+    remoteReports = sortNewestFirst(
+      snapshot.docs.map((item) => mapReport(item.id, item.data())),
+    );
 
-    if (Array.isArray(data)) {
-      remoteReports = data
-        .map(toRemoteRow)
-        .filter((row): row is RemoteReportRow => row !== null)
-        .map(mapRemoteReport);
-    }
-
-    const { data: votes } = await client
-      .from("report_votes")
-      .select("report_id")
-      .eq("voter_id", user.id);
-
-    if (Array.isArray(votes)) remoteVotes = votes.length;
+    const votesSnapshot = await getDocs(
+      collection(client.db, "userVotes", user.id, "reports"),
+    );
+    remoteVotes = votesSnapshot.size;
   }
 
-  const sorted = remoteReports
-    .slice()
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
   return {
-    reports: sorted.map((stored) => prajvalaApi.toFeedItem(stored, user.id)),
-    activity: buildActivity(sorted, remoteVotes),
+    reports: remoteReports.map((stored) => prajvalaApi.toFeedItem(stored, user.id)),
+    activity: buildActivity(remoteReports, remoteVotes),
   };
 }

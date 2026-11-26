@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Status ringan untuk mengecek koneksi Firestore dari klien.
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Profil warga: hanya pemilik yang boleh membaca dan menulis.
+    match /profiles/{uid} {
+      allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Laporan warga: dapat dibaca publik, ditulis oleh warga yang masuk.
+    match /reports/{reportId} {
+      allow read: if true;
+
+      allow create: if signedIn()
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.upvoteCount == 0
+        && request.resource.data.comment is string
+        && request.resource.data.comment.size() >= 20
+        && request.resource.data.comment.size() <= 2000
+        && request.resource.data.suitability in [
+          'Sesuai Target',
+          'Terlambat',
+          'Indikasi Kejanggalan'
+        ]
+        && request.resource.data.rating is number
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+
+      // Dukungan hanya boleh mengubah jumlah suara sebanyak satu langkah dan
+      // harus disertai dokumen suara milik pengguna yang sesuai.
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvoteCount'])
+        && (
+          (
+            request.resource.data.upvoteCount == resource.data.upvoteCount + 1
+            && existsAfter(
+              /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+            )
+          )
+          || (
+            request.resource.data.upvoteCount == resource.data.upvoteCount - 1
+            && !existsAfter(
+              /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+            )
+          )
+        );
+
+      allow delete: if signedIn() && resource.data.authorId == request.auth.uid;
+
+      // Satu dokumen suara per warga per laporan.
+      match /votes/{uid} {
+        allow read: if true;
+        allow create, delete: if signedIn() && request.auth.uid == uid;
+        allow update: if false;
+      }
+    }
+
+    // Daftar dukungan milik satu warga, dipakai untuk dasbor akun.
+    match /userVotes/{uid}/reports/{reportId} {
+      allow read, create, delete: if signedIn() && request.auth.uid == uid;
+      allow update: if false;
+    }
+  }
+}

@@ -1,6 +1,21 @@
 "use client";
 
-import type { SupabaseClient, User } from "@supabase/supabase-js";
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  type User as FirebaseUser,
+} from "firebase/auth";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import {
   createContext,
   useCallback,
@@ -11,12 +26,12 @@ import {
 } from "react";
 import { REGIONS } from "@/lib/data";
 import type { AuthResult, RegisterInput, UserProfile } from "@/types";
-import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
+import { createFirebaseClient, isFirebaseConfigured } from "@/utils/firebase/client";
 
 interface AuthContextValue {
   user: UserProfile | null;
   isHydrated: boolean;
-  isSupabaseMode: boolean;
+  isFirebaseMode: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (input: RegisterInput) => Promise<AuthResult>;
   logout: () => Promise<void>;
@@ -26,10 +41,6 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function isBrowser(): boolean {
-  return typeof window !== "undefined";
-}
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
@@ -59,139 +70,91 @@ function resolveRegionId(regionId?: string): string {
   return REGIONS.some((region) => region.id === regionId) ? (regionId as string) : "all";
 }
 
-function isTransientSupabaseError(message: string): boolean {
-  return /failed to fetch|fetch failed|network|load failed|timeout|timed out|temporarily|service unavailable|database error/i.test(
-    message,
-  );
-}
-
 /**
- * Pesan error Supabase lebih andal dipetakan lewat `code` resmi. Pencocokan teks
- * hanya dipakai sebagai cadangan bila kode tidak tersedia.
+ * Pesan error Firebase Auth dipetakan lewat `code` resmi agar pengguna
+ * mendapat penjelasan yang jelas, bukan pesan generik.
  */
 function mapAuthError(
-  error: { message?: string; code?: string; status?: number } | string,
+  error: { code?: string; message?: string } | string,
   fallback = "Terjadi kendala. Silakan coba lagi.",
 ): string {
-  const message = typeof error === "string" ? error : (error.message ?? "");
   const code = typeof error === "string" ? undefined : error.code;
-  const status = typeof error === "string" ? undefined : error.status;
+  const message = typeof error === "string" ? error : (error.message ?? "");
   const value = message.toLowerCase();
 
-  if (
-    code === "over_email_send_rate_limit" ||
-    code === "over_request_rate_limit" ||
-    status === 429
-  ) {
-    return "Batas pengiriman email Supabase sedang tercapai. Tunggu sekitar satu jam, lalu coba daftar lagi.";
+  switch (code) {
+    case "auth/email-already-in-use":
+      return "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.";
+    case "auth/invalid-email":
+      return "Alamat email belum valid. Contoh: nama@email.com.";
+    case "auth/weak-password":
+      return "Kata sandi terlalu lemah. Gunakan minimal 8 karakter berisi huruf dan angka.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Email atau kata sandi belum cocok. Periksa kembali lalu coba lagi.";
+    case "auth/too-many-requests":
+      return "Terlalu banyak percobaan. Tunggu beberapa saat lalu coba lagi.";
+    case "auth/network-request-failed":
+      return "Server Firebase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
+    case "auth/requires-recent-login":
+      return "Demi keamanan, silakan masuk ulang sebelum menghapus akun.";
+    case "auth/operation-not-allowed":
+      return "Metode masuk email/kata sandi belum diaktifkan. Hubungi pengelola PRAJVALA.";
+    case "auth/user-disabled":
+      return "Akun ini dinonaktifkan. Hubungi pengelola PRAJVALA.";
+    case "permission-denied":
+      return "Akses data ditolak. Pastikan aturan Firestore sudah dipasang.";
+    default:
+      break;
   }
 
-  if (
-    code === "email_address_invalid" ||
-    code === "email_address_not_authorized" ||
-    /email address .* is invalid/.test(value)
-  ) {
-    return "Alamat email ini tidak diterima server. Gunakan email aktif dari penyedia umum, misalnya Gmail atau Yahoo.";
+  if (value.includes("network") || value.includes("offline")) {
+    return "Server Firebase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
   }
-
-  if (code === "email_exists" || code === "user_already_exists") {
-    return "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.";
-  }
-
-  if (code === "weak_password" || code === "same_password") {
-    return "Kata sandi terlalu lemah. Gunakan minimal 8 karakter berisi huruf dan angka.";
-  }
-
-  if (code === "email_not_confirmed") {
-    return "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.";
-  }
-
-  if (code === "invalid_credentials") {
-    return "Email atau kata sandi belum cocok. Periksa kembali lalu coba lagi.";
-  }
-
-  if (code === "signup_disabled" || code === "email_provider_disabled") {
-    return "Pendaftaran akun baru sedang ditutup. Hubungi pengelola PRAJVALA.";
-  }
-
-  // Cadangan berbasis teks untuk respons lama atau tanpa kode.
-  if (value.includes("invalid login credentials")) {
-    return "Email atau kata sandi belum cocok. Periksa kembali lalu coba lagi.";
-  }
-  if (value.includes("email not confirmed")) {
-    return "Email Anda belum dikonfirmasi. Buka tautan konfirmasi di kotak masuk Anda, lalu masuk kembali.";
-  }
-  if (value.includes("user already registered") || value.includes("already registered")) {
-    return "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.";
-  }
-  if (value.includes("password should be at least")) {
-    return "Kata sandi terlalu pendek. Gunakan minimal 8 karakter.";
-  }
-  if (value.includes("signups not allowed") || value.includes("signup is disabled")) {
-    return "Pendaftaran akun baru sedang ditutup. Hubungi pengelola PRAJVALA.";
-  }
-  if (value.includes("rate limit") || value.includes("too many requests")) {
-    return "Batas pengiriman email Supabase sedang tercapai. Tunggu sekitar satu jam, lalu coba daftar lagi.";
-  }
-  if (isTransientSupabaseError(value)) {
-    return "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.";
+  if (value.includes("permission")) {
+    return "Akses data ditolak. Pastikan aturan Firestore sudah dipasang.";
   }
   return fallback;
 }
 
-function metadataName(user: Pick<User, "email" | "user_metadata">): string {
-  const metadata = user.user_metadata as Record<string, unknown> | undefined;
-  const fullName = metadata?.full_name;
-  if (typeof fullName === "string" && fullName.trim().length >= 3) {
-    return normalizeName(fullName);
-  }
+function metadataName(user: FirebaseUser): string {
+  const displayName = user.displayName?.trim();
+  if (displayName && displayName.length >= 3) return normalizeName(displayName);
   const email = user.email ?? "";
   return email.split("@")[0] || "Warga PRAJVALA";
 }
 
-function metadataRegion(user: Pick<User, "user_metadata">): string {
-  const metadata = user.user_metadata as Record<string, unknown> | undefined;
-  const value = metadata?.region_id;
-  return resolveRegionId(typeof value === "string" ? value : undefined);
-}
-
-async function profileFromSupabase(
-  client: SupabaseClient,
-  authUser: User,
-): Promise<UserProfile> {
+async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
   const fallback: UserProfile = {
-    id: authUser.id,
-    name: metadataName(authUser),
-    email: authUser.email ?? "",
-    regionId: metadataRegion(authUser),
-    createdAt: authUser.created_at ?? new Date().toISOString(),
-    source: "supabase",
+    id: user.uid,
+    name: metadataName(user),
+    email: user.email ?? "",
+    regionId: "all",
+    createdAt: user.metadata.creationTime ?? new Date().toISOString(),
+    source: "firebase",
   };
 
-  try {
-    const { data } = await client
-      .from("profiles")
-      .select("full_name, region_id, created_at")
-      .eq("id", authUser.id)
-      .maybeSingle<{
-        full_name: string | null;
-        region_id: string | null;
-        created_at: string | null;
-      }>();
+  const client = createFirebaseClient();
+  if (!client) return fallback;
 
-    if (data) {
+  try {
+    const snapshot = await getDoc(doc(client.db, "profiles", user.uid));
+    if (snapshot.exists()) {
+      const data = snapshot.data();
       return {
         ...fallback,
         name:
-          typeof data.full_name === "string" && data.full_name.trim().length >= 3
-            ? data.full_name.trim()
+          typeof data.fullName === "string" && data.fullName.trim().length >= 3
+            ? data.fullName.trim()
             : fallback.name,
-        regionId: resolveRegionId(data.region_id ?? undefined),
-        createdAt: data.created_at ?? fallback.createdAt,
+        regionId: resolveRegionId(
+          typeof data.regionId === "string" ? data.regionId : undefined,
+        ),
       };
     }
   } catch {
-    // Tabel profil belum tersedia; metadata auth tetap dapat dipakai.
+    // Dokumen profil belum tersedia; metadata auth tetap dapat dipakai.
   }
 
   return fallback;
@@ -202,68 +165,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    const client = createClient();
-
-    async function hydrate() {
-      if (!client) {
-        if (!cancelled) {
-          setUser(null);
-          setIsHydrated(true);
-        }
-        return;
-      }
-
-      try {
-        const { data } = await client.auth.getUser();
-        if (data.user) {
-          const profile = await profileFromSupabase(client, data.user);
-          if (!cancelled) {
-            setUser(profile);
-            setIsHydrated(true);
-          }
-          return;
-        }
-      } catch {
-        // Biarkan pengguna null; sesi akan dipulihkan saat koneksi tersedia.
-      }
-
-      if (!cancelled) {
-        setUser(null);
-        setIsHydrated(true);
-      }
-    }
-
-    void hydrate();
+    const client = createFirebaseClient();
 
     if (!client) {
-      return () => {
-        cancelled = true;
-      };
+      setUser(null);
+      setIsHydrated(true);
+      return;
     }
 
-    const { data: listener } = client.auth.onAuthStateChange((event, session) => {
-      if (cancelled) return;
-
-      if (event === "SIGNED_OUT") {
+    const unsubscribe = onAuthStateChanged(client.auth, (firebaseUser) => {
+      if (!firebaseUser) {
         setUser(null);
+        setIsHydrated(true);
         return;
       }
 
-      if (!session?.user) return;
-      const authUser = session.user;
-      // Jalankan di luar lock auth Supabase agar pemuatan profil tidak deadlock.
-      window.setTimeout(() => {
-        void profileFromSupabase(client, authUser).then((profile) => {
-          if (!cancelled) setUser(profile);
-        });
-      }, 0);
+      void profileFromFirebase(firebaseUser).then((profile) => {
+        setUser(profile);
+        setIsHydrated(true);
+      });
     });
 
-    return () => {
-      cancelled = true;
-      listener.subscription.unsubscribe();
-    };
+    return unsubscribe;
   }, []);
 
   const login = useCallback(
@@ -276,40 +199,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { ok: false, error: "Masukkan kata sandi akun Anda." };
       }
 
-      const client = createClient();
+      const client = createFirebaseClient();
       if (!client) {
         return {
           ok: false,
-          error: "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
+          error: "Firebase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
         };
       }
 
       try {
-        const { data, error } = await client.auth.signInWithPassword({
-          email: normalized,
+        const credential = await signInWithEmailAndPassword(
+          client.auth,
+          normalized,
           password,
-        });
-
-        if (!error && data.user) {
-          const profile = await profileFromSupabase(client, data.user);
-          setUser(profile);
-          return { ok: true, message: "Berhasil masuk." };
-        }
-
-        if (!error) {
-          return {
-            ok: false,
-            error: "Gagal masuk. Periksa email dan kata sandi Anda lalu coba lagi.",
-          };
-        }
-
-        return { ok: false, error: mapAuthError(error) };
-      } catch {
-        return {
-          ok: false,
-          error:
-            "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
-        };
+        );
+        const profile = await profileFromFirebase(credential.user);
+        setUser(profile);
+        return { ok: true, message: "Berhasil masuk." };
+      } catch (error) {
+        return { ok: false, error: mapAuthError(error as { code?: string }) };
       }
     },
     [],
@@ -319,74 +227,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const validationError = validateRegistration(input);
     if (validationError) return { ok: false, error: validationError };
 
-    const client = createClient();
+    const client = createFirebaseClient();
     if (!client) {
       return {
         ok: false,
-        error: "Supabase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
+        error: "Firebase belum dikonfigurasi. Hubungi pengelola PRAJVALA.",
       };
     }
 
     const normalized = normalizeEmail(input.email);
+    const displayName = normalizeName(input.name);
 
     try {
-      const { data, error } = await client.auth.signUp({
+      const credential = await createUserWithEmailAndPassword(
+        client.auth,
+        normalized,
+        input.password,
+      );
+
+      await updateProfile(credential.user, { displayName });
+
+      const profile: UserProfile = {
+        id: credential.user.uid,
+        name: displayName,
         email: normalized,
-        password: input.password,
-        options: {
-          data: {
-            full_name: normalizeName(input.name),
-            region_id: resolveRegionId(input.regionId),
-          },
-          emailRedirectTo: isBrowser()
-            ? `${window.location.origin}/masuk?redirect=%2Fakun`
-            : undefined,
-        },
-      });
-
-      if (error) {
-        return { ok: false, error: mapAuthError(error) };
-      }
-
-      if (!data.user) {
-        return {
-          ok: false,
-          error: "Pendaftaran belum dapat diproses. Coba lagi beberapa saat.",
-        };
-      }
-
-      if (Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-        return {
-          ok: false,
-          error: "Email ini sudah terdaftar. Silakan masuk atau gunakan email lain.",
-        };
-      }
-
-      if (data.session) {
-        const profile = await profileFromSupabase(client, data.user);
-        setUser(profile);
-        return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
-      }
-
-      return {
-        ok: true,
-        needsConfirmation: true,
-        message: `Kami mengirim tautan konfirmasi ke ${normalized}. Buka email tersebut, konfirmasi akun, lalu masuk kembali.`,
+        regionId: resolveRegionId(input.regionId),
+        createdAt: new Date().toISOString(),
+        source: "firebase",
       };
-    } catch {
-      return {
-        ok: false,
-        error:
-          "Server Supabase belum dapat dijangkau. Periksa koneksi internet lalu coba lagi.",
-      };
+
+      try {
+        await setDoc(doc(client.db, "profiles", credential.user.uid), {
+          fullName: profile.name,
+          regionId: profile.regionId,
+          email: profile.email,
+          createdAt: serverTimestamp(),
+        });
+      } catch (error) {
+        // Akun Auth sudah jadi; profil dapat dilengkapi saat login berikutnya.
+        console.error("Gagal menyimpan profil Firebase:", error);
+      }
+
+      setUser(profile);
+      return { ok: true, message: "Akun berhasil dibuat dan Anda sudah masuk." };
+    } catch (error) {
+      return { ok: false, error: mapAuthError(error as { code?: string }) };
     }
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
-    const client = createClient();
+    const client = createFirebaseClient();
     if (client) {
       try {
-        await client.auth.signOut();
+        await signOut(client.auth);
       } catch {
         // Sesi di memori tetap dibersihkan meski server tidak terjangkau.
       }
@@ -395,45 +288,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deleteAccount = useCallback(async (): Promise<AuthResult> => {
-    if (!user) return { ok: false, error: "Tidak ada akun yang sedang aktif." };
+    const client = createFirebaseClient();
+    const current = client?.auth.currentUser;
 
-    const client = createClient();
-    if (!client) {
-      return {
-        ok: false,
-        error: "Koneksi Supabase tidak tersedia. Coba lagi setelah jaringan pulih.",
-      };
+    if (!client || !current) {
+      return { ok: false, error: "Tidak ada akun yang sedang aktif." };
     }
 
     try {
-      const { error } = await client.rpc("delete_user");
-      if (error) {
-        return {
-          ok: false,
-          error: `Akun belum dapat dihapus: ${mapAuthError(error.message, error.message)}`,
-        };
-      }
       try {
-        await client.auth.signOut();
+        await deleteDoc(doc(client.db, "profiles", current.uid));
       } catch {
-        // Abaikan; state pengguna tetap dibersihkan di bawah.
+        // Profil mungkin sudah tidak ada; lanjutkan penghapusan akun.
       }
+
+      await deleteUser(current);
       setUser(null);
       return { ok: true, message: "Akun berhasil dihapus." };
-    } catch {
-      return {
-        ok: false,
-        error:
-          "Akun belum dapat dihapus. Pastikan fungsi delete_user sudah dijalankan di Supabase.",
-      };
+    } catch (error) {
+      return { ok: false, error: mapAuthError(error as { code?: string }) };
     }
-  }, [user]);
+  }, []);
 
   const value = useMemo(
     () => ({
       user,
       isHydrated,
-      isSupabaseMode: isSupabaseConfigured,
+      isFirebaseMode: isFirebaseConfigured,
       login,
       register,
       logout,

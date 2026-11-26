@@ -28,9 +28,9 @@ import { useRegion } from "@/components/providers/region-provider";
 import { PROJECTS, REGIONS, TOTAL_CITIZEN_REPORTS } from "@/lib/data";
 import { cn, formatNumber, initialsFor } from "@/lib/utils";
 import {
-  checkSupabaseSchema,
-  type SupabaseSchemaStatus,
-} from "@/utils/supabase/client";
+  checkFirebaseReady,
+  type FirebaseReadyStatus,
+} from "@/utils/firebase/client";
 
 interface AuthScreenProps {
   mode: "login" | "register";
@@ -90,7 +90,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const copy = COPY[mode];
   const target = safeRedirect(redirectTo);
   const router = useRouter();
-  const { user, login, register, logout, isSupabaseMode } = useAuth();
+  const { user, login, register, logout, isFirebaseMode } = useAuth();
   const { setActiveRegionId } = useRegion();
 
   const [email, setEmail] = useState("");
@@ -102,11 +102,11 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState("");
-  const [schemaStatus, setSchemaStatus] = useState<SupabaseSchemaStatus>("disabled");
+  const [schemaStatus, setSchemaStatus] = useState<FirebaseReadyStatus>("disabled");
 
   useEffect(() => {
     let cancelled = false;
-    void checkSupabaseSchema().then((status) => {
+    void checkFirebaseReady().then((status) => {
       if (!cancelled) setSchemaStatus(status);
     });
     return () => {
@@ -248,7 +248,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 </div>
                 <p className="mt-4 flex items-start gap-1.5 text-[9px] leading-relaxed text-ink-500">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
-                  Akun dan kontribusi tersinkron aman lewat Supabase.
+                  Akun dan kontribusi tersinkron aman lewat Firebase.
                 </p>
               </div>
             </div>
@@ -282,49 +282,35 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 <span
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.08em]",
-                    isSupabaseMode
+                    isFirebaseMode
                       ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                       : "border-ink-200 bg-ink-50 text-ink-500",
                   )}
                 >
-                  {isSupabaseMode ? (
+                  {isFirebaseMode ? (
                     <Cloud size={9} aria-hidden="true" />
                   ) : (
                     <AlertTriangle size={9} aria-hidden="true" />
                   )}
-                  {isSupabaseMode ? "Tersinkron Supabase" : "Supabase belum aktif"}
+                  {isFirebaseMode ? "Tersinkron Firebase" : "Firebase belum aktif"}
                 </span>
                 <span className="text-[8.5px] text-ink-400">
-                  {isSupabaseMode
+                  {isFirebaseMode
                     ? "Laporan & dukungan tersimpan di server"
-                    : "Konfigurasi Supabase diperlukan"}
+                    : "Konfigurasi Firebase diperlukan"}
                 </span>
               </div>
 
-              {schemaStatus === "missing" ? (
-                <div
-                  role="status"
-                  className="mt-3 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-[10px] leading-relaxed text-amber-800"
-                >
-                  <AlertTriangle size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
-                  <span>
-                    <span className="font-bold">Tabel Supabase belum dibuat.</span> Jalankan{" "}
-                    <code className="rounded bg-amber-100 px-1 py-0.5 font-mono text-[9px]">
-                      supabase/schema.sql
-                    </code>{" "}
-                    di SQL Editor sebelum mendaftar atau mengirim laporan.
-                  </span>
-                </div>
-              ) : schemaStatus === "offline" ? (
+              {schemaStatus === "offline" ? (
                 <div
                   role="status"
                   className="mt-3 flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-[10px] leading-relaxed text-rose-800"
                 >
                   <AlertTriangle size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
                   <span>
-                    <span className="font-bold">Server Supabase belum dapat dijangkau.</span>{" "}
+                    <span className="font-bold">Server Firebase belum dapat dijangkau.</span>{" "}
                     Aplikasi akan mencoba lagi saat koneksi tersedia. Pastikan konfigurasi
-                    Supabase sudah benar.
+                    Firebase sudah benar.
                   </span>
                 </div>
               ) : null}
@@ -333,7 +319,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                 <AlreadySignedIn
                   name={user.name}
                   email={user.email}
-                  isSupabaseMode={user.source === "supabase"}
+                  isFirebaseMode={user.source === "firebase"}
                   onLogout={() => {
                     void logout();
                     setError("");
@@ -480,7 +466,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
                           className="mt-0.5 h-4 w-4 shrink-0 accent-amber-500"
                         />
                         <span className="text-[9.5px] leading-relaxed text-ink-600">
-                          Saya memahami nama, email, dan kontribusi saya disimpan di Supabase
+                          Saya memahami nama, email, dan kontribusi saya disimpan di Firebase
                           dan dapat dihapus kapan saja.
                         </span>
                       </label>
@@ -560,7 +546,7 @@ export function AuthScreen({ mode, redirectTo }: AuthScreenProps) {
 
             <p className="mt-3 flex items-start justify-center gap-1.5 px-4 text-center text-[9px] leading-relaxed text-ink-400">
               <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-              Kata sandi dikelola Supabase Auth. Kami tidak pernah menyimpan kata sandi Anda.
+              Kata sandi dikelola Firebase Authentication. Kami tidak pernah menyimpan kata sandi Anda.
             </p>
           </div>
         </div>
@@ -622,12 +608,12 @@ function PasswordToggle({
 function AlreadySignedIn({
   name,
   email,
-  isSupabaseMode,
+  isFirebaseMode,
   onLogout,
 }: {
   name: string;
   email: string;
-  isSupabaseMode: boolean;
+  isFirebaseMode: boolean;
   onLogout: () => void;
 }) {
   return (
@@ -663,8 +649,8 @@ function AlreadySignedIn({
       </button>
       <p className="mt-3 flex items-center justify-center gap-1 text-[9px] text-ink-400">
         <CheckCircle2 size={10} className="text-emerald-500" aria-hidden="true" />
-        {isSupabaseMode
-          ? "Sesi tersinkron lewat Supabase Auth"
+        {isFirebaseMode
+          ? "Sesi tersinkron lewat Firebase Authentication"
           : "Sesi akun tersimpan di peramban ini"}
       </p>
     </div>

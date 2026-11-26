@@ -512,7 +512,7 @@ export function ValidationSection({ project }: { project: Project }) {
       <div className="mt-4 space-y-3.5">
         {filteredReports.map((report) => {
           const isUpvoted = voted.has(report.id);
-          const upvoteCount = report.upvotes + (voteCounts[report.id] ?? 0);
+          const upvoteCount = voteCounts[report.id] ?? report.upvotes;
           const isPending = pendingUpvotes.has(report.id);
 
           return (
@@ -545,7 +545,7 @@ export function ValidationSection({ project }: { project: Project }) {
                     </p>
                     <p className="mt-0.5 text-[9px] text-ink-400">
                       {formatDateShort(report.createdAt)} ·{" "}
-                      {report.source === "supabase" ? "Tersinkron Supabase" : "Laporan warga"}
+                      {report.source === "firebase" ? "Tersinkron Firebase" : "Laporan warga"}
                     </p>
                   </div>
                 </div>

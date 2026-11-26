@@ -200,7 +200,7 @@ export function AccountDashboard() {
             </div>
             <p className="mt-5 flex items-center justify-center gap-1.5 text-[9.5px] text-ink-400">
               <ShieldCheck size={11} className="text-emerald-500" aria-hidden="true" />
-              Akun dan kontribusi tersinkron langsung melalui Supabase.
+              Akun dan kontribusi tersinkron langsung melalui Firebase.
             </p>
           </div>
         </div>
@@ -240,7 +240,7 @@ export function AccountDashboard() {
                 Selamat datang, {user.name.split(" ")[0]}.
               </h1>
               <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-ink-500">
-                Ringkasan kontribusi yang tersinkron langsung melalui Supabase.
+                Ringkasan kontribusi yang tersinkron langsung melalui Firebase.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -367,7 +367,7 @@ export function AccountDashboard() {
                 },
                 {
                   label: "Status akun",
-                  value: "Supabase",
+                  value: "Firebase",
                   hint: "Tersinkron ke server",
                   icon: ShieldCheck,
                   tone: "text-emerald-600",
@@ -415,7 +415,7 @@ export function AccountDashboard() {
                     {loadingActivity
                       ? "Memuat riwayat kontribusi…"
                       : reports.length > 0
-                        ? `${formatNumber(reports.length)} laporan tersimpan di Supabase`
+                        ? `${formatNumber(reports.length)} laporan tersimpan di Firebase`
                         : "Laporan yang Anda kirim akan muncul di sini"}
                   </p>
                 </div>
@@ -605,8 +605,8 @@ export function AccountDashboard() {
                   </dt>
                   <dd className="mt-0.5 flex items-start gap-1.5 text-[10.5px] leading-relaxed text-ink-500">
                     <ShieldCheck size={12} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-                    Akun & kontribusi tersinkron aman di Supabase. Kata sandi dikelola
-                    Supabase Auth.
+                    Akun & kontribusi tersinkron aman di Firebase. Kata sandi dikelola
+                    Firebase Authentication.
                   </dd>
                 </div>
               </dl>
@@ -614,7 +614,7 @@ export function AccountDashboard() {
               <div className="mt-5 border-t border-ink-100 pt-4">
                 <p className="flex items-start gap-2 text-[9.5px] leading-relaxed text-ink-400">
                   <ShieldCheck size={11} className="mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
-                  Akun ini tersimpan di Supabase. Anda dapat menghapusnya kapan saja.
+                  Akun ini tersimpan di Firebase. Anda dapat menghapusnya kapan saja.
                 </p>
                 {confirmDelete ? (
                   <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
@@ -622,7 +622,7 @@ export function AccountDashboard() {
                       Hapus akun secara permanen?
                     </p>
                     <p className="mt-0.5 text-[9.5px] leading-relaxed text-rose-700">
-                      Akun auth dan profil Supabase akan dihapus. Laporan yang sudah terkirim
+                      Akun auth dan profil Firebase akan dihapus. Laporan yang sudah terkirim
                       tetap tersimpan sebagai laporan anonim.
                     </p>
                     <div className="mt-2.5 flex gap-2">

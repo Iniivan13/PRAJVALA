@@ -133,7 +133,7 @@ export interface BudgetItem {
   note?: string;
 }
 
-export type StorageSource = "supabase" | "local";
+export type StorageSource = "firebase";
 
 export interface CitizenReport {
   id: string;
@@ -205,7 +205,7 @@ export interface UserProfile {
   email: string;
   regionId: string;
   createdAt: string;
-  /** Asal akun: Supabase (tersinkron) atau penyimpanan lokal peramban. */
+  /** Asal akun: tersinkron ke Firebase. */
   source?: StorageSource;
 }
 

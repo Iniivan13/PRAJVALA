@@ -27,94 +27,87 @@ Fitur utama:
   anggaran, koordinat geotag, dan skor validasi warga.
 - **Validasi partisipatif** — feed laporan warga, dukungan (upvote), formulir
   laporan dengan simulasi pembersihan EXIF, deteksi GPS, unggah foto, serta
-  penyimpanan langsung ke Supabase.
+  penyimpanan langsung ke Firestore.
 - **Pusat informasi** — repositori dokumen APBD/APBDes, RAB, tender, LPJ, dan
   laporan akhir dengan ringkasan bahasa manusia, pencarian, unduhan `.txt`,
   pertanyaan umum, serta glosarium istilah anggaran.
 - **Pemilih wilayah** — data seluruh halaman mengikuti wilayah yang dipilih dan
   pilihannya tersimpan di perangkat.
-- **Akun warga** — daftar/masuk dengan Supabase Auth, prefilling identitas
+- **Akun warga** — daftar/masuk dengan Firebase Auth, prefilling identitas
   laporan, dan dasbor akun berisi riwayat kontribusi tersinkron.
 
-## Akun warga & Supabase
+## Akun warga & Firebase
 
-Halaman `/masuk`, `/daftar`, dan `/akun` memakai **Supabase sebagai satu-satunya
+Halaman `/masuk`, `/daftar`, dan `/akun` memakai **Firebase sebagai satu-satunya
 backend** autentikasi dan kontribusi warga:
 
-- Akun memakai Supabase Auth, laporan masuk ke tabel `reports`, dan dukungan
-  tersimpan di `report_votes`.
-- Tidak ada akun demo, akun lokal, atau fallback `localStorage`. Bila Supabase
+- Akun memakai Firebase Authentication, profil disimpan di `profiles`, laporan
+  masuk ke koleksi `reports`, dan dukungan tersimpan di subkoleksi `votes`.
+- Tidak ada akun demo, akun lokal, atau fallback `localStorage`. Bila Firebase
   belum dikonfigurasi atau tidak terjangkau, UI menampilkan pesan yang jelas.
-- Pendaftaran memerlukan konfirmasi email sebelum akun dapat masuk.
+- Pendaftaran langsung memberi sesi (tanpa email konfirmasi), sehingga warga
+  bisa mulai berkontribusi seketika.
 
-Proyek Supabase `ifmjceyehvyauwmhwsbk` sudah memiliki skema dan RLS yang aktif.
+Proyek Firebase `prajvala` sudah memiliki Firestore (lokasi `asia-southeast2`)
+dan aturan keamanan di [`firestore.rules`](firestore.rules).
 
 ### 1. Variabel lingkungan
 
-Salin `.env.example` menjadi `.env.local`, lalu isi:
+Salin `.env.example` menjadi `.env.local`, lalu isi dari
+**Firebase Console → Project settings → Your apps → SDK setup**:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=prajvala.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=prajvala
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=prajvala.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
 ```
 
 `.env.local` sudah masuk `.gitignore` dan tidak boleh di-commit.
 
-### 2. Skema database
+### 2. Aktifkan metode masuk
 
-Buka **Supabase Dashboard → SQL Editor**, tempel seluruh isi
-[`supabase/schema.sql`](supabase/schema.sql), lalu jalankan. Skema tersebut membuat:
+Di **Firebase Console → Authentication → Sign-in method**, aktifkan
+**Email/Password**. Tanpa langkah ini, pendaftaran dan login akan gagal dengan
+error `auth/operation-not-allowed`.
 
-- `profiles` — profil warga (nama, wilayah) dengan RLS dan trigger otomatis.
-- `reports` — laporan warga; nama pelapor disimpan tersamar (`Rina K.`).
-- `report_votes` + view `report_vote_counts` — dukungan per laporan.
-- Fungsi `delete_user()` (`security definer`) untuk hapus akun mandiri.
+### 3. Aturan Firestore
 
-### 3. URL redirect autentikasi
+Aturan keamanan ada di [`firestore.rules`](firestore.rules) dan dapat
+dideploy ulang dengan:
 
-Di **Authentication → URL Configuration**, tambahkan:
+```bash
+firebase deploy --only firestore:rules --project prajvala
+```
 
-- `http://localhost:3000/**`
-- `https://prajvala.vercel.app/**`
+Aturan tersebut menjamin:
 
-Tanpa ini, tautan konfirmasi email akan ditolak Supabase.
+- `profiles/{uid}` hanya dapat dibaca/ditulis pemiliknya.
+- `reports` dapat dibaca publik, ditulis warga yang masuk, dan hanya penulis
+  yang boleh menghapus.
+- `upvoteCount` hanya boleh berubah satu langkah dan wajib disertai dokumen
+  suara milik pengguna yang sesuai.
+- `userVotes/{uid}` hanya dapat diakses pemiliknya.
 
-### 4. Konfirmasi email
+### 4. Domain yang diizinkan
 
-Untuk situs ini, **konfirmasi email dimatikan** agar pendaftaran warga tidak
-bergantung pada kuota email Supabase. Bawaan SMTP Supabase hanya mengirim
-sekitar **2 email per jam**; bila konfirmasi aktif dan kuota habis, pendaftaran
-gagal dengan error `429 over_email_send_rate_limit`.
-
-Cara mengaktifkannya:
-
-1. Buka **Authentication → Sign In / Providers → Email**.
-2. Matikan **Confirm email**, lalu simpan.
-
-Setelah dimatikan, `auth.signUp()` langsung mengembalikan sesi dan pendaftar
-langsung masuk tanpa perlu membuka tautan email. Bila Anda ingin konfirmasi
-tetap aktif, hubungkan SMTP sendiri di **Authentication → SMTP Settings**
-(misalnya Resend, Brevo, atau SendGrid) agar kuota tidak lagi menjadi penghalang.
-
-Catatan: server menolak sebagian domain email (error
-`email_address_invalid`). Gunakan email aktif dari penyedia umum seperti Gmail
-atau Yahoo saat menguji.
-
-Halaman masuk/daftar juga memeriksa kesiapan database. Bila tabel belum dibuat,
-muncul peringatan untuk menjalankan `supabase/schema.sql`; bila server tidak
-terjangkau, aplikasi menampilkan pesan koneksi.
+Di **Firebase Console → Authentication → Settings → Authorized domains**,
+pastikan `localhost` dan `prajvala.vercel.app` terdaftar. Domain ini diperlukan
+untuk alur email (reset kata sandi) dan popup autentikasi.
 
 ### Alur yang didukung
 
 - Daftar dengan nama, email, kata sandi, dan wilayah pantau utama.
 - Masuk dengan email/kata sandi; pesan error dipetakan ke Bahasa Indonesia.
-- Sesi diperbarui lewat middleware Supabase (`utils/supabase/middleware.ts`).
+- Sesi dikelola Firebase Authentication di sisi klien (IndexedDB).
 - Pengguna yang sudah masuk mendapat nama terisi otomatis pada formulir laporan;
   tamu tetap dapat mengirim laporan.
-- Dukungan (upvote) memerlukan akun aktif agar tersimpan di Supabase.
-- Riwayat kontribusi di `/akun` dibaca langsung dari Supabase.
-- Hapus akun memanggil RPC `delete_user()`; laporan tetap tersimpan sebagai
-  laporan anonim.
+- Dukungan (upvote) memerlukan akun aktif agar tersimpan di Firestore.
+- Riwayat kontribusi di `/akun` dibaca langsung dari Firestore.
+- Hapus akun menghapus profil dan akun Firebase; laporan yang sudah terkirim
+  tetap tersimpan dengan nama tersamar.
 
 Ini purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 
@@ -128,7 +121,7 @@ Ini purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 | Peta        | Leaflet 1.9 + react-leaflet 5                   |
 | Ikon        | Lucide React                                    |
 | Font        | Plus Jakarta Sans, Inter, JetBrains Mono        |
-| Auth & data | Supabase Auth + Postgres/RLS                  |
+| Auth & data | Firebase Auth + Firestore                  |
 | Data proyek | Seed TypeScript (percontohan)                  |
 
 ## Menjalankan proyek
@@ -149,28 +142,28 @@ npm run start      # menjalankan hasil build
 ```
 
 Catatan: ubin peta OpenStreetMap dan foto proyek Unsplash memerlukan koneksi
-internet saat runtime. Akun, laporan, dan dukungan memerlukan Supabase aktif.
+internet saat runtime. Akun, laporan, dan dukungan memerlukan Firebase aktif.
 
 ## Deploy
 
 Produksi berjalan di Vercel: **https://prajvala.vercel.app**
 
-Tambahkan kedua variabel lingkungan berikut di **Vercel → Project Settings →
+Tambahkan variabel lingkungan Firebase berikut di **Vercel → Project Settings →
 Environment Variables** (Production, Preview, dan Development):
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://ifmjceyehvyauwmhwsbk.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=prajvala.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=prajvala
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=prajvala.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=...
 ```
 
 Lalu deploy ulang (`vercel --prod` atau push ke branch produksi).
 
-Di **Supabase → Authentication → URL Configuration**, daftarkan:
-
-- Site URL: `https://prajvala.vercel.app`
-- Redirect URLs: `https://prajvala.vercel.app/**` dan `http://localhost:3000/**`
-
-Tanpa daftar ini, tautan konfirmasi email dari domain produksi akan ditolak.
+Di **Firebase Console → Authentication → Settings → Authorized domains**,
+tambahkan `prajvala.vercel.app` bila belum ada.
 
 ## Struktur singkat
 
@@ -179,12 +172,12 @@ app/                 Rute App Router: /, /anggaran, /proyek, /proyek/[id], /info
                      /masuk, /daftar, /akun
 components/          UI, layout, grafik, peta, proyek, validasi, informasi, akun
 lib/data.ts          Sumber data percontohan + agregasi wilayah
-lib/api.ts           Lapisan data laporan/upvote/aktivitas (Supabase ketat)
+lib/api.ts           Lapisan data laporan/upvote/aktivitas (Firestore)
 lib/utils.ts         Format rupiah, tanggal, persentase, slug
 types/               Tipe TypeScript bersama
-supabase/schema.sql  Skema tabel, RLS, trigger, view, dan RPC hapus akun
-utils/supabase/      Klien browser/server + pembaruan sesi middleware
-middleware.ts        Menjaga cookie sesi Supabase tetap segar
+firestore.rules      Aturan keamanan Firestore
+firebase.json        Konfigurasi deploy aturan Firestore
+utils/firebase/      Inisialisasi Firebase Auth + Firestore
 ```
 
 ## Data percontohan
@@ -203,8 +196,8 @@ keperluan kompetisi; tidak merujuk pada pihak tertentu.
 Formulir laporan warga menyimulasikan penghapusan metadata EXIF (lokasi asli dan
 identitas perangkat) sebelum laporan ditampilkan. Nama pelapor disamarkan otomatis
 (contoh: “Rina Kusuma” → “Rina K.”) dan hanya nama tersamar itu yang dikirim ke
-Supabase. Laporan dan dukungan disimpan di database melalui RLS dan memerlukan akun
-aktif. Kata sandi dikelola sepenuhnya oleh Supabase Auth.
+Firestore. Laporan dan dukungan disimpan di database melalui aturan keamanan dan
+memerlukan akun aktif. Kata sandi dikelola sepenuhnya oleh Firebase Authentication.
 
 ## Lisensi & atribusi
 
