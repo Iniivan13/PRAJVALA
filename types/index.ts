@@ -248,7 +248,10 @@ export interface UserProfile {
   createdAt: string;
   /** Asal akun: tersinkron ke Firebase. */
   source?: StorageSource;
-  /** Peran akun; `admin` berasal dari custom claim Firebase Auth. */
+  /**
+   * Peran akun; `admin` diakui dari custom claim Firebase Auth atau `role`
+   * pada dokumen profil. Klien tidak dapat menaikkan perannya sendiri.
+   */
   role?: UserRole;
 }
 
