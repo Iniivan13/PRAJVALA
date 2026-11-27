@@ -271,3 +271,153 @@ export interface AuthResult {
   message?: string;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/*  Regional fiscal data — DJPK SIKD APBD                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Wilayah fiskal yang dipetakan ke entitas APBD nyata di portal DJPK.
+ *
+ * `coverage` menjelaskan mengapa sebuah wilayah PRAJVALA memakai APBD entitas
+ * yang lebih luas: Cibinong memakai APBD Kabupaten Bogor, dan koridor TB
+ * Simatupang memakai APBD Provinsi DKI Jakarta. Nilai APBD tidak pernah
+ * didistribusikan ke kecamatan atau koridor tanpa data pendukung.
+ */
+export type DjpkRegionId =
+  | "kota-depok"
+  | "kabupaten-bogor"
+  | "provinsi-dki-jakarta";
+
+export type BudgetQualityStatus = "valid" | "warning" | "invalid";
+
+export interface FiscalTotal {
+  budget_amount: number | null;
+  realization_amount: number | null;
+  realization_percentage: number | null;
+}
+
+export interface RegionalBudgetAccount {
+  /**
+   * Kunci kanonik internal PRAJVALA yang diturunkan dari nama akun DJPK.
+   * Portal DJPK tidak menerbitkan kode akun, jadi ini bukan kode BAS resmi.
+   */
+  account_code: string;
+  account_name: string;
+  account_level: 1 | 2 | 3;
+  parent_code: string | null;
+  budget_amount: number | null;
+  realization_amount: number | null;
+  /** Dihitung dari nominal rupiah; null bila pagu nol/tidak tersedia. */
+  realization_percentage: number | null;
+  /** Persentase yang dilaporkan portal, disimpan untuk audit. */
+  source_percentage: number | null;
+  data_quality_status: BudgetQualityStatus;
+  quality_notes: string[];
+  raw: {
+    account_name: string;
+    budget: string;
+    realization: string;
+    percentage: string;
+  };
+}
+
+export interface RegionalBudgetCheck {
+  id: string;
+  label: string;
+  status: BudgetQualityStatus;
+  detail: string;
+}
+
+export interface RegionalBudgetSnapshot {
+  id: string;
+  region_id: DjpkRegionId;
+  region_label: string;
+  apbd_entity: string;
+  coverage: string;
+  fiscal_year: number;
+  period_month: number;
+  budget_version: string;
+  reported_at: string | null;
+  fetched_at: string;
+  source_url: string;
+  source_name: string;
+  accounts: RegionalBudgetAccount[];
+  totals: {
+    revenue: FiscalTotal;
+    spending: FiscalTotal;
+    financing: FiscalTotal;
+  };
+  checks: RegionalBudgetCheck[];
+  quality: {
+    status: BudgetQualityStatus;
+    valid: number;
+    warning: number;
+    invalid: number;
+  };
+  /**
+   * Penanda perubahan terhadap snapshot tersimpan sebelumnya. Diisi oleh
+   * layanan/sinkronisasi, bukan oleh parser sumber.
+   */
+  changes?: {
+    compared_to: string | null;
+    changed: boolean;
+    changed_accounts: string[];
+    note: string;
+  };
+}
+
+export interface RegionalBudgetPeriodPoint {
+  fiscal_year: number;
+  period_month: number;
+  budget_version: string;
+  reported_at: string | null;
+  revenue: FiscalTotal;
+  spending: FiscalTotal;
+  financing: FiscalTotal;
+  pad: FiscalTotal;
+  spending_pegawai: FiscalTotal;
+  spending_barang_jasa: FiscalTotal;
+  spending_modal: FiscalTotal;
+}
+
+export interface RegionalBudgetHistoryFile {
+  generated_at: string;
+  fiscal_year: number;
+  source_name: string;
+  source_portal: string;
+  attribution: string;
+  regions: Record<
+    DjpkRegionId,
+    {
+      label: string;
+      entity: string;
+      coverage: string;
+      points: RegionalBudgetPeriodPoint[];
+    }
+  >;
+}
+
+export interface RegionalBudgetSnapshotFile {
+  generated_at: string;
+  fiscal_year: number;
+  period_month: number;
+  source_name: string;
+  source_portal: string;
+  attribution: string;
+  regions: Record<DjpkRegionId, RegionalBudgetSnapshot>;
+}
+
+export interface RegionalFiscalRegionData {
+  snapshot: RegionalBudgetSnapshot;
+  history: RegionalBudgetPeriodPoint[];
+  live: boolean;
+}
+
+export interface RegionalFiscalData {
+  generated_at: string;
+  source_name: string;
+  source_portal: string;
+  attribution: string;
+  regions: RegionalFiscalRegionData[];
+}

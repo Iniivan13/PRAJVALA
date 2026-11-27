@@ -251,5 +251,26 @@ service cloud.firestore {
       allow update: if false;
       allow delete: if isAdmin();
     }
+
+    // Snapshot APBD dari Portal Data SIKD DJPK. Dibaca publik agar angka
+    // anggaran dapat diperiksa siapa pun; penulisan hanya lewat proses
+    // sinkronisasi server (service account), bukan klien.
+    match /regional_budget_snapshots/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Respons mentah (SpreadsheetML) sebelum normalisasi. Disimpan untuk audit
+    // internal; tidak ditampilkan ke publik dan tidak dapat ditulis klien.
+    match /regional_budget_raw/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Catatan setiap proses sinkronisasi: jumlah baris, checksum, kualitas.
+    match /regional_budget_sync_runs/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
   }
 }

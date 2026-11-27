@@ -16,6 +16,7 @@ import {
   SpriteMore,
   SpriteQuest,
   SpriteReport,
+  SpriteSignpost,
 } from "@/components/ui/pixel-sprites";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn, initialsFor } from "@/lib/utils";
@@ -35,6 +36,7 @@ const ITEMS = [
 ] as const;
 
 const MORE_LINKS = [
+  { href: "/fiskal", label: "Monitor fiskal", note: "APBD DJPK", Sprite: SpriteSignpost },
   { href: "/informasi#dokumen", label: "Dokumen publik", note: "APBD, RAB, LPJ", Sprite: SpriteDocument },
   { href: "/write-up", label: "Write Up", note: "Jurnal & panduan", Sprite: SpriteJournal },
   { href: "/informasi#faq", label: "Pertanyaan umum", note: "6 jawaban singkat", Sprite: SpriteHelp },

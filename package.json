@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sync:djpk": "tsx scripts/sync-djpk.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
@@ -36,6 +37,7 @@
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }

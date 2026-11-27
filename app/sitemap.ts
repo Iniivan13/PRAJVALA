@@ -9,6 +9,7 @@ const PUBLIC_ROUTES: {
 }[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/anggaran", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/fiskal", changeFrequency: "monthly", priority: 0.9 },
   { path: "/proyek", changeFrequency: "weekly", priority: 0.9 },
   { path: "/laporan", changeFrequency: "daily", priority: 0.8 },
   { path: "/informasi", changeFrequency: "monthly", priority: 0.7 },

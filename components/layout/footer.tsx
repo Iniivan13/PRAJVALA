@@ -6,6 +6,7 @@ import { SpriteArrowRight } from "@/components/ui/pixel-sprites";
 
 const NAVIGATION = [
   { href: "/anggaran", label: "Dashboard Anggaran" },
+  { href: "/fiskal", label: "Monitor Fiskal Daerah" },
   { href: "/proyek", label: "Peta & Proyek" },
   { href: "/laporan", label: "Laporan Warga" },
   { href: "/informasi", label: "Pusat Informasi" },

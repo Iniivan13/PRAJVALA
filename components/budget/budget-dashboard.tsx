@@ -16,7 +16,7 @@ import { SectorDonut } from "@/components/charts/sector-donut";
 import { PageHero } from "@/components/layout/page-hero";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { RegionPicker } from "@/components/ui/region-picker";
-import { SpriteBudget, SpriteDocument, SpriteSun } from "@/components/ui/pixel-sprites";
+import { SpriteArrowRight, SpriteBudget, SpriteDocument, SpriteSun } from "@/components/ui/pixel-sprites";
 import { getBudgetItems } from "@/lib/data";
 import { formatCompactIDR, formatPercent } from "@/lib/utils";
 
@@ -69,6 +69,29 @@ export function BudgetDashboard() {
 
       <div className="bg-pixel-cream">
         <div className="container-page py-8 sm:py-10">
+          <Link
+            href="/fiskal"
+            className="mb-4 flex items-start gap-3 border-4 border-pixel-line bg-pixel-sun/35 p-4 shadow-card transition-transform duration-100 hover:-translate-y-0.5"
+          >
+            <span className="grid h-9 w-9 shrink-0 place-items-center border-[3px] border-pixel-line bg-pixel-sun text-pixel-line">
+              <SpriteBudget size={16} className="text-pixel-line" />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-pixel text-[8px] uppercase leading-[1.7] text-pixel-line">
+                APBD resmi dari DJPK
+              </span>
+              <span className="mt-1.5 block text-[11.5px] leading-relaxed text-pixel-ink/90">
+                Dashboard ini menampilkan item RAB percontohan. Untuk pagu dan realisasi
+                APBD resmi Kota Depok, Kabupaten Bogor, dan DKI Jakarta dari Portal Data
+                SIKD, buka Monitor Fiskal Daerah.
+              </span>
+              <span className="mt-2 inline-flex items-center gap-1.5 font-pixel text-[7.5px] uppercase text-pixel-line underline decoration-2 underline-offset-4">
+                Buka monitor fiskal
+                <SpriteArrowRight size={11} className="text-pixel-line" />
+              </span>
+            </span>
+          </Link>
+
           {/* Inventory slots: 1 column on tiny phones, 2 up from 380px. */}
           <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:gap-4 xl:grid-cols-4">
             <KpiCard

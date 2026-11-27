@@ -1,0 +1,2153 @@
+{
+  "generated_at": "2026-11-27T14:05:13.602Z",
+  "fiscal_year": 2026,
+  "period_month": 11,
+  "source_name": "DJPK SIKD — Portal Data APBD, Kementerian Keuangan RI",
+  "source_portal": "https://djpk.kemenkeu.go.id/portal/data/apbd",
+  "attribution": "Sumber: Direktorat Jenderal Perimbangan Keuangan, Kementerian Keuangan RI — Portal Data SIKD.",
+  "regions": {
+    "kota-depok": {
+      "id": "kota-depok__2026__11__murni",
+      "region_id": "kota-depok",
+      "region_label": "Kota Depok",
+      "apbd_entity": "Pemerintah Kota Depok",
+      "coverage": "APBD Pemerintah Kota Depok",
+      "fiscal_year": 2026,
+      "period_month": 11,
+      "budget_version": "Murni",
+      "reported_at": "2026-11-26",
+      "fetched_at": "2026-11-27T14:04:17.276Z",
+      "source_url": "https://djpk.kemenkeu.go.id/portal/data/apbd?periode=11&tahun=2026&provinsi=10&pemda=21",
+      "source_name": "DJPK SIKD — Portal Data APBD, Kementerian Keuangan RI",
+      "accounts": [
+        {
+          "account_code": "pendapatan-daerah",
+          "account_name": "Pendapatan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 4157050724049,
+          "realization_amount": 3318301847324,
+          "realization_percentage": 79.82,
+          "source_percentage": 79.82,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Daerah",
+            "budget": "4157050724049",
+            "realization": "3318301847324",
+            "percentage": "79.82"
+          }
+        },
+        {
+          "account_code": "pad",
+          "account_name": "PAD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 2401326857215,
+          "realization_amount": 1848810362525,
+          "realization_percentage": 76.99,
+          "source_percentage": 76.99,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "PAD",
+            "budget": "2401326857215",
+            "realization": "1848810362525",
+            "percentage": "76.99"
+          }
+        },
+        {
+          "account_code": "pajak-daerah",
+          "account_name": "Pajak Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 2057143337366,
+          "realization_amount": 1580288743082,
+          "realization_percentage": 76.82,
+          "source_percentage": 76.82,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pajak Daerah",
+            "budget": "2057143337366",
+            "realization": "1580288743082",
+            "percentage": "76.82"
+          }
+        },
+        {
+          "account_code": "retribusi-daerah",
+          "account_name": "Retribusi Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 298902754318,
+          "realization_amount": 209448101391,
+          "realization_percentage": 70.07,
+          "source_percentage": 70.07,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Retribusi Daerah",
+            "budget": "298902754318",
+            "realization": "209448101391",
+            "percentage": "70.07"
+          }
+        },
+        {
+          "account_code": "hasil-pengelolaan-kekayaan-daerah-yang-dipisahkan",
+          "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 22016816722,
+          "realization_amount": 24803845927,
+          "realization_percentage": 112.66,
+          "source_percentage": 112.66,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+            "budget": "22016816722",
+            "realization": "24803845927",
+            "percentage": "112.66"
+          }
+        },
+        {
+          "account_code": "lain-lain-pad-yang-sah",
+          "account_name": "Lain-Lain PAD yang Sah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 23263948809,
+          "realization_amount": 34269672125,
+          "realization_percentage": 147.31,
+          "source_percentage": 147.31,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Lain-Lain PAD yang Sah",
+            "budget": "23263948809",
+            "realization": "34269672125",
+            "percentage": "147.31"
+          }
+        },
+        {
+          "account_code": "tkdd",
+          "account_name": "TKDD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 1473909000350,
+          "realization_amount": 1240793249803,
+          "realization_percentage": 84.18,
+          "source_percentage": 84.18,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "TKDD",
+            "budget": "1473909000350",
+            "realization": "1240793249803",
+            "percentage": "84.18"
+          }
+        },
+        {
+          "account_code": "pendapatan-transfer-pemerintah-pusat",
+          "account_name": "Pendapatan Transfer Pemerintah Pusat",
+          "account_level": 3,
+          "parent_code": "tkdd",
+          "budget_amount": 1473909000350,
+          "realization_amount": 1240793249803,
+          "realization_percentage": 84.18,
+          "source_percentage": 84.18,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Transfer Pemerintah Pusat",
+            "budget": "1473909000350",
+            "realization": "1240793249803",
+            "percentage": "84.18"
+          }
+        },
+        {
+          "account_code": "pendapatan-lainnya",
+          "account_name": "Pendapatan Lainnya",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 281814866484,
+          "realization_amount": 228698234996,
+          "realization_percentage": 81.15,
+          "source_percentage": 81.15,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Lainnya",
+            "budget": "281814866484",
+            "realization": "228698234996",
+            "percentage": "81.15"
+          }
+        },
+        {
+          "account_code": "pendapatan-transfer-antar-daerah",
+          "account_name": "Pendapatan Transfer Antar Daerah",
+          "account_level": 3,
+          "parent_code": "pendapatan-lainnya",
+          "budget_amount": 281814866484,
+          "realization_amount": 228698234996,
+          "realization_percentage": 81.15,
+          "source_percentage": 81.15,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Transfer Antar Daerah",
+            "budget": "281814866484",
+            "realization": "228698234996",
+            "percentage": "81.15"
+          }
+        },
+        {
+          "account_code": "belanja-daerah",
+          "account_name": "Belanja Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 4387775724049,
+          "realization_amount": 2818770882324,
+          "realization_percentage": 64.24,
+          "source_percentage": 64.24,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Daerah",
+            "budget": "4387775724049",
+            "realization": "2818770882324",
+            "percentage": "64.24"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai",
+          "account_name": "Belanja Pegawai",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 1607179578044,
+          "realization_amount": 1019219917319,
+          "realization_percentage": 63.42,
+          "source_percentage": 63.42,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "1607179578043.5",
+            "realization": "1019219917319",
+            "percentage": "63.42"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai-l3",
+          "account_name": "Belanja Pegawai",
+          "account_level": 3,
+          "parent_code": "belanja-pegawai",
+          "budget_amount": 1607179578044,
+          "realization_amount": 1019219917319,
+          "realization_percentage": 63.42,
+          "source_percentage": 63.42,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "1607179578043.5",
+            "realization": "1019219917319",
+            "percentage": "63.42"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 1756477268173,
+          "realization_amount": 1141089986847,
+          "realization_percentage": 64.96,
+          "source_percentage": 64.96,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "1756477268172.8",
+            "realization": "1141089986847",
+            "percentage": "64.96"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa-l3",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 3,
+          "parent_code": "belanja-barang-dan-jasa",
+          "budget_amount": 1756477268173,
+          "realization_amount": 1141089986847,
+          "realization_percentage": 64.96,
+          "source_percentage": 64.96,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "1756477268172.8",
+            "realization": "1141089986847",
+            "percentage": "64.96"
+          }
+        },
+        {
+          "account_code": "belanja-modal",
+          "account_name": "Belanja Modal",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 775869123119,
+          "realization_amount": 524048224351,
+          "realization_percentage": 67.54,
+          "source_percentage": 67.54,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "775869123119",
+            "realization": "524048224351",
+            "percentage": "67.54"
+          }
+        },
+        {
+          "account_code": "belanja-modal-l3",
+          "account_name": "Belanja Modal",
+          "account_level": 3,
+          "parent_code": "belanja-modal",
+          "budget_amount": 775869123119,
+          "realization_amount": 524048224351,
+          "realization_percentage": 67.54,
+          "source_percentage": 67.54,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "775869123119",
+            "realization": "524048224351",
+            "percentage": "67.54"
+          }
+        },
+        {
+          "account_code": "belanja-lainnya",
+          "account_name": "Belanja Lainnya",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 248249754714,
+          "realization_amount": 134412753807,
+          "realization_percentage": 54.14,
+          "source_percentage": 54.14,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Lainnya",
+            "budget": "248249754713.66",
+            "realization": "134412753807",
+            "percentage": "54.14"
+          }
+        },
+        {
+          "account_code": "belanja-bunga",
+          "account_name": "Belanja Bunga",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 1200000000,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bunga",
+            "budget": "1200000000",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "belanja-subsidi",
+          "account_name": "Belanja Subsidi",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 110000000,
+          "realization_amount": 9744875,
+          "realization_percentage": 8.86,
+          "source_percentage": 8.86,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Subsidi",
+            "budget": "110000000",
+            "realization": "9744875",
+            "percentage": "8.86"
+          }
+        },
+        {
+          "account_code": "belanja-hibah",
+          "account_name": "Belanja Hibah",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 133464645200,
+          "realization_amount": 102811750342,
+          "realization_percentage": 77.03,
+          "source_percentage": 77.03,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Hibah",
+            "budget": "133464645200",
+            "realization": "102811750342",
+            "percentage": "77.03"
+          }
+        },
+        {
+          "account_code": "belanja-bantuan-sosial",
+          "account_name": "Belanja Bantuan Sosial",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 46675750000,
+          "realization_amount": 23508500000,
+          "realization_percentage": 50.37,
+          "source_percentage": 50.37,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bantuan Sosial",
+            "budget": "46675750000",
+            "realization": "23508500000",
+            "percentage": "50.37"
+          }
+        },
+        {
+          "account_code": "belanja-tidak-terduga",
+          "account_name": "Belanja Tidak Terduga",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 66799359514,
+          "realization_amount": 8082758590,
+          "realization_percentage": 12.1,
+          "source_percentage": 12.1,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Tidak Terduga",
+            "budget": "66799359513.66",
+            "realization": "8082758590",
+            "percentage": "12.10"
+          }
+        },
+        {
+          "account_code": "pembiayaan-daerah",
+          "account_name": "Pembiayaan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 230725000000,
+          "realization_amount": 265820768371,
+          "realization_percentage": 115.21,
+          "source_percentage": 115.21,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Pembiayaan Daerah",
+            "budget": "230725000000",
+            "realization": "265820768371.05",
+            "percentage": "115.21"
+          }
+        },
+        {
+          "account_code": "penerimaan-pembiayaan-daerah",
+          "account_name": "Penerimaan Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 243200000000,
+          "realization_amount": 275820768371,
+          "realization_percentage": 113.41,
+          "source_percentage": 113.41,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Penerimaan Pembiayaan Daerah",
+            "budget": "243200000000",
+            "realization": "275820768371.05",
+            "percentage": "113.41"
+          }
+        },
+        {
+          "account_code": "sisa-lebih-perhitungan-anggaran-tahun-sebelumnya",
+          "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 160700000000,
+          "realization_amount": 275820768371,
+          "realization_percentage": 171.64,
+          "source_percentage": 171.64,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+            "budget": "160700000000",
+            "realization": "275820768371.05",
+            "percentage": "171.64"
+          }
+        },
+        {
+          "account_code": "penerimaan-pembiayaan-lainnya-sesuai-dengan-ketentuan-p-a8va7p",
+          "account_name": "Penerimaan Pembiayaan Lainnya Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 82500000000,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Penerimaan Pembiayaan Lainnya Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+            "budget": "82500000000",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "pengeluaran-pembiayaan-daerah",
+          "account_name": "Pengeluaran Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 12475000000,
+          "realization_amount": 10000000000,
+          "realization_percentage": 80.16,
+          "source_percentage": 80.16,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pengeluaran Pembiayaan Daerah",
+            "budget": "12475000000",
+            "realization": "10000000000",
+            "percentage": "80.16"
+          }
+        },
+        {
+          "account_code": "penyertaan-modal-daerah",
+          "account_name": "Penyertaan Modal Daerah",
+          "account_level": 3,
+          "parent_code": "pengeluaran-pembiayaan-daerah",
+          "budget_amount": 10000000000,
+          "realization_amount": 10000000000,
+          "realization_percentage": 100,
+          "source_percentage": 100,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Penyertaan Modal Daerah",
+            "budget": "10000000000",
+            "realization": "10000000000",
+            "percentage": "100.00"
+          }
+        },
+        {
+          "account_code": "pembayaran-cicilan-pokok-utang-yang-jatuh-tempo",
+          "account_name": "Pembayaran Cicilan Pokok Utang yang Jatuh Tempo",
+          "account_level": 3,
+          "parent_code": "pengeluaran-pembiayaan-daerah",
+          "budget_amount": 2475000000,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pembayaran Cicilan Pokok Utang yang Jatuh Tempo",
+            "budget": "2475000000",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        }
+      ],
+      "totals": {
+        "revenue": {
+          "budget_amount": 4157050724049,
+          "realization_amount": 3318301847324,
+          "realization_percentage": 79.82
+        },
+        "spending": {
+          "budget_amount": 4387775724049,
+          "realization_amount": 2818770882324,
+          "realization_percentage": 64.24
+        },
+        "financing": {
+          "budget_amount": 230725000000,
+          "realization_amount": 265820768371,
+          "realization_percentage": 115.21
+        }
+      },
+      "checks": [
+        {
+          "id": "row-alignment",
+          "label": "Keselarasan baris HTML dan Spreadsheet",
+          "status": "valid",
+          "detail": "30 akun cocok antara tabel HTML dan CSV SpreadsheetML."
+        },
+        {
+          "id": "period-lock",
+          "label": "Kunci periode dan versi anggaran",
+          "status": "valid",
+          "detail": "November 2026 · APBD Murni · data diterima SIKD 26 November 2026."
+        },
+        {
+          "id": "value-completeness",
+          "label": "Kelengkapan nominal",
+          "status": "valid",
+          "detail": "Semua pagu dan realisasi terbaca; null tidak pernah diperlakukan sebagai nol."
+        },
+        {
+          "id": "integral-rupiah",
+          "label": "Satuan rupiah bulat",
+          "status": "warning",
+          "detail": "9 nominal pecahan dibulatkan; nilai mentah tetap disimpan."
+        },
+        {
+          "id": "percentage-consistency",
+          "label": "Konsistensi persentase",
+          "status": "valid",
+          "detail": "Persentase portal cocok dengan hitungan pagu/realisasi (toleransi 0,02 poin)."
+        },
+        {
+          "id": "aggregate-pendapatan-daerah",
+          "label": "Konsistensi Pendapatan Daerah",
+          "status": "valid",
+          "detail": "3 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pad",
+          "label": "Konsistensi PAD",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-tkdd",
+          "label": "Konsistensi TKDD",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pendapatan-lainnya",
+          "label": "Konsistensi Pendapatan Lainnya",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-daerah",
+          "label": "Konsistensi Belanja Daerah",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-pegawai",
+          "label": "Konsistensi Belanja Pegawai",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-barang-dan-jasa",
+          "label": "Konsistensi Belanja Barang dan Jasa",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-modal",
+          "label": "Konsistensi Belanja Modal",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-lainnya",
+          "label": "Konsistensi Belanja Lainnya",
+          "status": "valid",
+          "detail": "5 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pembiayaan-daerah",
+          "label": "Konsistensi Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-penerimaan-pembiayaan-daerah",
+          "label": "Konsistensi Penerimaan Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pengeluaran-pembiayaan-daerah",
+          "label": "Konsistensi Pengeluaran Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        }
+      ],
+      "quality": {
+        "status": "warning",
+        "valid": 21,
+        "warning": 9,
+        "invalid": 0
+      },
+      "changes": {
+        "compared_to": null,
+        "changed": false,
+        "changed_accounts": [],
+        "note": "Sinkronisasi pertama; belum ada snapshot pembanding."
+      }
+    },
+    "kabupaten-bogor": {
+      "id": "kabupaten-bogor__2026__11__murni",
+      "region_id": "kabupaten-bogor",
+      "region_label": "Kabupaten Bogor · cakupan Cibinong",
+      "apbd_entity": "Pemerintah Kabupaten Bogor",
+      "coverage": "APBD Kabupaten Bogor untuk cakupan Kecamatan Cibinong",
+      "fiscal_year": 2026,
+      "period_month": 11,
+      "budget_version": "Murni",
+      "reported_at": "2026-11-26",
+      "fetched_at": "2026-11-27T14:04:44.574Z",
+      "source_url": "https://djpk.kemenkeu.go.id/portal/data/apbd?periode=11&tahun=2026&provinsi=10&pemda=03",
+      "source_name": "DJPK SIKD — Portal Data APBD, Kementerian Keuangan RI",
+      "accounts": [
+        {
+          "account_code": "pendapatan-daerah",
+          "account_name": "Pendapatan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 10956945388935,
+          "realization_amount": 7620807912760,
+          "realization_percentage": 69.55,
+          "source_percentage": 69.55,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Pendapatan Daerah",
+            "budget": "10956945388935",
+            "realization": "7620807912760.3",
+            "percentage": "69.55"
+          }
+        },
+        {
+          "account_code": "pad",
+          "account_name": "PAD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 5647136406531,
+          "realization_amount": 4541042421423,
+          "realization_percentage": 80.41,
+          "source_percentage": 80.41,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "PAD",
+            "budget": "5647136406531",
+            "realization": "4541042421423.3",
+            "percentage": "80.41"
+          }
+        },
+        {
+          "account_code": "pajak-daerah",
+          "account_name": "Pajak Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 4171531395904,
+          "realization_amount": 3755478080948,
+          "realization_percentage": 90.03,
+          "source_percentage": 90.03,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pajak Daerah",
+            "budget": "4171531395904",
+            "realization": "3755478080948",
+            "percentage": "90.03"
+          }
+        },
+        {
+          "account_code": "retribusi-daerah",
+          "account_name": "Retribusi Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 1275874162481,
+          "realization_amount": 715211704209,
+          "realization_percentage": 56.06,
+          "source_percentage": 56.06,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Retribusi Daerah",
+            "budget": "1275874162481",
+            "realization": "715211704209",
+            "percentage": "56.06"
+          }
+        },
+        {
+          "account_code": "hasil-pengelolaan-kekayaan-daerah-yang-dipisahkan",
+          "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 82486510256,
+          "realization_amount": 18725838074,
+          "realization_percentage": 22.7,
+          "source_percentage": 22.7,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+            "budget": "82486510256",
+            "realization": "18725838074",
+            "percentage": "22.70"
+          }
+        },
+        {
+          "account_code": "lain-lain-pad-yang-sah",
+          "account_name": "Lain-Lain PAD yang Sah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 117244337890,
+          "realization_amount": 51626798192,
+          "realization_percentage": 44.03,
+          "source_percentage": 44.03,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Lain-Lain PAD yang Sah",
+            "budget": "117244337890",
+            "realization": "51626798192.28",
+            "percentage": "44.03"
+          }
+        },
+        {
+          "account_code": "tkdd",
+          "account_name": "TKDD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 4690757004000,
+          "realization_amount": 2588699253277,
+          "realization_percentage": 55.19,
+          "source_percentage": 55.19,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "TKDD",
+            "budget": "4690757004000",
+            "realization": "2588699253277",
+            "percentage": "55.19"
+          }
+        },
+        {
+          "account_code": "pendapatan-transfer-pemerintah-pusat",
+          "account_name": "Pendapatan Transfer Pemerintah Pusat",
+          "account_level": 3,
+          "parent_code": "tkdd",
+          "budget_amount": 4690757004000,
+          "realization_amount": 2588699253277,
+          "realization_percentage": 55.19,
+          "source_percentage": 55.19,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Transfer Pemerintah Pusat",
+            "budget": "4690757004000",
+            "realization": "2588699253277",
+            "percentage": "55.19"
+          }
+        },
+        {
+          "account_code": "pendapatan-lainnya",
+          "account_name": "Pendapatan Lainnya",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 619051978404,
+          "realization_amount": 491066238060,
+          "realization_percentage": 79.33,
+          "source_percentage": 79.33,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Lainnya",
+            "budget": "619051978404",
+            "realization": "491066238060",
+            "percentage": "79.33"
+          }
+        },
+        {
+          "account_code": "lain-lain-pendapatan-sesuai-dengan-ketentuan-peraturan--14osy89",
+          "account_name": "Lain-lain Pendapatan Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+          "account_level": 3,
+          "parent_code": "pendapatan-lainnya",
+          "budget_amount": 0,
+          "realization_amount": 9936805266,
+          "realization_percentage": null,
+          "source_percentage": 0,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Pagu nol; persentase tidak dapat dihitung dan disimpan sebagai null.",
+            "Realisasi tercatat meskipun pagu nol; bukan angka nol yang setara dengan 0%."
+          ],
+          "raw": {
+            "account_name": "Lain-lain Pendapatan Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+            "budget": "0",
+            "realization": "9936805266",
+            "percentage": "0"
+          }
+        },
+        {
+          "account_code": "pendapatan-transfer-antar-daerah",
+          "account_name": "Pendapatan Transfer Antar Daerah",
+          "account_level": 3,
+          "parent_code": "pendapatan-lainnya",
+          "budget_amount": 619051978404,
+          "realization_amount": 481129432794,
+          "realization_percentage": 77.72,
+          "source_percentage": 77.72,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Transfer Antar Daerah",
+            "budget": "619051978404",
+            "realization": "481129432794",
+            "percentage": "77.72"
+          }
+        },
+        {
+          "account_code": "belanja-daerah",
+          "account_name": "Belanja Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 11655339902239,
+          "realization_amount": 7626597782221,
+          "realization_percentage": 65.43,
+          "source_percentage": 65.43,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Daerah",
+            "budget": "11655339902239",
+            "realization": "7626597782221.2",
+            "percentage": "65.43"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai",
+          "account_name": "Belanja Pegawai",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 3835681375316,
+          "realization_amount": 2808311367773,
+          "realization_percentage": 73.22,
+          "source_percentage": 73.22,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "3835681375316",
+            "realization": "2808311367773",
+            "percentage": "73.22"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai-l3",
+          "account_name": "Belanja Pegawai",
+          "account_level": 3,
+          "parent_code": "belanja-pegawai",
+          "budget_amount": 3835681375316,
+          "realization_amount": 2808311367773,
+          "realization_percentage": 73.22,
+          "source_percentage": 73.22,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "3835681375316",
+            "realization": "2808311367773",
+            "percentage": "73.22"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 4224757597885,
+          "realization_amount": 2427062349002,
+          "realization_percentage": 57.45,
+          "source_percentage": 57.45,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "4224757597885",
+            "realization": "2427062349002.2",
+            "percentage": "57.45"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa-l3",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 3,
+          "parent_code": "belanja-barang-dan-jasa",
+          "budget_amount": 4224757597885,
+          "realization_amount": 2427062349002,
+          "realization_percentage": 57.45,
+          "source_percentage": 57.45,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "4224757597885",
+            "realization": "2427062349002.2",
+            "percentage": "57.45"
+          }
+        },
+        {
+          "account_code": "belanja-modal",
+          "account_name": "Belanja Modal",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 1156701946229,
+          "realization_amount": 688562895553,
+          "realization_percentage": 59.53,
+          "source_percentage": 59.53,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "1156701946229",
+            "realization": "688562895553",
+            "percentage": "59.53"
+          }
+        },
+        {
+          "account_code": "belanja-modal-l3",
+          "account_name": "Belanja Modal",
+          "account_level": 3,
+          "parent_code": "belanja-modal",
+          "budget_amount": 1156701946229,
+          "realization_amount": 688562895553,
+          "realization_percentage": 59.53,
+          "source_percentage": 59.53,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "1156701946229",
+            "realization": "688562895553",
+            "percentage": "59.53"
+          }
+        },
+        {
+          "account_code": "belanja-lainnya",
+          "account_name": "Belanja Lainnya",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 2438198982809,
+          "realization_amount": 1702661169893,
+          "realization_percentage": 69.83,
+          "source_percentage": 69.83,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Lainnya",
+            "budget": "2438198982809",
+            "realization": "1702661169893",
+            "percentage": "69.83"
+          }
+        },
+        {
+          "account_code": "belanja-bagi-hasil",
+          "account_name": "Belanja Bagi Hasil",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 279809416666,
+          "realization_amount": 351618789518,
+          "realization_percentage": 125.66,
+          "source_percentage": 125.66,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bagi Hasil",
+            "budget": "279809416666",
+            "realization": "351618789518",
+            "percentage": "125.66"
+          }
+        },
+        {
+          "account_code": "belanja-bantuan-keuangan",
+          "account_name": "Belanja Bantuan Keuangan",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 1470634127538,
+          "realization_amount": 829022665345,
+          "realization_percentage": 56.37,
+          "source_percentage": 56.37,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bantuan Keuangan",
+            "budget": "1470634127538",
+            "realization": "829022665345",
+            "percentage": "56.37"
+          }
+        },
+        {
+          "account_code": "belanja-hibah",
+          "account_name": "Belanja Hibah",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 536737947176,
+          "realization_amount": 440506314276,
+          "realization_percentage": 82.07,
+          "source_percentage": 82.07,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Hibah",
+            "budget": "536737947176",
+            "realization": "440506314276",
+            "percentage": "82.07"
+          }
+        },
+        {
+          "account_code": "belanja-bantuan-sosial",
+          "account_name": "Belanja Bantuan Sosial",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 70688851305,
+          "realization_amount": 41861000000,
+          "realization_percentage": 59.22,
+          "source_percentage": 59.22,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bantuan Sosial",
+            "budget": "70688851305",
+            "realization": "41861000000",
+            "percentage": "59.22"
+          }
+        },
+        {
+          "account_code": "belanja-tidak-terduga",
+          "account_name": "Belanja Tidak Terduga",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 80328640124,
+          "realization_amount": 39652400754,
+          "realization_percentage": 49.36,
+          "source_percentage": 49.36,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Tidak Terduga",
+            "budget": "80328640124",
+            "realization": "39652400754",
+            "percentage": "49.36"
+          }
+        },
+        {
+          "account_code": "pembiayaan-daerah",
+          "account_name": "Pembiayaan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 698394513304,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Jumlah sub-akun tidak sama dengan total (selisih pagu 0, realisasi 150407259985)."
+          ],
+          "raw": {
+            "account_name": "Pembiayaan Daerah",
+            "budget": "698394513304",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "penerimaan-pembiayaan-daerah",
+          "account_name": "Penerimaan Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 698394513304,
+          "realization_amount": 150407259985,
+          "realization_percentage": 21.54,
+          "source_percentage": 21.54,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Penerimaan Pembiayaan Daerah",
+            "budget": "698394513304",
+            "realization": "150407259984.68",
+            "percentage": "21.54"
+          }
+        },
+        {
+          "account_code": "sisa-lebih-perhitungan-anggaran-tahun-sebelumnya",
+          "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 698394513304,
+          "realization_amount": 150407259985,
+          "realization_percentage": 21.54,
+          "source_percentage": 21.54,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Sumber memuat pecahan rupiah; nominal dibulatkan ke rupiah terdekat tanpa mengubah nilai mentah."
+          ],
+          "raw": {
+            "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+            "budget": "698394513304",
+            "realization": "150407259984.68",
+            "percentage": "21.54"
+          }
+        },
+        {
+          "account_code": "pengeluaran-pembiayaan-daerah",
+          "account_name": "Pengeluaran Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 0,
+          "realization_amount": 0,
+          "realization_percentage": null,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [
+            "Pagu nol; persentase tidak dapat dihitung dan disimpan sebagai null."
+          ],
+          "raw": {
+            "account_name": "Pengeluaran Pembiayaan Daerah",
+            "budget": "0",
+            "realization": "0",
+            "percentage": "0"
+          }
+        },
+        {
+          "account_code": "penyertaan-modal-daerah",
+          "account_name": "Penyertaan Modal Daerah",
+          "account_level": 3,
+          "parent_code": "pengeluaran-pembiayaan-daerah",
+          "budget_amount": 0,
+          "realization_amount": 0,
+          "realization_percentage": null,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [
+            "Pagu nol; persentase tidak dapat dihitung dan disimpan sebagai null."
+          ],
+          "raw": {
+            "account_name": "Penyertaan Modal Daerah",
+            "budget": "0",
+            "realization": "0",
+            "percentage": "0"
+          }
+        }
+      ],
+      "totals": {
+        "revenue": {
+          "budget_amount": 10956945388935,
+          "realization_amount": 7620807912760,
+          "realization_percentage": 69.55
+        },
+        "spending": {
+          "budget_amount": 11655339902239,
+          "realization_amount": 7626597782221,
+          "realization_percentage": 65.43
+        },
+        "financing": {
+          "budget_amount": 698394513304,
+          "realization_amount": 0,
+          "realization_percentage": 0
+        }
+      },
+      "checks": [
+        {
+          "id": "row-alignment",
+          "label": "Keselarasan baris HTML dan Spreadsheet",
+          "status": "valid",
+          "detail": "29 akun cocok antara tabel HTML dan CSV SpreadsheetML."
+        },
+        {
+          "id": "period-lock",
+          "label": "Kunci periode dan versi anggaran",
+          "status": "valid",
+          "detail": "November 2026 · APBD Murni · data diterima SIKD 26 November 2026."
+        },
+        {
+          "id": "value-completeness",
+          "label": "Kelengkapan nominal",
+          "status": "valid",
+          "detail": "Semua pagu dan realisasi terbaca; null tidak pernah diperlakukan sebagai nol."
+        },
+        {
+          "id": "integral-rupiah",
+          "label": "Satuan rupiah bulat",
+          "status": "warning",
+          "detail": "8 nominal pecahan dibulatkan; nilai mentah tetap disimpan."
+        },
+        {
+          "id": "percentage-consistency",
+          "label": "Konsistensi persentase",
+          "status": "valid",
+          "detail": "Persentase portal cocok dengan hitungan pagu/realisasi (toleransi 0,02 poin)."
+        },
+        {
+          "id": "zero-budget",
+          "label": "Pagu nol dengan realisasi",
+          "status": "warning",
+          "detail": "1 akun memiliki pagu nol tetapi realisasi positif; persentasenya null, bukan 0%."
+        },
+        {
+          "id": "aggregate-pendapatan-daerah",
+          "label": "Konsistensi Pendapatan Daerah",
+          "status": "valid",
+          "detail": "3 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pad",
+          "label": "Konsistensi PAD",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-tkdd",
+          "label": "Konsistensi TKDD",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pendapatan-lainnya",
+          "label": "Konsistensi Pendapatan Lainnya",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-daerah",
+          "label": "Konsistensi Belanja Daerah",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-pegawai",
+          "label": "Konsistensi Belanja Pegawai",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-barang-dan-jasa",
+          "label": "Konsistensi Belanja Barang dan Jasa",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-modal",
+          "label": "Konsistensi Belanja Modal",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-lainnya",
+          "label": "Konsistensi Belanja Lainnya",
+          "status": "valid",
+          "detail": "5 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pembiayaan-daerah",
+          "label": "Konsistensi Pembiayaan Daerah",
+          "status": "warning",
+          "detail": "Selisih pagu 0 dan realisasi 150407259985 terhadap jumlah sub-akun."
+        },
+        {
+          "id": "aggregate-penerimaan-pembiayaan-daerah",
+          "label": "Konsistensi Penerimaan Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pengeluaran-pembiayaan-daerah",
+          "label": "Konsistensi Pengeluaran Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        }
+      ],
+      "quality": {
+        "status": "warning",
+        "valid": 19,
+        "warning": 10,
+        "invalid": 0
+      },
+      "changes": {
+        "compared_to": null,
+        "changed": false,
+        "changed_accounts": [],
+        "note": "Sinkronisasi pertama; belum ada snapshot pembanding."
+      }
+    },
+    "provinsi-dki-jakarta": {
+      "id": "provinsi-dki-jakarta__2026__11__murni",
+      "region_id": "provinsi-dki-jakarta",
+      "region_label": "DKI Jakarta · koridor TB Simatupang",
+      "apbd_entity": "Pemerintah Provinsi DKI Jakarta",
+      "coverage": "APBD Provinsi DKI Jakarta untuk koridor TB Simatupang",
+      "fiscal_year": 2026,
+      "period_month": 11,
+      "budget_version": "Murni",
+      "reported_at": "2026-11-26",
+      "fetched_at": "2026-11-27T14:05:13.340Z",
+      "source_url": "https://djpk.kemenkeu.go.id/portal/data/apbd?periode=11&tahun=2026&provinsi=09&pemda=00",
+      "source_name": "DJPK SIKD — Portal Data APBD, Kementerian Keuangan RI",
+      "accounts": [
+        {
+          "account_code": "pendapatan-daerah",
+          "account_name": "Pendapatan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 71450673065697,
+          "realization_amount": 48543787549011,
+          "realization_percentage": 67.94,
+          "source_percentage": 67.94,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Daerah",
+            "budget": "71450673065697",
+            "realization": "48543787549011",
+            "percentage": "67.94"
+          }
+        },
+        {
+          "account_code": "pad",
+          "account_name": "PAD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 57670647712697,
+          "realization_amount": 43066911440071,
+          "realization_percentage": 74.68,
+          "source_percentage": 74.68,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "PAD",
+            "budget": "57670647712697",
+            "realization": "43066911440071",
+            "percentage": "74.68"
+          }
+        },
+        {
+          "account_code": "pajak-daerah",
+          "account_name": "Pajak Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 49898218773411,
+          "realization_amount": 37745017258427,
+          "realization_percentage": 75.64,
+          "source_percentage": 75.64,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pajak Daerah",
+            "budget": "49898218773411",
+            "realization": "37745017258427",
+            "percentage": "75.64"
+          }
+        },
+        {
+          "account_code": "retribusi-daerah",
+          "account_name": "Retribusi Daerah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 2214853656242,
+          "realization_amount": 997299054230,
+          "realization_percentage": 45.03,
+          "source_percentage": 45.03,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Retribusi Daerah",
+            "budget": "2214853656242",
+            "realization": "997299054230",
+            "percentage": "45.03"
+          }
+        },
+        {
+          "account_code": "hasil-pengelolaan-kekayaan-daerah-yang-dipisahkan",
+          "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 876020190232,
+          "realization_amount": 764116170000,
+          "realization_percentage": 87.23,
+          "source_percentage": 87.23,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Hasil Pengelolaan Kekayaan Daerah yang Dipisahkan",
+            "budget": "876020190232",
+            "realization": "764116170000",
+            "percentage": "87.23"
+          }
+        },
+        {
+          "account_code": "lain-lain-pad-yang-sah",
+          "account_name": "Lain-Lain PAD yang Sah",
+          "account_level": 3,
+          "parent_code": "pad",
+          "budget_amount": 4681555092812,
+          "realization_amount": 3560478957414,
+          "realization_percentage": 76.05,
+          "source_percentage": 76.05,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Lain-Lain PAD yang Sah",
+            "budget": "4681555092812",
+            "realization": "3560478957414",
+            "percentage": "76.05"
+          }
+        },
+        {
+          "account_code": "tkdd",
+          "account_name": "TKDD",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 11159480293000,
+          "realization_amount": 5475368889400,
+          "realization_percentage": 49.06,
+          "source_percentage": 49.06,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "TKDD",
+            "budget": "11159480293000",
+            "realization": "5475368889400",
+            "percentage": "49.06"
+          }
+        },
+        {
+          "account_code": "pendapatan-transfer-pemerintah-pusat",
+          "account_name": "Pendapatan Transfer Pemerintah Pusat",
+          "account_level": 3,
+          "parent_code": "tkdd",
+          "budget_amount": 11159480293000,
+          "realization_amount": 5475368889400,
+          "realization_percentage": 49.06,
+          "source_percentage": 49.06,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Transfer Pemerintah Pusat",
+            "budget": "11159480293000",
+            "realization": "5475368889400",
+            "percentage": "49.06"
+          }
+        },
+        {
+          "account_code": "pendapatan-lainnya",
+          "account_name": "Pendapatan Lainnya",
+          "account_level": 2,
+          "parent_code": "pendapatan-daerah",
+          "budget_amount": 2620545060000,
+          "realization_amount": 1507219540,
+          "realization_percentage": 0.06,
+          "source_percentage": 0.06,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Lainnya",
+            "budget": "2620545060000",
+            "realization": "1507219540",
+            "percentage": "0.06"
+          }
+        },
+        {
+          "account_code": "pendapatan-hibah",
+          "account_name": "Pendapatan Hibah",
+          "account_level": 3,
+          "parent_code": "pendapatan-lainnya",
+          "budget_amount": 2620545060000,
+          "realization_amount": 1507219540,
+          "realization_percentage": 0.06,
+          "source_percentage": 0.06,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pendapatan Hibah",
+            "budget": "2620545060000",
+            "realization": "1507219540",
+            "percentage": "0.06"
+          }
+        },
+        {
+          "account_code": "belanja-daerah",
+          "account_name": "Belanja Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 74285299931740,
+          "realization_amount": 43931198916303,
+          "realization_percentage": 59.14,
+          "source_percentage": 59.14,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Daerah",
+            "budget": "74285299931740",
+            "realization": "43931198916303",
+            "percentage": "59.14"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai",
+          "account_name": "Belanja Pegawai",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 21431736563104,
+          "realization_amount": 15952755027613,
+          "realization_percentage": 74.44,
+          "source_percentage": 74.44,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "21431736563104",
+            "realization": "15952755027613",
+            "percentage": "74.44"
+          }
+        },
+        {
+          "account_code": "belanja-pegawai-l3",
+          "account_name": "Belanja Pegawai",
+          "account_level": 3,
+          "parent_code": "belanja-pegawai",
+          "budget_amount": 21431736563104,
+          "realization_amount": 15952755027613,
+          "realization_percentage": 74.44,
+          "source_percentage": 74.44,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Pegawai",
+            "budget": "21431736563104",
+            "realization": "15952755027613",
+            "percentage": "74.44"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 28998168578186,
+          "realization_amount": 17242214733937,
+          "realization_percentage": 59.46,
+          "source_percentage": 59.46,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "28998168578186",
+            "realization": "17242214733937",
+            "percentage": "59.46"
+          }
+        },
+        {
+          "account_code": "belanja-barang-dan-jasa-l3",
+          "account_name": "Belanja Barang dan Jasa",
+          "account_level": 3,
+          "parent_code": "belanja-barang-dan-jasa",
+          "budget_amount": 28998168578186,
+          "realization_amount": 17242214733937,
+          "realization_percentage": 59.46,
+          "source_percentage": 59.46,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Barang dan Jasa",
+            "budget": "28998168578186",
+            "realization": "17242214733937",
+            "percentage": "59.46"
+          }
+        },
+        {
+          "account_code": "belanja-modal",
+          "account_name": "Belanja Modal",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 10164767414640,
+          "realization_amount": 2860390006511,
+          "realization_percentage": 28.14,
+          "source_percentage": 28.14,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "10164767414640",
+            "realization": "2860390006511",
+            "percentage": "28.14"
+          }
+        },
+        {
+          "account_code": "belanja-modal-l3",
+          "account_name": "Belanja Modal",
+          "account_level": 3,
+          "parent_code": "belanja-modal",
+          "budget_amount": 10164767414640,
+          "realization_amount": 2860390006511,
+          "realization_percentage": 28.14,
+          "source_percentage": 28.14,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Modal",
+            "budget": "10164767414640",
+            "realization": "2860390006511",
+            "percentage": "28.14"
+          }
+        },
+        {
+          "account_code": "belanja-lainnya",
+          "account_name": "Belanja Lainnya",
+          "account_level": 2,
+          "parent_code": "belanja-daerah",
+          "budget_amount": 13690627375810,
+          "realization_amount": 7875839148242,
+          "realization_percentage": 57.53,
+          "source_percentage": 57.53,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Lainnya",
+            "budget": "13690627375810",
+            "realization": "7875839148242",
+            "percentage": "57.53"
+          }
+        },
+        {
+          "account_code": "belanja-bantuan-keuangan",
+          "account_name": "Belanja Bantuan Keuangan",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 195283179400,
+          "realization_amount": 189878000000,
+          "realization_percentage": 97.23,
+          "source_percentage": 97.23,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bantuan Keuangan",
+            "budget": "195283179400",
+            "realization": "189878000000",
+            "percentage": "97.23"
+          }
+        },
+        {
+          "account_code": "belanja-bunga",
+          "account_name": "Belanja Bunga",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 120400000000,
+          "realization_amount": 77758200000,
+          "realization_percentage": 64.58,
+          "source_percentage": 64.58,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bunga",
+            "budget": "120400000000",
+            "realization": "77758200000",
+            "percentage": "64.58"
+          }
+        },
+        {
+          "account_code": "belanja-subsidi",
+          "account_name": "Belanja Subsidi",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 5277927322600,
+          "realization_amount": 2407820140000,
+          "realization_percentage": 45.62,
+          "source_percentage": 45.62,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Subsidi",
+            "budget": "5277927322600",
+            "realization": "2407820140000",
+            "percentage": "45.62"
+          }
+        },
+        {
+          "account_code": "belanja-hibah",
+          "account_name": "Belanja Hibah",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 2801230357390,
+          "realization_amount": 2133635203000,
+          "realization_percentage": 76.17,
+          "source_percentage": 76.17,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Hibah",
+            "budget": "2801230357390",
+            "realization": "2133635203000",
+            "percentage": "76.17"
+          }
+        },
+        {
+          "account_code": "belanja-bantuan-sosial",
+          "account_name": "Belanja Bantuan Sosial",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 4581666540583,
+          "realization_amount": 3066747605242,
+          "realization_percentage": 66.94,
+          "source_percentage": 66.94,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Bantuan Sosial",
+            "budget": "4581666540583",
+            "realization": "3066747605242",
+            "percentage": "66.94"
+          }
+        },
+        {
+          "account_code": "belanja-tidak-terduga",
+          "account_name": "Belanja Tidak Terduga",
+          "account_level": 3,
+          "parent_code": "belanja-lainnya",
+          "budget_amount": 714119975837,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Belanja Tidak Terduga",
+            "budget": "714119975837",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "pembiayaan-daerah",
+          "account_name": "Pembiayaan Daerah",
+          "account_level": 1,
+          "parent_code": null,
+          "budget_amount": 2834626866043,
+          "realization_amount": 181921400000,
+          "realization_percentage": 6.42,
+          "source_percentage": 6.42,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pembiayaan Daerah",
+            "budget": "2834626866043",
+            "realization": "181921400000",
+            "percentage": "6.42"
+          }
+        },
+        {
+          "account_code": "penerimaan-pembiayaan-daerah",
+          "account_name": "Penerimaan Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 9875623866043,
+          "realization_amount": 1000043200000,
+          "realization_percentage": 10.13,
+          "source_percentage": 10.13,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Penerimaan Pembiayaan Daerah",
+            "budget": "9875623866043",
+            "realization": "1000043200000",
+            "percentage": "10.13"
+          }
+        },
+        {
+          "account_code": "sisa-lebih-perhitungan-anggaran-tahun-sebelumnya",
+          "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 5052674866043,
+          "realization_amount": 1000000000000,
+          "realization_percentage": 19.79,
+          "source_percentage": 19.79,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Sisa Lebih Perhitungan Anggaran Tahun Sebelumnya",
+            "budget": "5052674866043",
+            "realization": "1000000000000",
+            "percentage": "19.79"
+          }
+        },
+        {
+          "account_code": "penerimaan-kembali-pemberian-pinjaman-daerah",
+          "account_name": "Penerimaan Kembali Pemberian Pinjaman Daerah",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 0,
+          "realization_amount": 43200000,
+          "realization_percentage": null,
+          "source_percentage": 0,
+          "data_quality_status": "warning",
+          "quality_notes": [
+            "Pagu nol; persentase tidak dapat dihitung dan disimpan sebagai null.",
+            "Realisasi tercatat meskipun pagu nol; bukan angka nol yang setara dengan 0%."
+          ],
+          "raw": {
+            "account_name": "Penerimaan Kembali Pemberian Pinjaman Daerah",
+            "budget": "0",
+            "realization": "43200000",
+            "percentage": "0"
+          }
+        },
+        {
+          "account_code": "penerimaan-pembiayaan-lainnya-sesuai-dengan-ketentuan-p-a8va7p",
+          "account_name": "Penerimaan Pembiayaan Lainnya Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+          "account_level": 3,
+          "parent_code": "penerimaan-pembiayaan-daerah",
+          "budget_amount": 4822949000000,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Penerimaan Pembiayaan Lainnya Sesuai dengan Ketentuan Peraturan Perundang-Undangan",
+            "budget": "4822949000000",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "pengeluaran-pembiayaan-daerah",
+          "account_name": "Pengeluaran Pembiayaan Daerah",
+          "account_level": 2,
+          "parent_code": "pembiayaan-daerah",
+          "budget_amount": 7040997000000,
+          "realization_amount": 818121800000,
+          "realization_percentage": 11.62,
+          "source_percentage": 11.62,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pengeluaran Pembiayaan Daerah",
+            "budget": "7040997000000",
+            "realization": "818121800000",
+            "percentage": "11.62"
+          }
+        },
+        {
+          "account_code": "penyertaan-modal-daerah",
+          "account_name": "Penyertaan Modal Daerah",
+          "account_level": 3,
+          "parent_code": "pengeluaran-pembiayaan-daerah",
+          "budget_amount": 5230567000000,
+          "realization_amount": 0,
+          "realization_percentage": 0,
+          "source_percentage": 0,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Penyertaan Modal Daerah",
+            "budget": "5230567000000",
+            "realization": "0",
+            "percentage": "0.00"
+          }
+        },
+        {
+          "account_code": "pembayaran-cicilan-pokok-utang-yang-jatuh-tempo",
+          "account_name": "Pembayaran Cicilan Pokok Utang yang Jatuh Tempo",
+          "account_level": 3,
+          "parent_code": "pengeluaran-pembiayaan-daerah",
+          "budget_amount": 1810430000000,
+          "realization_amount": 818121800000,
+          "realization_percentage": 45.19,
+          "source_percentage": 45.19,
+          "data_quality_status": "valid",
+          "quality_notes": [],
+          "raw": {
+            "account_name": "Pembayaran Cicilan Pokok Utang yang Jatuh Tempo",
+            "budget": "1810430000000",
+            "realization": "818121800000",
+            "percentage": "45.19"
+          }
+        }
+      ],
+      "totals": {
+        "revenue": {
+          "budget_amount": 71450673065697,
+          "realization_amount": 48543787549011,
+          "realization_percentage": 67.94
+        },
+        "spending": {
+          "budget_amount": 74285299931740,
+          "realization_amount": 43931198916303,
+          "realization_percentage": 59.14
+        },
+        "financing": {
+          "budget_amount": 2834626866043,
+          "realization_amount": 181921400000,
+          "realization_percentage": 6.42
+        }
+      },
+      "checks": [
+        {
+          "id": "row-alignment",
+          "label": "Keselarasan baris HTML dan Spreadsheet",
+          "status": "valid",
+          "detail": "32 akun cocok antara tabel HTML dan CSV SpreadsheetML."
+        },
+        {
+          "id": "period-lock",
+          "label": "Kunci periode dan versi anggaran",
+          "status": "valid",
+          "detail": "November 2026 · APBD Murni · data diterima SIKD 26 November 2026."
+        },
+        {
+          "id": "value-completeness",
+          "label": "Kelengkapan nominal",
+          "status": "valid",
+          "detail": "Semua pagu dan realisasi terbaca; null tidak pernah diperlakukan sebagai nol."
+        },
+        {
+          "id": "integral-rupiah",
+          "label": "Satuan rupiah bulat",
+          "status": "valid",
+          "detail": "Seluruh nominal sudah berupa rupiah bulat."
+        },
+        {
+          "id": "percentage-consistency",
+          "label": "Konsistensi persentase",
+          "status": "valid",
+          "detail": "Persentase portal cocok dengan hitungan pagu/realisasi (toleransi 0,02 poin)."
+        },
+        {
+          "id": "zero-budget",
+          "label": "Pagu nol dengan realisasi",
+          "status": "warning",
+          "detail": "1 akun memiliki pagu nol tetapi realisasi positif; persentasenya null, bukan 0%."
+        },
+        {
+          "id": "aggregate-pendapatan-daerah",
+          "label": "Konsistensi Pendapatan Daerah",
+          "status": "valid",
+          "detail": "3 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pad",
+          "label": "Konsistensi PAD",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-tkdd",
+          "label": "Konsistensi TKDD",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pendapatan-lainnya",
+          "label": "Konsistensi Pendapatan Lainnya",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-daerah",
+          "label": "Konsistensi Belanja Daerah",
+          "status": "valid",
+          "detail": "4 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-pegawai",
+          "label": "Konsistensi Belanja Pegawai",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-barang-dan-jasa",
+          "label": "Konsistensi Belanja Barang dan Jasa",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-modal",
+          "label": "Konsistensi Belanja Modal",
+          "status": "valid",
+          "detail": "1 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-belanja-lainnya",
+          "label": "Konsistensi Belanja Lainnya",
+          "status": "valid",
+          "detail": "6 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pembiayaan-daerah",
+          "label": "Konsistensi Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-penerimaan-pembiayaan-daerah",
+          "label": "Konsistensi Penerimaan Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "3 sub-akun menjumlah tepat ke total."
+        },
+        {
+          "id": "aggregate-pengeluaran-pembiayaan-daerah",
+          "label": "Konsistensi Pengeluaran Pembiayaan Daerah",
+          "status": "valid",
+          "detail": "2 sub-akun menjumlah tepat ke total."
+        }
+      ],
+      "quality": {
+        "status": "warning",
+        "valid": 31,
+        "warning": 1,
+        "invalid": 0
+      },
+      "changes": {
+        "compared_to": null,
+        "changed": false,
+        "changed_accounts": [],
+        "note": "Sinkronisasi pertama; belum ada snapshot pembanding."
+      }
+    }
+  }
+}

@@ -1,0 +1,1383 @@
+{
+  "generated_at": "2026-11-27T14:05:13.602Z",
+  "fiscal_year": 2026,
+  "source_name": "DJPK SIKD — Portal Data APBD, Kementerian Keuangan RI",
+  "source_portal": "https://djpk.kemenkeu.go.id/portal/data/apbd",
+  "attribution": "Sumber: Direktorat Jenderal Perimbangan Keuangan, Kementerian Keuangan RI — Portal Data SIKD.",
+  "regions": {
+    "kota-depok": {
+      "label": "Kota Depok",
+      "entity": "Pemerintah Kota Depok",
+      "coverage": "APBD Pemerintah Kota Depok",
+      "points": [
+        {
+          "fiscal_year": 2026,
+          "period_month": 1,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 259477327812,
+            "realization_percentage": 6.24
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 85910025377,
+            "realization_percentage": 1.96
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 103800376112,
+            "realization_percentage": 4.32
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 74411004857,
+            "realization_percentage": 4.63
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 11498049270,
+            "realization_percentage": 0.65
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 2,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 493100275385,
+            "realization_percentage": 11.86
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 240675740881,
+            "realization_percentage": 5.49
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 241224265616,
+            "realization_percentage": 10.05
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 150989049366,
+            "realization_percentage": 9.39
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 89684716640,
+            "realization_percentage": 5.11
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 3,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 810883959538,
+            "realization_percentage": 19.51
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 528512585820,
+            "realization_percentage": 12.05
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 467519992602,
+            "realization_percentage": 19.47
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 299718820887,
+            "realization_percentage": 18.65
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 204687094235,
+            "realization_percentage": 11.65
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 903789323,
+            "realization_percentage": 0.12
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 4,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 1115134053364,
+            "realization_percentage": 26.83
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 723360829902,
+            "realization_percentage": 16.49
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 641011117309,
+            "realization_percentage": 26.69
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 382464198759,
+            "realization_percentage": 23.8
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 306301204863,
+            "realization_percentage": 17.44
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 6817338405,
+            "realization_percentage": 0.88
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 5,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 1352817818573,
+            "realization_percentage": 32.54
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 895144754882,
+            "realization_percentage": 20.4
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 800703444515,
+            "realization_percentage": 33.34
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 463920036728,
+            "realization_percentage": 28.87
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 387765977512,
+            "realization_percentage": 22.08
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 13582646517,
+            "realization_percentage": 1.75
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 6,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 1796517590173,
+            "realization_percentage": 43.22
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 1353765975081,
+            "realization_percentage": 30.85
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1046253059967,
+            "realization_percentage": 43.57
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 688003505570,
+            "realization_percentage": 42.81
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 566203498030,
+            "realization_percentage": 32.24
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 61207132741,
+            "realization_percentage": 7.89
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 7,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 1959074195914,
+            "realization_percentage": 47.13
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 1652942377307,
+            "realization_percentage": 37.67
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 265820768371,
+            "realization_percentage": 115.21
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1256746575342,
+            "realization_percentage": 52.34
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 772213641294,
+            "realization_percentage": 48.05
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 721279196855,
+            "realization_percentage": 41.06
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 107663438178,
+            "realization_percentage": 13.88
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 8,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 2255160806027,
+            "realization_percentage": 54.25
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 1895502914874,
+            "realization_percentage": 43.2
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 265820768371,
+            "realization_percentage": 115.21
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1420840745592,
+            "realization_percentage": 59.17
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 852772830845,
+            "realization_percentage": 53.06
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 805911686267,
+            "realization_percentage": 45.88
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 170870793914,
+            "realization_percentage": 22.02
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 9,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 2672571614531,
+            "realization_percentage": 64.29
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 2305712093907,
+            "realization_percentage": 52.55
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 265820768371,
+            "realization_percentage": 115.21
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1693366394786,
+            "realization_percentage": 70.52
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 927594612362,
+            "realization_percentage": 57.72
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 964478129538,
+            "realization_percentage": 54.91
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 315595234743,
+            "realization_percentage": 40.68
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 10,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 3317216879150,
+            "realization_percentage": 79.8
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 2580599943500,
+            "realization_percentage": 58.81
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 265820768371,
+            "realization_percentage": 115.21
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1847725394351,
+            "realization_percentage": 76.95
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 979333926069,
+            "realization_percentage": 60.93
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 1065296888166,
+            "realization_percentage": 60.65
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 420054037678,
+            "realization_percentage": 54.14
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 11,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 4157050724049,
+            "realization_amount": 3318301847324,
+            "realization_percentage": 79.82
+          },
+          "spending": {
+            "budget_amount": 4387775724049,
+            "realization_amount": 2818770882324,
+            "realization_percentage": 64.24
+          },
+          "financing": {
+            "budget_amount": 230725000000,
+            "realization_amount": 265820768371,
+            "realization_percentage": 115.21
+          },
+          "pad": {
+            "budget_amount": 2401326857215,
+            "realization_amount": 1848810362525,
+            "realization_percentage": 76.99
+          },
+          "spending_pegawai": {
+            "budget_amount": 1607179578044,
+            "realization_amount": 1019219917319,
+            "realization_percentage": 63.42
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 1756477268173,
+            "realization_amount": 1141089986847,
+            "realization_percentage": 64.96
+          },
+          "spending_modal": {
+            "budget_amount": 775869123119,
+            "realization_amount": 524048224351,
+            "realization_percentage": 67.54
+          }
+        }
+      ]
+    },
+    "kabupaten-bogor": {
+      "label": "Kabupaten Bogor · cakupan Cibinong",
+      "entity": "Pemerintah Kabupaten Bogor",
+      "coverage": "APBD Kabupaten Bogor untuk cakupan Kecamatan Cibinong",
+      "points": [
+        {
+          "fiscal_year": 2026,
+          "period_month": 1,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 1384178002020,
+            "realization_percentage": 12.63
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 229315629791,
+            "realization_percentage": 1.97
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 472234040877,
+            "realization_percentage": 8.36
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 159193314451,
+            "realization_percentage": 4.15
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 68417558990,
+            "realization_percentage": 1.62
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 1354056350,
+            "realization_percentage": 0.12
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 2,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 2067724107616,
+            "realization_percentage": 18.87
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 970606233471,
+            "realization_percentage": 8.33
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 882309950645,
+            "realization_percentage": 15.62
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 377034464998,
+            "realization_percentage": 9.83
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 253024408244,
+            "realization_percentage": 5.99
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 269716190760,
+            "realization_percentage": 23.32
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 3,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 2889302901561,
+            "realization_percentage": 26.37
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 1720628818177,
+            "realization_percentage": 14.76
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 1406975153650,
+            "realization_percentage": 24.91
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 755585165134,
+            "realization_percentage": 19.7
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 457578664455,
+            "realization_percentage": 10.83
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 285789819477,
+            "realization_percentage": 24.71
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 4,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 3985429051165,
+            "realization_percentage": 36.37
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 2781854970377,
+            "realization_percentage": 23.87
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 2062456282113,
+            "realization_percentage": 36.52
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 1004145519522,
+            "realization_percentage": 26.18
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 858401945755,
+            "realization_percentage": 20.32
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 351124697397,
+            "realization_percentage": 30.36
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 5,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 4700329524821,
+            "realization_percentage": 42.9
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 3344750258838,
+            "realization_percentage": 28.7
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 2460205147377,
+            "realization_percentage": 43.57
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 1232483000513,
+            "realization_percentage": 32.13
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 1090808084505,
+            "realization_percentage": 25.82
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 371774835398,
+            "realization_percentage": 32.14
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 6,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 5328268794126,
+            "realization_percentage": 48.63
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 4426957838626,
+            "realization_percentage": 37.98
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 2777816128165,
+            "realization_percentage": 49.19
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 1853372077698,
+            "realization_percentage": 48.32
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 1330750069382,
+            "realization_percentage": 31.5
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 394354770635,
+            "realization_percentage": 34.09
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 7,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 5895300123341,
+            "realization_percentage": 53.8
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 5057840531181,
+            "realization_percentage": 43.4
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 3223441935107,
+            "realization_percentage": 57.08
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 2082393111831,
+            "realization_percentage": 54.29
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 1581818957818,
+            "realization_percentage": 37.44
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 443258498947,
+            "realization_percentage": 38.32
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 8,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 6362667914784,
+            "realization_percentage": 58.07
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 5635185671199,
+            "realization_percentage": 48.35
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 3618051781235,
+            "realization_percentage": 64.07
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 2255147680775,
+            "realization_percentage": 58.79
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 1858693933836,
+            "realization_percentage": 44
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 471405112570,
+            "realization_percentage": 40.75
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 9,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 6764766341001,
+            "realization_percentage": 61.74
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 6322197360048,
+            "realization_percentage": 54.24
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 3943225344508,
+            "realization_percentage": 69.83
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 2428533671518,
+            "realization_percentage": 63.31
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 2014392497017,
+            "realization_percentage": 47.68
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 522316461773,
+            "realization_percentage": 45.16
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 10,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 7256944599499,
+            "realization_percentage": 66.23
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 7149477963295,
+            "realization_percentage": 61.34
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 4262569731817,
+            "realization_percentage": 75.48
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 2632003451992,
+            "realization_percentage": 68.62
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 2274641787844,
+            "realization_percentage": 53.84
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 647073889658,
+            "realization_percentage": 55.94
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 11,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 10956945388935,
+            "realization_amount": 7620807912760,
+            "realization_percentage": 69.55
+          },
+          "spending": {
+            "budget_amount": 11655339902239,
+            "realization_amount": 7626597782221,
+            "realization_percentage": 65.43
+          },
+          "financing": {
+            "budget_amount": 698394513304,
+            "realization_amount": 0,
+            "realization_percentage": 0
+          },
+          "pad": {
+            "budget_amount": 5647136406531,
+            "realization_amount": 4541042421423,
+            "realization_percentage": 80.41
+          },
+          "spending_pegawai": {
+            "budget_amount": 3835681375316,
+            "realization_amount": 2808311367773,
+            "realization_percentage": 73.22
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 4224757597885,
+            "realization_amount": 2427062349002,
+            "realization_percentage": 57.45
+          },
+          "spending_modal": {
+            "budget_amount": 1156701946229,
+            "realization_amount": 688562895553,
+            "realization_percentage": 59.53
+          }
+        }
+      ]
+    },
+    "provinsi-dki-jakarta": {
+      "label": "DKI Jakarta · koridor TB Simatupang",
+      "entity": "Pemerintah Provinsi DKI Jakarta",
+      "coverage": "APBD Provinsi DKI Jakarta untuk koridor TB Simatupang",
+      "points": [
+        {
+          "fiscal_year": 2026,
+          "period_month": 1,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 3033756950013,
+            "realization_percentage": 4.25
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 1786921533891,
+            "realization_percentage": 2.41
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": -75458500000,
+            "realization_percentage": -2.66
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 3012872121013,
+            "realization_percentage": 5.22
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 1487381203256,
+            "realization_percentage": 6.94
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 295595462515,
+            "realization_percentage": 1.02
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 634718120,
+            "realization_percentage": 0.01
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 2,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 6699512439151,
+            "realization_percentage": 9.38
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 4542356383849,
+            "realization_percentage": 6.11
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": -167732200000,
+            "realization_percentage": -5.92
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 5914409360151,
+            "realization_percentage": 10.26
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 2803552555093,
+            "realization_percentage": 13.08
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 1537079729124,
+            "realization_percentage": 5.3
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 8835649632,
+            "realization_percentage": 0.09
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 3,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 9841865256224,
+            "realization_percentage": 13.77
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 10510710604499,
+            "realization_percentage": 14.15
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 756806900000,
+            "realization_percentage": 26.7
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 9016003894224,
+            "realization_percentage": 15.63
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 5167191072051,
+            "realization_percentage": 24.11
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 3803097807746,
+            "realization_percentage": 13.11
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 45137166702,
+            "realization_percentage": 0.44
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 4,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 14280029472864,
+            "realization_percentage": 19.99
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 14791061456695,
+            "realization_percentage": 19.91
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 681350200000,
+            "realization_percentage": 24.04
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 13453661611864,
+            "realization_percentage": 23.33
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 6947815895459,
+            "realization_percentage": 32.42
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 5867054788594,
+            "realization_percentage": 20.23
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 135217676992,
+            "realization_percentage": 1.33
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 5,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 24312537464467,
+            "realization_percentage": 34.03
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 18915998541071,
+            "realization_percentage": 25.46
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 605891300000,
+            "realization_percentage": 21.37
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 22674348010927,
+            "realization_percentage": 39.32
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 8168650189358,
+            "realization_percentage": 38.11
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 7405615959660,
+            "realization_percentage": 25.54
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 392527837383,
+            "realization_percentage": 3.86
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 6,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 28995600640211,
+            "realization_percentage": 40.58
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 24733802113194,
+            "realization_percentage": 33.3
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 5243671324114,
+            "realization_percentage": 184.99
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 26358962518502,
+            "realization_percentage": 45.71
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 10453358531396,
+            "realization_percentage": 48.78
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 9547848729562,
+            "realization_percentage": 32.93
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 619102766851,
+            "realization_percentage": 6.09
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 7,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 34563211650555,
+            "realization_percentage": 48.37
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 30445551818879,
+            "realization_percentage": 40.98
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 349645700000,
+            "realization_percentage": 12.33
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 31902548965015,
+            "realization_percentage": 55.32
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 12353550003221,
+            "realization_percentage": 57.64
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 11647398673319,
+            "realization_percentage": 40.17
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 1118430878896,
+            "realization_percentage": 11
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 8,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 39619186178186,
+            "realization_percentage": 55.45
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 34919615885252,
+            "realization_percentage": 47.01
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 257373200000,
+            "realization_percentage": 9.08
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 35493419991446,
+            "realization_percentage": 61.55
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 13286449397504,
+            "realization_percentage": 61.99
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 13535920651638,
+            "realization_percentage": 46.68
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 1624564965017,
+            "realization_percentage": 15.98
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 9,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 43682947997590,
+            "realization_percentage": 61.14
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 39604499169821,
+            "realization_percentage": 53.31
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 181915200000,
+            "realization_percentage": 6.42
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 39531578722850,
+            "realization_percentage": 68.55
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 14570476609560,
+            "realization_percentage": 67.99
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 15419533033105,
+            "realization_percentage": 53.17
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 2121930697743,
+            "realization_percentage": 20.88
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 10,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 48543787549011,
+            "realization_percentage": 67.94
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 43931198916303,
+            "realization_percentage": 59.14
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 181921400000,
+            "realization_percentage": 6.42
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 43066911440071,
+            "realization_percentage": 74.68
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 15952755027613,
+            "realization_percentage": 74.44
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 17242214733937,
+            "realization_percentage": 59.46
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 2860390006511,
+            "realization_percentage": 28.14
+          }
+        },
+        {
+          "fiscal_year": 2026,
+          "period_month": 11,
+          "budget_version": "Murni",
+          "reported_at": "2026-11-26",
+          "revenue": {
+            "budget_amount": 71450673065697,
+            "realization_amount": 48543787549011,
+            "realization_percentage": 67.94
+          },
+          "spending": {
+            "budget_amount": 74285299931740,
+            "realization_amount": 43931198916303,
+            "realization_percentage": 59.14
+          },
+          "financing": {
+            "budget_amount": 2834626866043,
+            "realization_amount": 181921400000,
+            "realization_percentage": 6.42
+          },
+          "pad": {
+            "budget_amount": 57670647712697,
+            "realization_amount": 43066911440071,
+            "realization_percentage": 74.68
+          },
+          "spending_pegawai": {
+            "budget_amount": 21431736563104,
+            "realization_amount": 15952755027613,
+            "realization_percentage": 74.44
+          },
+          "spending_barang_jasa": {
+            "budget_amount": 28998168578186,
+            "realization_amount": 17242214733937,
+            "realization_percentage": 59.46
+          },
+          "spending_modal": {
+            "budget_amount": 10164767414640,
+            "realization_amount": 2860390006511,
+            "realization_percentage": 28.14
+          }
+        }
+      ]
+    }
+  }
+}

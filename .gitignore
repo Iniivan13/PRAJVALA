@@ -30,3 +30,6 @@ Thumbs.db
 .idea/
 .vscode/
 .vercel
+
+# Generated DJPK upload payload (derived from snapshots)
+data/djpk/firestore-docs.json
