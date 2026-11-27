@@ -6,56 +6,127 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // Peran administrator berasal dari custom claim Firebase Auth. Nilai ini
+    // hanya dapat dipasang lewat Admin SDK / Firebase CLI, tidak dari klien.
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
     // Status ringan untuk mengecek koneksi Firestore dari klien.
     match /config/{docId} {
       allow read: if true;
       allow write: if false;
     }
 
-    // Profil warga: hanya pemilik yang boleh membaca dan menulis.
+    // Profil warga: pemilik dapat membaca dan menulis; admin dapat membaca.
     match /profiles/{uid} {
-      allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, update, delete: if signedIn() && request.auth.uid == uid;
     }
 
     // Laporan warga: dapat dibaca publik, ditulis oleh warga yang masuk.
     match /reports/{reportId} {
       allow read: if true;
 
-      allow create: if signedIn()
-        && request.resource.data.authorId == request.auth.uid
-        && request.resource.data.upvoteCount == 0
-        && request.resource.data.comment is string
-        && request.resource.data.comment.size() >= 20
-        && request.resource.data.comment.size() <= 2000
-        && request.resource.data.suitability in [
-          'Sesuai Target',
-          'Terlambat',
-          'Indikasi Kejanggalan'
-        ]
-        && request.resource.data.rating is number
-        && request.resource.data.rating >= 1
-        && request.resource.data.rating <= 5;
-
-      // Dukungan hanya boleh mengubah jumlah suara sebanyak satu langkah dan
-      // harus disertai dokumen suara milik pengguna yang sesuai.
-      allow update: if signedIn()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvoteCount'])
-        && (
-          (
-            request.resource.data.upvoteCount == resource.data.upvoteCount + 1
-            && existsAfter(
-              /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+      // Warga: laporan selalu masuk sebagai `pending` dan tidak boleh
+      // memverifikasi dirinya sendiri.
+      // Admin: boleh menerbitkan bukti resmi dengan foto wajib.
+      allow create: if signedIn() && (
+        (
+          request.resource.data.authorId == request.auth.uid
+          && request.resource.data.upvoteCount == 0
+          && request.resource.data.comment is string
+          && request.resource.data.comment.size() >= 20
+          && request.resource.data.comment.size() <= 2000
+          && request.resource.data.suitability in [
+            'Sesuai Target',
+            'Terlambat',
+            'Indikasi Kejanggalan'
+          ]
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1
+          && request.resource.data.rating <= 5
+          && request.resource.data.verified == false
+          && request.resource.data.moderationStatus == 'pending'
+          && (
+            !('official' in request.resource.data)
+            || request.resource.data.official == false
+          )
+          && (
+            !('photoUrl' in request.resource.data)
+            || request.resource.data.photoUrl == null
+            || (
+              request.resource.data.photoUrl is string
+              && request.resource.data.photoUrl.size() <= 720000
             )
           )
-          || (
-            request.resource.data.upvoteCount == resource.data.upvoteCount - 1
-            && !existsAfter(
-              /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+        )
+        || (
+          isAdmin()
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.upvoteCount == 0
+          && request.resource.data.comment is string
+          && request.resource.data.comment.size() >= 20
+          && request.resource.data.comment.size() <= 2000
+          && request.resource.data.suitability in [
+            'Sesuai Target',
+            'Terlambat',
+            'Indikasi Kejanggalan'
+          ]
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1
+          && request.resource.data.rating <= 5
+          && request.resource.data.official == true
+          && request.resource.data.verified == true
+          && request.resource.data.moderationStatus == 'verified'
+          && request.resource.data.photoUrl is string
+          && request.resource.data.photoUrl.size() <= 720000
+        )
+      );
+
+      // Dukungan warga: hanya boleh mengubah jumlah suara sebanyak satu langkah
+      // dan harus disertai dokumen suara milik pengguna yang sesuai.
+      // Admin: hanya boleh mengubah kolom moderasi.
+      allow update: if signedIn() && (
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvoteCount'])
+          && (
+            (
+              request.resource.data.upvoteCount == resource.data.upvoteCount + 1
+              && existsAfter(
+                /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+              )
+            )
+            || (
+              request.resource.data.upvoteCount == resource.data.upvoteCount - 1
+              && !existsAfter(
+                /databases/$(database)/documents/reports/$(reportId)/votes/$(request.auth.uid)
+              )
             )
           )
-        );
+        )
+        || (
+          isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'verified',
+            'moderationStatus',
+            'moderationNote',
+            'moderatedAt',
+            'moderatedBy'
+          ])
+          && request.resource.data.moderationStatus in [
+            'pending',
+            'verified',
+            'flagged'
+          ]
+          && request.resource.data.verified == (
+            request.resource.data.moderationStatus == 'verified'
+          )
+        )
+      );
 
-      allow delete: if signedIn() && resource.data.authorId == request.auth.uid;
+      allow delete: if isAdmin()
+        || (signedIn() && resource.data.authorId == request.auth.uid);
 
       // Satu dokumen suara per warga per laporan.
       match /votes/{uid} {
@@ -69,6 +140,12 @@ service cloud.firestore {
     match /userVotes/{uid}/reports/{reportId} {
       allow read, create, delete: if signedIn() && request.auth.uid == uid;
       allow update: if false;
+    }
+
+    // Jejak audit administrator: hanya admin yang boleh membaca dan menulis.
+    match /adminLogs/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
     }
   }
 }

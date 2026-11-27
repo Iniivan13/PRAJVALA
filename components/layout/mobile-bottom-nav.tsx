@@ -8,6 +8,7 @@ import {
   SpriteAccount,
   SpriteBudget,
   SpriteClose,
+  SpriteCrest,
   SpriteDocument,
   SpriteHelp,
   SpriteHome,
@@ -43,10 +44,22 @@ const MORE_LINKS = [
 
 export function MobileBottomNav() {
   const pathname = usePathname();
-  const { user, isHydrated, logout } = useAuth();
+  const { user, isHydrated, isAdmin, logout } = useAuth();
   const [moreOpen, setMoreOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
+
+  const moreLinks = isAdmin
+    ? [
+        {
+          href: "/admin",
+          label: "Panel admin",
+          note: "Moderasi & bukti resmi",
+          Sprite: SpriteCrest,
+        },
+        ...MORE_LINKS,
+      ]
+    : MORE_LINKS;
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -247,7 +260,7 @@ export function MobileBottomNav() {
               ) : null}
 
               <ul className="grid gap-2">
-                {MORE_LINKS.map((link) => {
+                {moreLinks.map((link) => {
                   const Sprite = link.Sprite;
                   return (
                     <li key={link.href}>

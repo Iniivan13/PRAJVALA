@@ -3,9 +3,13 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  EmailAuthProvider,
+  getIdTokenResult,
   onAuthStateChanged,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   updateProfile,
   type User as FirebaseUser,
 } from "firebase/auth";
@@ -32,10 +36,13 @@ interface AuthContextValue {
   user: UserProfile | null;
   isHydrated: boolean;
   isFirebaseMode: boolean;
+  /** Akun memiliki custom claim `admin` yang valid. */
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (input: RegisterInput) => Promise<AuthResult>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<AuthResult>;
+  changePassword: (currentPassword: string, nextPassword: string) => Promise<AuthResult>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -138,10 +145,21 @@ async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
     regionId: "all",
     createdAt: user.metadata.creationTime ?? new Date().toISOString(),
     source: "firebase",
+    role: "warga",
   };
 
+  // Custom claim adalah sumber kebenaran peran. Nilai ini tidak bisa diubah
+  // dari klien; hanya Admin SDK / Firebase CLI yang dapat memasangnya.
+  let role: UserProfile["role"] = "warga";
+  try {
+    const token = await getIdTokenResult(user, true);
+    if (token.claims.admin === true) role = "admin";
+  } catch {
+    // Token gagal dibaca (offline). Peran admin tidak diberikan secara default.
+  }
+
   const client = createFirebaseClient();
-  if (!client) return fallback;
+  if (!client) return { ...fallback, role };
 
   try {
     const snapshot = await getDoc(doc(client.db, "profiles", user.uid));
@@ -149,6 +167,7 @@ async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
       const data = snapshot.data();
       return {
         ...fallback,
+        role,
         name:
           typeof data.fullName === "string" && data.fullName.trim().length >= 3
             ? data.fullName.trim()
@@ -162,7 +181,7 @@ async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
     // Dokumen profil belum tersedia; metadata auth tetap dapat dipakai.
   }
 
-  return fallback;
+  return { ...fallback, role };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -259,6 +278,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         regionId: resolveRegionId(input.regionId),
         createdAt: new Date().toISOString(),
         source: "firebase",
+        role: "warga",
       };
 
       try {
@@ -315,17 +335,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const changePassword = useCallback(
+    async (currentPassword: string, nextPassword: string): Promise<AuthResult> => {
+      const client = createFirebaseClient();
+      const current = client?.auth.currentUser;
+
+      if (!client || !current || !current.email) {
+        return { ok: false, error: "Masuk ke akun Anda terlebih dahulu." };
+      }
+      if (nextPassword.length < 8) {
+        return { ok: false, error: "Kata sandi baru minimal 8 karakter." };
+      }
+      if (!/[A-Za-z]/.test(nextPassword) || !/\d/.test(nextPassword)) {
+        return { ok: false, error: "Kata sandi baru perlu mengandung huruf dan angka." };
+      }
+      if (currentPassword === nextPassword) {
+        return { ok: false, error: "Kata sandi baru harus berbeda dari yang sekarang." };
+      }
+
+      try {
+        const credential = EmailAuthProvider.credential(current.email, currentPassword);
+        await reauthenticateWithCredential(current, credential);
+        await updatePassword(current, nextPassword);
+        return { ok: true, message: "Kata sandi berhasil diperbarui." };
+      } catch (error) {
+        return { ok: false, error: mapAuthError(error as { code?: string }) };
+      }
+    },
+    [],
+  );
+
   const value = useMemo(
     () => ({
       user,
       isHydrated,
       isFirebaseMode: isFirebaseConfigured,
+      isAdmin: user?.role === "admin",
       login,
       register,
       logout,
       deleteAccount,
+      changePassword,
     }),
-    [user, isHydrated, login, register, logout, deleteAccount],
+    [user, isHydrated, login, register, logout, deleteAccount, changePassword],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

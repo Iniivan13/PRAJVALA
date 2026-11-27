@@ -185,9 +185,12 @@ Inspect existing routes first; preserve them and map them to these patterns. Do 
 | `/write-up` | Journal page built only from `FAQS` (chapters) and `GLOSSARY` (appendix), with a sticky table of contents |
 | `/masuk`, `/daftar` | Wood-chassis auth gate; desktop ledger aside hidden below `lg`; all Firebase flows unchanged |
 | `/akun` | Sky account header, inventory stat slots, report history, distribution board, quick actions, account detail and deletion |
+| `/admin` | Dark-dirt control room: moderation queue, official evidence publisher, audit log, and password security panel; gated by Firebase custom claim `admin` |
 | `not-found` | Signpost empty state on the sky band with three waymarked routes back |
 
 `/laporan` and `/write-up` are derived exclusively from existing seed data (`CITIZEN_REPORTS`, `FAQS`, `GLOSSARY`). No editorial copy or aggregate figures are invented; all counters are computed at render time.
+
+The administrator panel at `/admin` is the only route that can change moderation state. It is deliberately hidden from navigation for non-admins and shows an explicit gate instead of a blank page. Its four tabs are **Moderasi** (review queue, verify/flag/pending, delete), **Bukti resmi** (photo-backed official evidence), **Log audit** (append-only trail), and **Keamanan** (password change plus role explanation). Admin capability comes from the Firebase Auth custom claim `admin: true`; the UI is never the source of truth.
 
 Avoid forcing every page into the same card grid. Use distinct compositions that still share the same pixel design language.
 
@@ -201,6 +204,9 @@ Avoid forcing every page into the same card grid. Use distinct compositions that
 - Pixel-style charts may use deliberate pixel-like markers or gridlines, but must retain accurate scales, labels, units, legends, and accessible summaries.
 - Preserve map controls, attribution, coordinate accuracy, legend, and keyboard/mobile access. Pixel-art map markers may be used only if they remain clear and usable.
 - Evidence images require descriptive metadata and meaningful alt text.
+- Evidence photos are compressed in the browser (longest edge 1600 px, iterative JPEG, data URL ≤ 680,000 characters) and stored in the Firestore report document because Cloud Storage is unavailable without billing. Re-encoding through canvas removes EXIF/GPS metadata for real, not just in copy.
+- Citizen reports enter as `moderationStatus: "pending"` and `verified: false`. Only verified reports affect the citizen validation score. Admin-published official evidence is `official: true`, `verified: true`, and requires a photo.
+- The audit trail lives in `adminLogs`: admin-only read/create, with no client update or delete.
 
 ## 9. Component families and interaction states
 
@@ -217,6 +223,7 @@ Audit and reuse existing components before creating equivalents. Establish a sha
 - Maps, markers, legends, and project detail panels.
 - Pixel-art empty states and loading/feedback illustrations.
 - Loading, empty, error, success, disabled, and permission states.
+- Admin moderation cards, status chips, photo lightbox, official-evidence form, and append-only audit list. These reuse the same pixel frames, chips, and button shadows as citizen-facing surfaces.
 
 Every visible control must perform its advertised action. Do not add decorative controls that do nothing.
 

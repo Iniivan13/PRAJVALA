@@ -135,6 +135,17 @@ export interface BudgetItem {
 
 export type StorageSource = "firebase";
 
+export type UserRole = "warga" | "admin";
+
+/**
+ * Status moderasi laporan.
+ *
+ * `pending`  — baru dikirim warga, belum ditinjau pengelola.
+ * `verified` — sudah dicocokkan dan diterima sebagai bukti pendukung.
+ * `flagged`  — ditandai untuk ditinjau lebih lanjut; tetap tampil dengan label.
+ */
+export type ModerationStatus = "pending" | "verified" | "flagged";
+
 export interface CitizenReport {
   id: string;
   projectId: string;
@@ -150,6 +161,12 @@ export interface CitizenReport {
   photoUrl?: string;
   isUserSubmitted?: boolean;
   source?: StorageSource;
+  /** Laporan resmi yang diterbitkan pengelola, bukan warga. */
+  official?: boolean;
+  moderationStatus?: ModerationStatus;
+  moderationNote?: string;
+  moderatedAt?: string;
+  moderatedBy?: string;
 }
 
 export interface PublicDocument {
@@ -207,6 +224,8 @@ export interface UserProfile {
   createdAt: string;
   /** Asal akun: tersinkron ke Firebase. */
   source?: StorageSource;
+  /** Peran akun; `admin` berasal dari custom claim Firebase Auth. */
+  role?: UserRole;
 }
 
 export interface RegisterInput {

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/logo";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -25,7 +26,7 @@ export const PRIMARY_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user, isHydrated, logout } = useAuth();
+  const { user, isHydrated, isAdmin, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
 
@@ -143,6 +144,16 @@ export function Navbar() {
                     </div>
                   </div>
                   <div className="p-1.5">
+                    {isAdmin ? (
+                      <Link
+                        href="/admin"
+                        role="menuitem"
+                        className="mb-1 flex min-h-9 items-center gap-2 border-2 border-pixel-line bg-pixel-sun px-2 py-1.5 text-[12px] font-bold text-pixel-line hover:bg-pixel-sun/80"
+                      >
+                        <ShieldCheck size={13} aria-hidden="true" />
+                        Panel admin
+                      </Link>
+                    ) : null}
                     <Link
                       href="/akun"
                       role="menuitem"

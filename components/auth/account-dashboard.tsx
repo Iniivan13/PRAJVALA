@@ -104,7 +104,7 @@ function Panel({
 
 export function AccountDashboard() {
   const router = useRouter();
-  const { user, isHydrated, logout, deleteAccount } = useAuth();
+  const { user, isHydrated, isAdmin, logout, deleteAccount } = useAuth();
   const { activeRegionId, setActiveRegionId } = useRegion();
 
   const [reports, setReports] = useState<CitizenReport[]>([]);
@@ -153,6 +153,22 @@ export function AccountDashboard() {
   const accountRegion = useMemo(
     () => (user ? getRegion(user.regionId) : undefined),
     [user],
+  );
+  const quickActions = useMemo(
+    () =>
+      isAdmin
+        ? [
+            {
+              href: "/admin",
+              label: "Panel administrator",
+              description:
+                "Tinjau laporan warga, terbitkan bukti resmi berfoto, dan baca log audit.",
+              icon: ShieldCheck,
+            },
+            ...QUICK_ACTIONS,
+          ]
+        : QUICK_ACTIONS,
+    [isAdmin],
   );
   const activeRegion = useMemo(
     () => (activeRegionId === "all" ? undefined : getRegion(activeRegionId)),
@@ -297,6 +313,12 @@ export function AccountDashboard() {
                         <BadgeCheck size={9} aria-hidden="true" />
                         Akun aktif
                       </span>
+                      {isAdmin ? (
+                        <span className="inline-flex items-center gap-1 border-2 border-pixel-line bg-pixel-sun px-1.5 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.06em] text-pixel-line">
+                          <ShieldCheck size={9} aria-hidden="true" />
+                          Administrator
+                        </span>
+                      ) : null}
                     </p>
                     <p className="mt-0.5 truncate text-[11px] text-pixel-ink/65">
                       {user.email}
@@ -578,7 +600,7 @@ export function AccountDashboard() {
                   Langkah cepat
                 </h2>
                 <ul className="mt-3 space-y-2">
-                  {QUICK_ACTIONS.map((action) => {
+                  {quickActions.map((action) => {
                     const Icon = action.icon;
                     return (
                       <li key={action.href}>

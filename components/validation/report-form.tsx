@@ -22,6 +22,13 @@ import {
 import { useEffect, useId, useRef, useState } from "react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { prajvalaApi } from "@/lib/api";
+import {
+  compressPhoto,
+  formatFileSize,
+  ImageCompressionError,
+  MAX_SOURCE_BYTES,
+  type CompressedPhoto,
+} from "@/lib/image";
 import { trapFocus } from "@/lib/focus-trap";
 import { PixelCloseButton } from "@/components/layout/navbar";
 import type { CitizenReport, Project, Suitability } from "@/types";
@@ -86,7 +93,9 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
   const [photo, setPhoto] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState("");
   const [photoSize, setPhotoSize] = useState(0);
+  const [photoMeta, setPhotoMeta] = useState<CompressedPhoto | null>(null);
   const [photoError, setPhotoError] = useState("");
+  const [processing, setProcessing] = useState(false);
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -116,31 +125,43 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
     };
   }, [onClose]);
 
-  const handleFile = (file: File | undefined) => {
+  const handleFile = async (file: File | undefined) => {
     setPhotoError("");
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setPhotoError("Berkas harus berupa gambar (JPG, PNG, atau WebP).");
       return;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      setPhotoError("Ukuran gambar maksimal 3 MB.");
+    if (file.size > MAX_SOURCE_BYTES) {
+      setPhotoError(
+        `Ukuran foto maksimal ${formatFileSize(MAX_SOURCE_BYTES)} sebelum dikompres.`,
+      );
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPhoto(typeof reader.result === "string" ? reader.result : null);
+
+    setProcessing(true);
+    try {
+      const compressed = await compressPhoto(file);
+      setPhoto(compressed.dataUrl);
       setPhotoName(file.name);
-      setPhotoSize(file.size);
-    };
-    reader.onerror = () => setPhotoError("Gagal membaca berkas. Coba gambar lain.");
-    reader.readAsDataURL(file);
+      setPhotoSize(compressed.bytes);
+      setPhotoMeta(compressed);
+    } catch (error) {
+      setPhotoError(
+        error instanceof ImageCompressionError
+          ? error.message
+          : "Foto gagal diproses. Coba gambar lain.",
+      );
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const removePhoto = () => {
     setPhoto(null);
     setPhotoName("");
     setPhotoSize(0);
+    setPhotoMeta(null);
     setPhotoError("");
   };
 
@@ -493,7 +514,13 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   type="file"
                   accept="image/*"
                   className="sr-only"
-                  onChange={(event) => handleFile(event.target.files?.[0])}
+                  disabled={processing}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    // Reset agar berkas yang sama dapat dipilih ulang setelah dihapus.
+                    event.target.value = "";
+                    void handleFile(file);
+                  }}
                 />
                 {photo ? (
                   <>
@@ -507,11 +534,24 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                     </span>
                     <span className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[9.5px] text-pixel-ink/75">
                       <ImageIcon size={11} aria-hidden="true" />
-                      {photoName} · {(photoSize / 1024).toFixed(0)} KB
+                      {photoName} · {formatFileSize(photoSize)}
+                      {photoMeta ? ` · ${photoMeta.width}×${photoMeta.height}` : ""}
                       <span className="inline-flex items-center gap-1 border border-pixel-line bg-emerald-100 px-1 py-0.5 text-[9px] font-semibold text-emerald-900">
                         <ShieldCheck size={9} aria-hidden="true" />
                         EXIF dibersihkan
                       </span>
+                    </span>
+                  </>
+                ) : processing ? (
+                  <>
+                    <span className="grid h-9 w-9 place-items-center border-2 border-pixel-line bg-pixel-sun text-pixel-line">
+                      <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+                    </span>
+                    <span className="mt-2 text-[11px] font-bold text-pixel-line">
+                      Mengompres foto…
+                    </span>
+                    <span className="mt-0.5 text-[9.5px] text-pixel-ink/70">
+                      Foto diperkecil dan metadata dibersihkan.
                     </span>
                   </>
                 ) : (
@@ -523,7 +563,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                       Unggah foto bukti (opsional)
                     </span>
                     <span className="mt-0.5 text-[9.5px] text-pixel-ink/70">
-                      JPG, PNG, atau WebP · maksimal 3 MB
+                      JPG, PNG, atau WebP · maksimal 12 MB, dikompres otomatis
                     </span>
                   </>
                 )}
@@ -588,7 +628,7 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || processing}
                   className="btn-primary flex-1 sm:flex-none"
                 >
                   {submitting ? (
@@ -596,7 +636,11 @@ export function ReportForm({ project, onClose, onSubmitted }: ReportFormProps) {
                   ) : (
                     <UploadCloud size={13} aria-hidden="true" />
                   )}
-                  {submitting ? "Mengirim…" : "Kirim laporan"}
+                  {processing
+                    ? "Menyiapkan foto…"
+                    : submitting
+                      ? "Mengirim…"
+                      : "Kirim laporan"}
                 </button>
               </div>
             </div>

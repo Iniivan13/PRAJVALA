@@ -26,8 +26,8 @@ Fitur utama:
 - **Detail proyek** — slider foto sebelum–sesudah, jejak milestone, rincian
   anggaran, koordinat geotag, dan skor validasi warga.
 - **Validasi partisipatif** — feed laporan warga, dukungan (upvote), formulir
-  laporan dengan simulasi pembersihan EXIF, deteksi GPS, unggah foto, serta
-  penyimpanan langsung ke Firestore.
+  laporan dengan pembersihan EXIF nyata, deteksi GPS, unggah foto terkompres,
+  serta penyimpanan langsung ke Firestore.
 - **Pusat informasi** — repositori dokumen APBD/APBDes, RAB, tender, LPJ, dan
   laporan akhir dengan ringkasan bahasa manusia, pencarian, unduhan `.txt`,
   pertanyaan umum, serta glosarium istilah anggaran.
@@ -35,6 +35,9 @@ Fitur utama:
   pilihannya tersimpan di perangkat.
 - **Akun warga** — daftar/masuk dengan Firebase Auth, prefilling identitas
   laporan, dan dasbor akun berisi riwayat kontribusi tersinkron.
+- **Panel administrator** — moderasi laporan (verifikasi/tandai/pending), hapus
+  laporan, penerbitan bukti resmi berfoto, log audit, dan ganti kata sandi.
+  Akses memakai custom claim Firebase Auth `admin: true`.
 
 ## Akun warga & Firebase
 
@@ -84,14 +87,39 @@ firebase deploy --only firestore:rules --project prajvala
 
 Aturan tersebut menjamin:
 
-- `profiles/{uid}` hanya dapat dibaca/ditulis pemiliknya.
-- `reports` dapat dibaca publik, ditulis warga yang masuk, dan hanya penulis
-  yang boleh menghapus.
+- `profiles/{uid}` hanya dapat dibaca/ditulis pemiliknya; admin boleh membaca.
+- `reports` dapat dibaca publik. Warga hanya dapat membuat laporan `pending`
+  yang belum terverifikasi; admin dapat menerbitkan bukti resmi berfoto.
+- Update moderasi (`verified`, `moderationStatus`, `moderationNote`,
+  `moderatedAt`, `moderatedBy`) hanya boleh dilakukan admin.
 - `upvoteCount` hanya boleh berubah satu langkah dan wajib disertai dokumen
   suara milik pengguna yang sesuai.
 - `userVotes/{uid}` hanya dapat diakses pemiliknya.
+- `adminLogs` hanya dapat dibaca dan ditambah admin; tidak ada update/delete.
 
-### 4. Domain yang diizinkan
+Foto bukti disimpan sebagai data URL JPEG di dokumen laporan (maks. 680.000
+karakter di klien, 720.000 di rules). Ini dipakai karena Cloud Storage belum
+tersedia tanpa billing/Blaze; foto dikompres ulang di peramban sehingga metadata
+EXIF/GPS benar-benar hilang.
+
+### 4. Membuat atau mempromosikan administrator
+
+Peran admin **tidak** disimpan sebagai field yang bisa diubah klien. Peran
+berasal dari custom claim Firebase Auth:
+
+1. Buat akun lewat Firebase Console atau Authentication REST API.
+2. Pasang claim dengan Firebase Admin SDK / Firebase CLI:
+   ```js
+   await admin.auth().setCustomUserClaims(uid, { admin: true });
+   ```
+3. Pastikan dokumen `profiles/{uid}` berisi `fullName`, `email`, `regionId`,
+   dan `role: "admin"`.
+4. Keluar lalu masuk kembali agar ID token memuat claim baru.
+
+Setelah itu menu akun menampilkan **Panel admin** dan rute `/admin` terbuka.
+Tanpa claim tersebut, `/admin` hanya menampilkan gerbang akses terbatas.
+
+### 5. Domain yang diizinkan
 
 Di **Firebase Console → Authentication → Settings → Authorized domains**,
 pastikan `localhost` dan `prajvala.vercel.app` terdaftar. Domain ini diperlukan
@@ -108,6 +136,11 @@ untuk alur email (reset kata sandi) dan popup autentikasi.
 - Riwayat kontribusi di `/akun` dibaca langsung dari Firestore.
 - Hapus akun menghapus profil dan akun Firebase; laporan yang sudah terkirim
   tetap tersimpan dengan nama tersamar.
+- Laporan warga baru masuk sebagai **menunggu tinjauan**. Skor validasi hanya
+  menghitung laporan yang sudah diverifikasi admin.
+- Admin dapat memverifikasi, menandai, mengembalikan ke pending, menghapus
+  laporan, menerbitkan bukti resmi berfoto, dan mengganti kata sandi sendiri.
+  Semua tindakan tercatat di `adminLogs`.
 
 Ini purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 
@@ -169,13 +202,15 @@ tambahkan `prajvala.vercel.app` bila belum ada.
 
 ```
 app/                 Rute App Router: /, /anggaran, /proyek, /proyek/[id], /informasi,
-                     /masuk, /daftar, /akun
-components/          UI, layout, grafik, peta, proyek, validasi, informasi, akun
+                     /masuk, /daftar, /akun, /admin
+components/          UI, layout, grafik, peta, proyek, validasi, informasi, akun, admin
 lib/data.ts          Sumber data percontohan + agregasi wilayah
-lib/api.ts           Lapisan data laporan/upvote/aktivitas (Firestore)
+lib/api.ts           Lapisan data laporan/upvote/aktivitas/moderasi (Firestore)
+lib/admin.ts         Log audit tindakan administrator
+lib/image.ts         Kompresi foto + pembersihan metadata di peramban
 lib/utils.ts         Format rupiah, tanggal, persentase, slug
 types/               Tipe TypeScript bersama
-firestore.rules      Aturan keamanan Firestore
+firestore.rules      Aturan keamanan Firestore (termasuk peran admin)
 firebase.json        Konfigurasi deploy aturan Firestore
 utils/firebase/      Inisialisasi Firebase Auth + Firestore
 ```
@@ -193,11 +228,12 @@ keperluan kompetisi; tidak merujuk pada pihak tertentu.
 
 ## Catatan privasi
 
-Formulir laporan warga menyimulasikan penghapusan metadata EXIF (lokasi asli dan
-identitas perangkat) sebelum laporan ditampilkan. Nama pelapor disamarkan otomatis
-(contoh: “Rina Kusuma” → “Rina K.”) dan hanya nama tersamar itu yang dikirim ke
-Firestore. Laporan dan dukungan disimpan di database melalui aturan keamanan dan
-memerlukan akun aktif. Kata sandi dikelola sepenuhnya oleh Firebase Authentication.
+Formulir laporan warga mengompres ulang foto di peramban, sehingga metadata EXIF
+(lokasi asli dan identitas perangkat) benar-benar dibuang sebelum dikirim. Nama
+pelapor disamarkan otomatis (contoh: “Rina Kusuma” → “Rina K.”) dan hanya nama
+tersamar itu yang dikirim ke Firestore. Laporan dan dukungan disimpan di database
+melalui aturan keamanan dan memerlukan akun aktif. Kata sandi dikelola sepenuhnya
+oleh Firebase Authentication.
 
 ## Lisensi & atribusi
 

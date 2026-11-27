@@ -6,6 +6,7 @@ import {
   BadgeCheck,
   Camera,
   CheckCircle2,
+  Clock3,
   ImageIcon,
   Loader2,
   MapPin,
@@ -21,8 +22,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ReportForm } from "@/components/validation/report-form";
 import { computeValidationScore, prajvalaApi } from "@/lib/api";
+import { logAdminAction } from "@/lib/admin";
 import { getReportsForProject } from "@/lib/data";
-import type { CitizenReport, Project, Suitability } from "@/types";
+import type { CitizenReport, ModerationStatus, Project, Suitability } from "@/types";
 import {
   cn,
   formatDateShort,
@@ -56,7 +58,7 @@ function ReportStars({ rating }: { rating: number }) {
 }
 
 export function ValidationSection({ project }: { project: Project }) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const seedReports = useMemo(() => getReportsForProject(project.id), [project.id]);
   const [userReports, setUserReports] = useState<CitizenReport[]>([]);
   const [voted, setVoted] = useState<Set<string>>(new Set());
@@ -69,6 +71,8 @@ export function ValidationSection({ project }: { project: Project }) {
   const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [moderatingId, setModeratingId] = useState<string | null>(null);
+  const [moderationError, setModerationError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -252,9 +256,60 @@ export function ValidationSection({ project }: { project: Project }) {
         delete next[report.id];
         return next;
       });
+      if (isAdmin && user) {
+        await logAdminAction({
+          action: "delete",
+          targetId: report.id,
+          projectId: project.id,
+          detail: `Laporan ${report.author} dihapus dari halaman proyek.`,
+          actorId: user.id,
+          actorName: user.name,
+        }).catch(() => undefined);
+      }
       setDeleteTarget(null);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleModerate = async (report: CitizenReport, status: ModerationStatus) => {
+    if (!user) return;
+    setModeratingId(report.id);
+    setModerationError("");
+    try {
+      await prajvalaApi.moderateReport(report.id, status);
+      setUserReports((previous) =>
+        previous.map((item) =>
+          item.id === report.id
+            ? {
+                ...item,
+                verified: status === "verified",
+                moderationStatus: status,
+                moderatedBy: user.id,
+                moderatedAt: new Date().toISOString(),
+              }
+            : item,
+        ),
+      );
+      await logAdminAction({
+        action: "moderate",
+        targetId: report.id,
+        projectId: project.id,
+        detail:
+          status === "verified"
+            ? "Laporan diverifikasi."
+            : status === "flagged"
+              ? "Laporan ditandai untuk ditinjau."
+              : "Verifikasi dibatalkan.",
+        actorId: user.id,
+        actorName: user.name,
+      }).catch(() => undefined);
+    } catch (error) {
+      setModerationError(
+        error instanceof Error ? error.message : "Tinjauan belum dapat disimpan.",
+      );
+    } finally {
+      setModeratingId(null);
     }
   };
 
@@ -303,6 +358,26 @@ export function ValidationSection({ project }: { project: Project }) {
         </div>
       ) : null}
 
+      {moderationError ? (
+        <div
+          role="alert"
+          className="mt-4 flex items-start justify-between gap-3 border-4 border-pixel-line bg-rose-50 px-3.5 py-2.5 shadow-card"
+        >
+          <div className="flex items-start gap-2.5">
+            <AlertTriangle size={14} className="mt-0.5 shrink-0 text-rose-700" aria-hidden="true" />
+            <p className="text-[10.5px] leading-relaxed text-rose-900">{moderationError}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setModerationError("")}
+            className="shrink-0 border-2 border-pixel-line bg-white p-1 text-pixel-line hover:bg-pixel-sun"
+            aria-label="Tutup pesan tinjauan"
+          >
+            <X size={13} />
+          </button>
+        </div>
+      ) : null}
+
       {success ? (
         <div
           role="status"
@@ -317,8 +392,8 @@ export function ValidationSection({ project }: { project: Project }) {
                 Laporan berhasil dikirim
               </p>
               <p className="mt-0.5 text-[10.5px] leading-relaxed text-emerald-800">
-                Terima kasih. Laporan Anda masuk ke feed dan skor validasi warga telah
-                diperbarui{delta !== 0 ? ` (${delta > 0 ? "+" : ""}${delta} poin)` : ""}.
+                Terima kasih. Laporan Anda masuk antrean tinjauan pengelola. Skor
+                validasi diperbarui setelah laporan diverifikasi.
               </p>
             </div>
           </div>
@@ -534,7 +609,22 @@ export function ValidationSection({ project }: { project: Project }) {
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-center gap-1.5 text-[11.5px] font-bold text-pixel-line">
                       <span className="truncate">{report.author}</span>
-                      {report.verified ? (
+                      {report.official ? (
+                        <span className="inline-flex items-center gap-0.5 border border-pixel-line bg-pixel-line px-1 py-0.5 text-[9px] font-semibold text-pixel-sun">
+                          <ShieldCheck size={9} aria-hidden="true" />
+                          Bukti resmi
+                        </span>
+                      ) : report.moderationStatus === "pending" ? (
+                        <span className="inline-flex items-center gap-0.5 border border-pixel-line bg-amber-50 px-1 py-0.5 text-[9px] font-semibold text-amber-900">
+                          <Clock3 size={9} aria-hidden="true" />
+                          Menunggu tinjauan
+                        </span>
+                      ) : report.moderationStatus === "flagged" ? (
+                        <span className="inline-flex items-center gap-0.5 border border-pixel-line bg-rose-50 px-1 py-0.5 text-[9px] font-semibold text-rose-900">
+                          <AlertTriangle size={9} aria-hidden="true" />
+                          Ditandai
+                        </span>
+                      ) : report.verified ? (
                         <span className="inline-flex items-center gap-0.5 border border-pixel-line bg-emerald-50 px-1 py-0.5 text-[9px] font-semibold text-emerald-900">
                           <BadgeCheck size={9} aria-hidden="true" />
                           Terverifikasi
@@ -601,6 +691,50 @@ export function ValidationSection({ project }: { project: Project }) {
                 </div>
               ) : null}
 
+              {isAdmin && report.source === "firebase" ? (
+                <div className="mt-3 flex flex-wrap items-center gap-2 border-2 border-pixel-line bg-pixel-panel px-2.5 py-2">
+                  <span className="font-pixel text-[6.5px] uppercase leading-[1.7] text-pixel-line">
+                    Tinjauan admin
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleModerate(report, "verified")}
+                    disabled={
+                      moderatingId === report.id || report.moderationStatus === "verified"
+                    }
+                    className="inline-flex min-h-8 items-center gap-1 border-2 border-pixel-line bg-emerald-50 px-2 py-0.5 text-[9.5px] font-semibold text-emerald-900 shadow-chip hover:bg-emerald-100 disabled:opacity-45"
+                  >
+                    <CheckCircle2 size={10} aria-hidden="true" />
+                    Verifikasi
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleModerate(report, "flagged")}
+                    disabled={
+                      moderatingId === report.id || report.moderationStatus === "flagged"
+                    }
+                    className="inline-flex min-h-8 items-center gap-1 border-2 border-pixel-line bg-rose-50 px-2 py-0.5 text-[9.5px] font-semibold text-rose-900 shadow-chip hover:bg-rose-100 disabled:opacity-45"
+                  >
+                    <AlertTriangle size={10} aria-hidden="true" />
+                    Tandai
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleModerate(report, "pending")}
+                    disabled={
+                      moderatingId === report.id || report.moderationStatus === "pending"
+                    }
+                    className="inline-flex min-h-8 items-center gap-1 border-2 border-pixel-line bg-white px-2 py-0.5 text-[9.5px] font-semibold text-pixel-line shadow-chip hover:bg-pixel-sun disabled:opacity-45"
+                  >
+                    <Clock3 size={10} aria-hidden="true" />
+                    Pending
+                  </button>
+                  {moderatingId === report.id ? (
+                    <Loader2 size={11} className="animate-spin text-pixel-line" aria-hidden="true" />
+                  ) : null}
+                </div>
+              ) : null}
+
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-2 border-pixel-line/20 pt-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
@@ -623,7 +757,7 @@ export function ValidationSection({ project }: { project: Project }) {
                     />
                     Membantu · {formatNumber(upvoteCount)}
                   </button>
-                  {report.isUserSubmitted ? (
+                  {(report.isUserSubmitted || isAdmin) && report.source === "firebase" ? (
                     deleteTarget === report.id ? (
                       <span className="inline-flex items-center gap-1.5 border-2 border-rose-700 bg-rose-50 px-1.5 py-0.5 text-[9.5px] font-semibold text-rose-900">
                         Hapus laporan?
@@ -648,7 +782,7 @@ export function ValidationSection({ project }: { project: Project }) {
                         type="button"
                         onClick={() => setDeleteTarget(report.id)}
                         className="inline-flex min-h-8 items-center gap-1 border-2 border-transparent px-2 py-1 text-[9.5px] font-semibold text-pixel-ink/60 hover:border-rose-700 hover:bg-rose-50 hover:text-rose-800"
-                        aria-label={`Hapus laporan Anda tentang ${project.name}`}
+                        aria-label={`Hapus laporan ${report.author} tentang ${project.name}`}
                       >
                         <Trash2 size={10} aria-hidden="true" />
                         Hapus
@@ -661,8 +795,22 @@ export function ValidationSection({ project }: { project: Project }) {
                   </span>
                 </div>
                 <span className="flex items-center gap-1 text-[9.5px] text-pixel-ink/60">
-                  <ShieldCheck size={9} className="text-emerald-700" aria-hidden="true" />
-                  Diverifikasi kecocokan lokasi
+                  {report.moderationStatus === "pending" ? (
+                    <>
+                      <Clock3 size={9} aria-hidden="true" />
+                      Menunggu pencocokan lokasi
+                    </>
+                  ) : report.moderationStatus === "flagged" ? (
+                    <>
+                      <AlertTriangle size={9} aria-hidden="true" />
+                      Perlu tinjauan tambahan
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck size={9} className="text-emerald-700" aria-hidden="true" />
+                      Diverifikasi kecocokan lokasi
+                    </>
+                  )}
                 </span>
               </div>
             </article>

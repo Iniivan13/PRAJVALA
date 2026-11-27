@@ -10,11 +10,13 @@ import {
   runTransaction,
   setDoc,
   Timestamp,
+  updateDoc,
   where,
   type DocumentData,
 } from "firebase/firestore";
 import type {
   CitizenReport,
+  ModerationStatus,
   NewReportInput,
   Suitability,
   UserProfile,
@@ -30,10 +32,14 @@ export const SCORE_EFFECT: Record<Suitability, number> = {
 
 export function computeValidationScore(
   baseScore: number,
-  reports: { suitability: Suitability; isUserSubmitted?: boolean }[],
+  reports: {
+    suitability: Suitability;
+    isUserSubmitted?: boolean;
+    verified?: boolean;
+  }[],
 ): number {
   const adjustment = reports
-    .filter((report) => report.isUserSubmitted)
+    .filter((report) => report.isUserSubmitted && report.verified !== false)
     .reduce((sum, report) => sum + SCORE_EFFECT[report.suitability], 0);
   return clamp(Math.round(baseScore + adjustment), 12, 99);
 }
@@ -43,6 +49,12 @@ type StoredReport = NewReportInput & {
   createdAt: string;
   upvotes: number;
   authorId?: string;
+  verified: boolean;
+  official: boolean;
+  moderationStatus: ModerationStatus;
+  moderationNote?: string;
+  moderatedAt?: string;
+  moderatedBy?: string;
 };
 
 const NOT_CONFIGURED =
@@ -63,6 +75,16 @@ function toIso(value: unknown): string {
 }
 
 function mapReport(id: string, data: DocumentData): StoredReport {
+  const verified = typeof data.verified === "boolean" ? data.verified : true;
+  const moderationStatus: ModerationStatus =
+    data.moderationStatus === "pending" ||
+    data.moderationStatus === "verified" ||
+    data.moderationStatus === "flagged"
+      ? data.moderationStatus
+      : verified
+        ? "verified"
+        : "pending";
+
   return {
     id,
     projectId: typeof data.projectId === "string" ? data.projectId : "",
@@ -74,6 +96,15 @@ function mapReport(id: string, data: DocumentData): StoredReport {
     photoUrl: typeof data.photoUrl === "string" ? data.photoUrl : undefined,
     createdAt: toIso(data.createdAt),
     upvotes: typeof data.upvoteCount === "number" ? data.upvoteCount : 0,
+    verified,
+    official: data.official === true,
+    moderationStatus,
+    moderationNote:
+      typeof data.moderationNote === "string" ? data.moderationNote : undefined,
+    moderatedAt:
+      typeof data.moderatedAt !== "undefined" ? toIso(data.moderatedAt) : undefined,
+    moderatedBy:
+      typeof data.moderatedBy === "string" ? data.moderatedBy : undefined,
   };
 }
 
@@ -97,6 +128,14 @@ export const prajvalaApi = {
     );
   },
 
+  async getAllReports(): Promise<StoredReport[]> {
+    const client = createFirebaseClient();
+    if (!client) return [];
+
+    const snapshot = await getDocs(collection(client.db, "reports"));
+    return sortNewestFirst(snapshot.docs.map((item) => mapReport(item.id, item.data())));
+  },
+
   async submitReport(input: NewReportInput): Promise<StoredReport> {
     const client = requireClient();
     const rawAuthor = input.author?.trim() || "Warga Anonim";
@@ -112,6 +151,8 @@ export const prajvalaApi = {
       comment: input.comment.trim(),
       photoUrl: input.photoUrl ?? null,
       upvoteCount: 0,
+      verified: false,
+      moderationStatus: "pending" as ModerationStatus,
       createdAt: Timestamp.now(),
     };
 
@@ -123,6 +164,80 @@ export const prajvalaApi = {
         error instanceof Error && error.message.includes("permission")
           ? "Laporan gagal disimpan karena akses ditolak. Masuk ulang lalu coba lagi."
           : "Laporan gagal disimpan. Periksa koneksi Anda lalu coba lagi.",
+      );
+    }
+  },
+
+  /**
+   * Menerbitkan bukti resmi pengelola. Hanya akun dengan custom claim `admin`
+   * yang lolos Firestore Rules; pemeriksaan di klien hanya untuk UX.
+   */
+  async publishOfficialEvidence(input: {
+    projectId: string;
+    suitability: Suitability;
+    rating: number;
+    comment: string;
+    photoUrl: string;
+  }): Promise<StoredReport> {
+    const client = requireClient();
+    const uid = client.auth.currentUser?.uid;
+    if (!uid) {
+      throw new Error("Masuk sebagai administrator untuk menerbitkan bukti resmi.");
+    }
+
+    const payload = {
+      projectId: input.projectId,
+      authorId: uid,
+      authorName: "Tim PRAJVALA",
+      suitability: input.suitability,
+      rating: input.rating,
+      comment: input.comment.trim(),
+      photoUrl: input.photoUrl,
+      upvoteCount: 0,
+      verified: true,
+      official: true,
+      moderationStatus: "verified" as ModerationStatus,
+      moderatedAt: Timestamp.now(),
+      moderatedBy: uid,
+      createdAt: Timestamp.now(),
+    };
+
+    try {
+      const created = await addDoc(collection(client.db, "reports"), payload);
+      return mapReport(created.id, payload);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error && error.message.includes("permission")
+          ? "Bukti resmi gagal diterbitkan. Pastikan akun Anda masih memiliki peran administrator."
+          : "Bukti resmi gagal diterbitkan. Periksa koneksi lalu coba lagi.",
+      );
+    }
+  },
+
+  async moderateReport(
+    reportId: string,
+    status: ModerationStatus,
+    note?: string,
+  ): Promise<void> {
+    const client = requireClient();
+    const uid = client.auth.currentUser?.uid;
+    if (!uid) {
+      throw new Error("Masuk sebagai administrator untuk meninjau laporan.");
+    }
+
+    try {
+      await updateDoc(doc(client.db, "reports", reportId), {
+        verified: status === "verified",
+        moderationStatus: status,
+        moderationNote: note?.trim() ? note.trim() : null,
+        moderatedAt: Timestamp.now(),
+        moderatedBy: uid,
+      });
+    } catch (error) {
+      throw new Error(
+        error instanceof Error && error.message.includes("permission")
+          ? "Tinjauan gagal disimpan. Pastikan akun Anda masih memiliki peran administrator."
+          : "Tinjauan gagal disimpan. Coba lagi.",
       );
     }
   },
@@ -210,7 +325,7 @@ export const prajvalaApi = {
     } catch (error) {
       throw new Error(
         error instanceof Error && error.message.includes("permission")
-          ? "Laporan belum dapat dihapus. Anda hanya dapat menghapus laporan sendiri."
+          ? "Laporan belum dapat dihapus. Pastikan Anda pemilik laporan atau administrator."
           : "Laporan belum dapat dihapus. Coba lagi.",
       );
     }
@@ -218,22 +333,30 @@ export const prajvalaApi = {
 
   toFeedItem(stored: StoredReport, currentUserId?: string): CitizenReport {
     const isOwn = Boolean(currentUserId && stored.authorId === currentUserId);
+    const displayAuthor = stored.official
+      ? stored.author || "Tim PRAJVALA"
+      : maskName(stored.author ?? "Warga Anonim");
 
     return {
       id: stored.id,
       projectId: stored.projectId,
-      author: maskName(stored.author ?? "Warga Anonim"),
+      author: displayAuthor,
       authorId: stored.authorId,
-      initials: initialsFor(stored.author ?? "Warga Anonim"),
-      verified: true,
+      initials: initialsFor(displayAuthor),
+      verified: stored.verified,
       suitability: stored.suitability,
       rating: stored.rating,
       comment: stored.comment,
       createdAt: stored.createdAt,
       upvotes: stored.upvotes,
       photoUrl: stored.photoUrl,
-      isUserSubmitted: isOwn,
+      isUserSubmitted: isOwn && !stored.official,
       source: "firebase",
+      official: stored.official,
+      moderationStatus: stored.moderationStatus,
+      moderationNote: stored.moderationNote,
+      moderatedAt: stored.moderatedAt,
+      moderatedBy: stored.moderatedBy,
     };
   },
 };
