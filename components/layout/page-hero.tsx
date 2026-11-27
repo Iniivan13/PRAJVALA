@@ -34,7 +34,10 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "relative overflow-hidden border-b-4 border-pixel-line",
+        // No `overflow-hidden` here: the region picker opens an absolutely
+        // positioned listbox below the button, and clipping the section cut it
+        // off at the bottom border on /laporan, /proyek, /informasi, /anggaran.
+        "relative border-b-4 border-pixel-line",
         tone === "sky" && "bg-pixel-sky",
         tone === "paper" && "bg-pixel-cream",
         tone === "dirt" && "bg-pixel-dirt",
