@@ -26,7 +26,7 @@ export const PRIMARY_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user, isHydrated, isAdmin, logout } = useAuth();
+  const { user, isHydrated, isAdmin, isModerator, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
 
@@ -144,14 +144,14 @@ export function Navbar() {
                     </div>
                   </div>
                   <div className="p-1.5">
-                    {isAdmin ? (
+                    {isModerator ? (
                       <Link
                         href="/admin"
                         role="menuitem"
                         className="mb-1 flex min-h-9 items-center gap-2 border-2 border-pixel-line bg-pixel-sun px-2 py-1.5 text-[12px] font-bold text-pixel-line hover:bg-pixel-sun/80"
                       >
                         <ShieldCheck size={13} aria-hidden="true" />
-                        Panel admin
+                        {isAdmin ? "Panel admin" : "Panel daerah"}
                       </Link>
                     ) : null}
                     <Link

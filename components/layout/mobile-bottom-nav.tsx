@@ -44,17 +44,17 @@ const MORE_LINKS = [
 
 export function MobileBottomNav() {
   const pathname = usePathname();
-  const { user, isHydrated, isAdmin, logout } = useAuth();
+  const { user, isHydrated, isAdmin, isModerator, logout } = useAuth();
   const [moreOpen, setMoreOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
 
-  const moreLinks = isAdmin
+  const moreLinks = isModerator
     ? [
         {
           href: "/admin",
-          label: "Panel admin",
-          note: "Moderasi & bukti resmi",
+          label: isAdmin ? "Panel admin" : "Panel daerah",
+          note: isAdmin ? "Moderasi, pengguna & bukti" : "Moderasi wilayah tugas",
           Sprite: SpriteCrest,
         },
         ...MORE_LINKS,

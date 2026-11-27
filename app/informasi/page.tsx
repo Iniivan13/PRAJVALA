@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BookOpen, FileText, HelpCircle, Library } from "lucide-react";
 import { InformationCenter } from "@/components/information/information-center";
+import { PublicSourceLibrary } from "@/components/information/public-source-library";
 import { FaqSection, GlossarySection } from "@/components/information/faq-glossary";
 import { PageHero } from "@/components/layout/page-hero";
 import { RegionPicker } from "@/components/ui/region-picker";
@@ -67,6 +68,7 @@ export default function InformasiPage() {
 
       <div className="bg-pixel-cream">
         <InformationCenter />
+        <PublicSourceLibrary />
         <FaqSection />
         <GlossarySection />
       </div>

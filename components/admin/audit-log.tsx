@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   Camera,
   Clock3,
+  Link2,
   Loader2,
   RefreshCw,
   ShieldCheck,
@@ -26,6 +27,7 @@ const ACTION_STYLE: Record<
   delete: { chip: "bg-rose-50 text-rose-900", icon: Trash2 },
   publish: { chip: "bg-pixel-sun text-pixel-line", icon: Camera },
   role: { chip: "bg-amber-50 text-amber-900", icon: UserCog },
+  source: { chip: "bg-sky-50 text-sky-900", icon: Link2 },
 };
 
 interface AuditLogProps {

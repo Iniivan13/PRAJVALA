@@ -135,7 +135,7 @@ export interface BudgetItem {
 
 export type StorageSource = "firebase";
 
-export type UserRole = "warga" | "admin";
+export type UserRole = "warga" | "pj_daerah" | "admin";
 
 /**
  * Status moderasi laporan.
@@ -161,6 +161,8 @@ export interface CitizenReport {
   photoUrl?: string;
   isUserSubmitted?: boolean;
   source?: StorageSource;
+  /** Wilayah proyek saat laporan dibuat; dipakai untuk moderasi daerah. */
+  regionId?: string;
   /** Laporan resmi yang diterbitkan pengelola, bukan warga. */
   official?: boolean;
   moderationStatus?: ModerationStatus;
@@ -180,6 +182,28 @@ export interface PublicDocument {
   pageCount: number;
   summaryPoints: string[];
   highlight: string;
+}
+
+/** Jenis dokumen publik yang boleh dicari: hanya Drive/Docs resmi. */
+export type PublicSourceCategory = "drive" | "docs" | "sheets" | "slides" | "forms";
+
+/**
+ * Tautan dokumen anggaran publik yang disimpan administrator.
+ *
+ * Hanya tautan Google Drive/Docs/Sheets/Slides/Forms pada domain `go.id`
+ * yang boleh ditambahkan. Tidak ada berkas sensitif, kredensial, atau data
+ * bocor yang didukung fitur ini.
+ */
+export interface PublicSourceLink {
+  id: string;
+  title: string;
+  url: string;
+  category: PublicSourceCategory;
+  regionId: string;
+  year: number;
+  note?: string;
+  addedBy?: string;
+  createdAt: string;
 }
 
 export interface FaqItem {

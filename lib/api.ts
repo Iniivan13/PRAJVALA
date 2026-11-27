@@ -22,6 +22,7 @@ import type {
   UserProfile,
 } from "@/types";
 import { clamp, initialsFor, maskName } from "@/lib/utils";
+import { getProject } from "@/lib/data";
 import { createFirebaseClient } from "@/utils/firebase/client";
 
 export const SCORE_EFFECT: Record<Suitability, number> = {
@@ -49,6 +50,7 @@ type StoredReport = NewReportInput & {
   createdAt: string;
   upvotes: number;
   authorId?: string;
+  regionId: string;
   verified: boolean;
   official: boolean;
   moderationStatus: ModerationStatus;
@@ -94,6 +96,11 @@ function mapReport(id: string, data: DocumentData): StoredReport {
     rating: typeof data.rating === "number" ? data.rating : 0,
     comment: typeof data.comment === "string" ? data.comment : "",
     photoUrl: typeof data.photoUrl === "string" ? data.photoUrl : undefined,
+    regionId:
+      typeof data.regionId === "string"
+        ? data.regionId
+        : (getProject(typeof data.projectId === "string" ? data.projectId : "")
+            ?.regionId ?? ""),
     createdAt: toIso(data.createdAt),
     upvotes: typeof data.upvoteCount === "number" ? data.upvoteCount : 0,
     verified,
@@ -150,6 +157,7 @@ export const prajvalaApi = {
       rating: input.rating,
       comment: input.comment.trim(),
       photoUrl: input.photoUrl ?? null,
+      regionId: getProject(input.projectId)?.regionId ?? null,
       upvoteCount: 0,
       verified: false,
       moderationStatus: "pending" as ModerationStatus,
@@ -193,6 +201,7 @@ export const prajvalaApi = {
       rating: input.rating,
       comment: input.comment.trim(),
       photoUrl: input.photoUrl,
+      regionId: getProject(input.projectId)?.regionId ?? null,
       upvoteCount: 0,
       verified: true,
       official: true,
@@ -350,6 +359,7 @@ export const prajvalaApi = {
       createdAt: stored.createdAt,
       upvotes: stored.upvotes,
       photoUrl: stored.photoUrl,
+      regionId: stored.regionId,
       isUserSubmitted: isOwn && !stored.official,
       source: "firebase",
       official: stored.official,

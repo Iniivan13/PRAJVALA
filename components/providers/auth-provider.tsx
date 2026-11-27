@@ -36,8 +36,12 @@ interface AuthContextValue {
   user: UserProfile | null;
   isHydrated: boolean;
   isFirebaseMode: boolean;
-  /** Akun memiliki custom claim `admin` yang valid. */
+  /** Akun memiliki peran administrator (custom claim atau profil). */
   isAdmin: boolean;
+  /** Akun ditugaskan sebagai penanggung jawab daerah. */
+  isPjDaerah: boolean;
+  /** Akun boleh membuka panel pengelola (admin atau PJ daerah). */
+  isModerator: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (input: RegisterInput) => Promise<AuthResult>;
   logout: () => Promise<void>;
@@ -148,26 +152,31 @@ async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
     role: "warga",
   };
 
-  // Custom claim adalah sumber kebenaran peran. Nilai ini tidak bisa diubah
-  // dari klien; hanya Admin SDK / Firebase CLI yang dapat memasangnya.
-  let role: UserProfile["role"] = "warga";
+  // Custom claim adalah sumber kebenaran utama. Peran `pj_daerah` dan
+  // `warga` dibaca dari dokumen profil; klaim admin selalu menang.
+  let claimAdmin = false;
   try {
     const token = await getIdTokenResult(user, true);
-    if (token.claims.admin === true) role = "admin";
+    if (token.claims.admin === true) claimAdmin = true;
   } catch {
     // Token gagal dibaca (offline). Peran admin tidak diberikan secara default.
   }
 
   const client = createFirebaseClient();
-  if (!client) return { ...fallback, role };
+  if (!client) {
+    return { ...fallback, role: claimAdmin ? "admin" : "warga" };
+  }
 
   try {
     const snapshot = await getDoc(doc(client.db, "profiles", user.uid));
     if (snapshot.exists()) {
       const data = snapshot.data();
+      const storedRole: UserProfile["role"] =
+        data.role === "admin" || data.role === "pj_daerah" ? data.role : "warga";
+
       return {
         ...fallback,
-        role,
+        role: claimAdmin ? "admin" : storedRole,
         name:
           typeof data.fullName === "string" && data.fullName.trim().length >= 3
             ? data.fullName.trim()
@@ -181,7 +190,7 @@ async function profileFromFirebase(user: FirebaseUser): Promise<UserProfile> {
     // Dokumen profil belum tersedia; metadata auth tetap dapat dipakai.
   }
 
-  return { ...fallback, role };
+  return { ...fallback, role: claimAdmin ? "admin" : "warga" };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -286,6 +295,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           fullName: profile.name,
           regionId: profile.regionId,
           email: profile.email,
+          role: "warga",
           createdAt: serverTimestamp(),
         });
       } catch (error) {
@@ -371,6 +381,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isHydrated,
       isFirebaseMode: isFirebaseConfigured,
       isAdmin: user?.role === "admin",
+      isPjDaerah: user?.role === "pj_daerah",
+      isModerator: user?.role === "admin" || user?.role === "pj_daerah",
       login,
       register,
       logout,

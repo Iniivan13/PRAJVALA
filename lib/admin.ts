@@ -18,13 +18,14 @@ import { createFirebaseClient } from "@/utils/firebase/client";
  * klien, sehingga tindakan moderasi tetap dapat ditelusuri.
  */
 
-export type AdminAction = "moderate" | "delete" | "publish" | "role";
+export type AdminAction = "moderate" | "delete" | "publish" | "role" | "source";
 
 export const ADMIN_ACTION_LABEL: Record<AdminAction, string> = {
   moderate: "Meninjau laporan",
   delete: "Menghapus laporan",
   publish: "Menerbitkan bukti resmi",
   role: "Mengubah peran",
+  source: "Mengelola sumber publik",
 };
 
 export interface AdminLogEntry {

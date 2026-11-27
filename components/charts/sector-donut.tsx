@@ -71,8 +71,8 @@ export function SectorDonut({ sectors, total }: SectorDonutProps) {
             return circle;
           })}
         </svg>
-        {/* Centre plate sits on a solid pixel window, not bare canvas. */}
-        <div className="pointer-events-none absolute inset-[38px] flex flex-col items-center justify-center border-2 border-pixel-line bg-pixel-cream px-3 text-center">
+        {/* Centre readout sits directly inside the ring, without a boxed plate. */}
+        <div className="pointer-events-none absolute inset-[38px] flex flex-col items-center justify-center px-3 text-center">
           {active ? (
             <>
               <span

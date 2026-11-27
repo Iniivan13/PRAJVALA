@@ -180,17 +180,19 @@ Inspect existing routes first; preserve them and map them to these patterns. Do 
 | `/anggaran` | Paper hero, inventory KPI grid, wood-framed cashflow board, sector board, notes, RAB anchor and table |
 | `/proyek` | Paper hero with region picker, status chips, filter board, wood-bezel map, quest card grid |
 | `/proyek/[id]` | Sky header band, photo frame before/after, mission-path timeline, RAB table, citizen validation, wood ledger aside |
-| `/informasi` | Pocket page: document trophy case (`#dokumen`), pixel FAQ accordion (`#faq`), dark glossary board (`#glosarium`) |
+| `/informasi` | Pocket page: document trophy case (`#dokumen`), verified public-source library (`#sumber` when populated), pixel FAQ accordion (`#faq`), dark glossary board (`#glosarium`) |
 | `/laporan` | Citizen report board built only from `CITIZEN_REPORTS`, with region scoping, search, suitability filters, and per-project links |
 | `/write-up` | Journal page built only from `FAQS` (chapters) and `GLOSSARY` (appendix), with a sticky table of contents |
 | `/masuk`, `/daftar` | Wood-chassis auth gate; desktop ledger aside hidden below `lg`; all Firebase flows unchanged |
 | `/akun` | Sky account header, inventory stat slots, report history, distribution board, quick actions, account detail and deletion |
-| `/admin` | Dark-dirt control room: moderation queue, official evidence publisher, audit log, and password security panel; gated by Firebase custom claim `admin` |
+| `/admin` | Dark-dirt control room: moderation queue, user directory, safe public-source finder, official evidence publisher, audit log, and password security panel; gated by admin role or regional PJ role |
 | `not-found` | Signpost empty state on the sky band with three waymarked routes back |
 
 `/laporan` and `/write-up` are derived exclusively from existing seed data (`CITIZEN_REPORTS`, `FAQS`, `GLOSSARY`). No editorial copy or aggregate figures are invented; all counters are computed at render time.
 
-The administrator panel at `/admin` is the only route that can change moderation state. It is deliberately hidden from navigation for non-admins and shows an explicit gate instead of a blank page. Its four tabs are **Moderasi** (review queue, verify/flag/pending, delete), **Bukti resmi** (photo-backed official evidence), **Log audit** (append-only trail), and **Keamanan** (password change plus role explanation). Admin capability comes from the Firebase Auth custom claim `admin: true`; the UI is never the source of truth.
+The administrator panel at `/admin` is the only route that can change moderation state. It is deliberately hidden from navigation for non-admins and shows an explicit gate instead of a blank page. Administrators see six tabs: **Moderasi** (review queue, verify/flag/pending, delete), **Pengguna** (registered accounts, search, role and region assignment), **Sumber publik** (fixed safe search templates plus a reviewed link library), **Bukti resmi** (photo-backed official evidence), **Log audit** (append-only trail), and **Keamanan** (password change plus role explanation). Regional PJ accounts see only **Moderasi** and **Keamanan**, scoped to reports whose `regionId` matches their assignment. Admin capability comes from the Firebase Auth custom claim `admin: true` or an `admin` role on the profile document; the UI is never the source of truth, and owners cannot promote themselves.
+
+The public-source finder keeps the pixel tool language — category chips, monospace query plates, copy/open actions — but exposes only nine fixed budget-document templates bound to `site:go.id` and official Google Drive/Docs hosts. Sensitive-document, login/admin, config/error, and data-leak categories are intentionally absent, and free-form query input is not offered.
 
 Avoid forcing every page into the same card grid. Use distinct compositions that still share the same pixel design language.
 
@@ -205,8 +207,9 @@ Avoid forcing every page into the same card grid. Use distinct compositions that
 - Preserve map controls, attribution, coordinate accuracy, legend, and keyboard/mobile access. Pixel-art map markers may be used only if they remain clear and usable.
 - Evidence images require descriptive metadata and meaningful alt text.
 - Evidence photos are compressed in the browser (longest edge 1600 px, iterative JPEG, data URL ≤ 680,000 characters) and stored in the Firestore report document because Cloud Storage is unavailable without billing. Re-encoding through canvas removes EXIF/GPS metadata for real, not just in copy.
-- Citizen reports enter as `moderationStatus: "pending"` and `verified: false`. Only verified reports affect the citizen validation score. Admin-published official evidence is `official: true`, `verified: true`, and requires a photo.
-- The audit trail lives in `adminLogs`: admin-only read/create, with no client update or delete.
+- Citizen reports enter as `moderationStatus: "pending"` and `verified: false`. Only verified reports affect the citizen validation score. Admin-published official evidence is `official: true`, `verified: true`, and requires a photo. New reports always store the project's `regionId`; a regional PJ can moderate only reports with a matching region, while admin can moderate all.
+- The audit trail lives in `adminLogs`: admin-only read, admin or regional PJ create, with no client update or delete.
+- Public budget sources live in `publicSources`: public read, admin-only create/delete. URLs must use HTTPS on `drive.google.com` or `docs.google.com`; queries are fixed templates limited to `site:go.id`, never free-form sensitive searches.
 
 ## 9. Component families and interaction states
 

@@ -6,10 +6,35 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Peran administrator berasal dari custom claim Firebase Auth. Nilai ini
-    // hanya dapat dipasang lewat Admin SDK / Firebase CLI, tidak dari klien.
+    function ownProfilePath() {
+      return /databases/$(database)/documents/profiles/$(request.auth.uid);
+    }
+
+    // Peran admin berasal dari custom claim (bootstrap) atau dokumen profil
+    // yang hanya dapat diubah administrator. Klien tidak dapat menaikkan
+    // perannya sendiri.
+    function hasProfileRole(role) {
+      return signedIn()
+        && exists(ownProfilePath())
+        && get(ownProfilePath()).data.role == role;
+    }
+
     function isAdmin() {
-      return signedIn() && request.auth.token.admin == true;
+      return signedIn()
+        && (request.auth.token.admin == true || hasProfileRole('admin'));
+    }
+
+    function isPjDaerah() {
+      return hasProfileRole('pj_daerah');
+    }
+
+    // PJ daerah hanya boleh meninjau laporan pada wilayah tugasnya.
+    function canModerateReport(regionId) {
+      return isAdmin()
+        || (
+          isPjDaerah()
+          && get(ownProfilePath()).data.regionId == regionId
+        );
     }
 
     // Status ringan untuk mengecek koneksi Firestore dari klien.
@@ -18,18 +43,53 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Profil warga: pemilik dapat membaca dan menulis; admin dapat membaca.
+    // Profil: pemilik boleh memperbarui nama/wilayah; admin boleh mengatur
+    // peran dan wilayah tugas. Pemilik tidak boleh mengubah perannya sendiri.
     match /profiles/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create, update, delete: if signedIn() && request.auth.uid == uid;
+
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.role == 'warga'
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() >= 3
+        && request.resource.data.fullName.size() <= 80
+        && request.resource.data.email is string
+        && request.resource.data.regionId is string;
+
+      allow update: if signedIn() && (
+        (
+          request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'fullName',
+            'regionId'
+          ])
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.email == resource.data.email
+        )
+        || (
+          isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'fullName',
+            'regionId',
+            'role',
+            'updatedAt',
+            'promotedBy'
+          ])
+          && request.resource.data.role in ['warga', 'pj_daerah', 'admin']
+          && request.resource.data.regionId is string
+        )
+      );
+
+      allow delete: if signedIn() && request.auth.uid == uid;
     }
 
     // Laporan warga: dapat dibaca publik, ditulis oleh warga yang masuk.
     match /reports/{reportId} {
       allow read: if true;
 
-      // Warga: laporan selalu masuk sebagai `pending` dan tidak boleh
-      // memverifikasi dirinya sendiri.
+      // Warga: laporan selalu masuk sebagai `pending`, membawa regionId, dan
+      // tidak boleh memverifikasi dirinya sendiri.
       // Admin: boleh menerbitkan bukti resmi dengan foto wajib.
       allow create: if signedIn() && (
         (
@@ -46,6 +106,7 @@ service cloud.firestore {
           && request.resource.data.rating is number
           && request.resource.data.rating >= 1
           && request.resource.data.rating <= 5
+          && request.resource.data.regionId is string
           && request.resource.data.verified == false
           && request.resource.data.moderationStatus == 'pending'
           && (
@@ -76,6 +137,7 @@ service cloud.firestore {
           && request.resource.data.rating is number
           && request.resource.data.rating >= 1
           && request.resource.data.rating <= 5
+          && request.resource.data.regionId is string
           && request.resource.data.official == true
           && request.resource.data.verified == true
           && request.resource.data.moderationStatus == 'verified'
@@ -86,7 +148,7 @@ service cloud.firestore {
 
       // Dukungan warga: hanya boleh mengubah jumlah suara sebanyak satu langkah
       // dan harus disertai dokumen suara milik pengguna yang sesuai.
-      // Admin: hanya boleh mengubah kolom moderasi.
+      // Admin / PJ daerah: hanya boleh mengubah kolom moderasi.
       allow update: if signedIn() && (
         (
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvoteCount'])
@@ -106,7 +168,7 @@ service cloud.firestore {
           )
         )
         || (
-          isAdmin()
+          canModerateReport(resource.data.regionId)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'verified',
             'moderationStatus',
@@ -125,8 +187,8 @@ service cloud.firestore {
         )
       );
 
-      allow delete: if isAdmin()
-        || (signedIn() && resource.data.authorId == request.auth.uid);
+      allow delete: if (signedIn() && resource.data.authorId == request.auth.uid)
+        || canModerateReport(resource.data.regionId);
 
       // Satu dokumen suara per warga per laporan.
       match /votes/{uid} {
@@ -142,10 +204,52 @@ service cloud.firestore {
       allow update: if false;
     }
 
-    // Jejak audit administrator: hanya admin yang boleh membaca dan menulis.
+    // Jejak audit: admin membaca, admin/PJ daerah menulis. Tidak ada update
+    // atau delete dari klien.
     match /adminLogs/{logId} {
-      allow read, create: if isAdmin();
+      allow read: if isAdmin();
+      allow create: if isAdmin() || isPjDaerah();
       allow update, delete: if false;
+    }
+
+    // Pustaka sumber anggaran publik. Dapat dibaca siapa saja, tetapi hanya
+    // admin yang boleh menambah atau menghapus. URL dibatasi ke host Google
+    // Drive/Docs; tidak ada berkas sensitif atau kredensial.
+    match /publicSources/{sourceId} {
+      allow read: if true;
+
+      allow create: if isAdmin()
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 4
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.url is string
+        && request.resource.data.url.size() <= 500
+        && request.resource.data.url.matches(
+          '^https://(drive|docs)\\.google\\.com/.+'
+        )
+        && request.resource.data.category in [
+          'drive',
+          'docs',
+          'sheets',
+          'slides',
+          'forms'
+        ]
+        && request.resource.data.regionId is string
+        && request.resource.data.year is int
+        && request.resource.data.year >= 2000
+        && request.resource.data.year <= 2100
+        && request.resource.data.addedBy == request.auth.uid
+        && (
+          !('note' in request.resource.data)
+          || request.resource.data.note == null
+          || (
+            request.resource.data.note is string
+            && request.resource.data.note.size() <= 280
+          )
+        );
+
+      allow update: if false;
+      allow delete: if isAdmin();
     }
   }
 }

@@ -104,7 +104,7 @@ function Panel({
 
 export function AccountDashboard() {
   const router = useRouter();
-  const { user, isHydrated, isAdmin, logout, deleteAccount } = useAuth();
+  const { user, isHydrated, isAdmin, isModerator, logout, deleteAccount } = useAuth();
   const { activeRegionId, setActiveRegionId } = useRegion();
 
   const [reports, setReports] = useState<CitizenReport[]>([]);
@@ -156,19 +156,20 @@ export function AccountDashboard() {
   );
   const quickActions = useMemo(
     () =>
-      isAdmin
+      isModerator
         ? [
             {
               href: "/admin",
-              label: "Panel administrator",
-              description:
-                "Tinjau laporan warga, terbitkan bukti resmi berfoto, dan baca log audit.",
+              label: isAdmin ? "Panel administrator" : "Panel daerah",
+              description: isAdmin
+                ? "Tinjau laporan warga, kelola pengguna, terbitkan bukti resmi, dan baca log audit."
+                : "Tinjau laporan warga di wilayah tugas Anda.",
               icon: ShieldCheck,
             },
             ...QUICK_ACTIONS,
           ]
         : QUICK_ACTIONS,
-    [isAdmin],
+    [isAdmin, isModerator],
   );
   const activeRegion = useMemo(
     () => (activeRegionId === "all" ? undefined : getRegion(activeRegionId)),
@@ -313,10 +314,10 @@ export function AccountDashboard() {
                         <BadgeCheck size={9} aria-hidden="true" />
                         Akun aktif
                       </span>
-                      {isAdmin ? (
+                      {isModerator ? (
                         <span className="inline-flex items-center gap-1 border-2 border-pixel-line bg-pixel-sun px-1.5 py-0.5 text-[8.5px] font-bold uppercase tracking-[0.06em] text-pixel-line">
                           <ShieldCheck size={9} aria-hidden="true" />
-                          Administrator
+                          {isAdmin ? "Administrator" : "PJ Daerah"}
                         </span>
                       ) : null}
                     </p>

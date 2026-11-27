@@ -35,7 +35,7 @@ export function ProjectMap({
 }: ProjectMapProps) {
   return (
     <div className="border-4 border-pixel-line bg-pixel-wood-dark p-1.5 shadow-panel">
-      <div className={`relative w-full overflow-hidden border-[3px] border-pixel-line ${heightClass}`}>
+      <div className={`relative isolate z-0 w-full overflow-hidden border-[3px] border-pixel-line ${heightClass}`}>
         <MapCanvas projects={projects} activeRegionId={activeRegionId} />
 
         <div className="pointer-events-none absolute left-3 top-3 z-[500] flex items-center gap-2 border-2 border-pixel-line bg-pixel-cream px-2 py-1.5 shadow-chip">

@@ -11,18 +11,23 @@ import {
   Eye,
   KeyRound,
   LayoutDashboard,
+  Link2,
   Loader2,
   LockKeyhole,
   LogIn,
+  MapPin,
   RefreshCw,
   ShieldCheck,
   ShieldX,
   UserRound,
+  Users,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuditLog } from "@/components/admin/audit-log";
 import { EvidencePublisher } from "@/components/admin/evidence-publisher";
 import { ModerationBoard } from "@/components/admin/moderation-board";
+import { PublicSourceFinder } from "@/components/admin/public-source-finder";
+import { UserDirectory } from "@/components/admin/user-directory";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
   getAdminLogs,
@@ -30,15 +35,33 @@ import {
   type AdminLogEntry,
 } from "@/lib/admin";
 import { prajvalaApi } from "@/lib/api";
-import type { CitizenReport, ModerationStatus } from "@/types";
+import { getProject, getRegion } from "@/lib/data";
+import {
+  getAllUsers,
+  updateUserRole,
+  USER_ROLE_LABEL,
+  type ManagedUser,
+} from "@/lib/users";
+import type { CitizenReport, ModerationStatus, UserRole } from "@/types";
 import { cn, formatNumber } from "@/lib/utils";
 
-type TabValue = "moderasi" | "bukti" | "log" | "keamanan";
+type TabValue = "moderasi" | "pengguna" | "sumber" | "bukti" | "log" | "keamanan";
 
-const TABS: { value: TabValue; label: string; icon: typeof LayoutDashboard }[] = [
+const ADMIN_TABS: {
+  value: TabValue;
+  label: string;
+  icon: typeof LayoutDashboard;
+}[] = [
   { value: "moderasi", label: "Moderasi", icon: BadgeCheck },
+  { value: "pengguna", label: "Pengguna", icon: Users },
+  { value: "sumber", label: "Sumber publik", icon: Link2 },
   { value: "bukti", label: "Bukti resmi", icon: Camera },
   { value: "log", label: "Log audit", icon: Eye },
+  { value: "keamanan", label: "Keamanan", icon: LockKeyhole },
+];
+
+const MODERATOR_TABS: typeof ADMIN_TABS = [
+  { value: "moderasi", label: "Moderasi", icon: BadgeCheck },
   { value: "keamanan", label: "Keamanan", icon: LockKeyhole },
 ];
 
@@ -78,7 +101,7 @@ function Gate({
             )}
           </span>
           <p className="mt-4 inline-flex border-2 border-pixel-line bg-pixel-panel px-2 py-0.5 font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line">
-            Panel administrator
+            Panel pengelola
           </p>
           <h1 className="mt-2.5 font-pixel text-[15px] uppercase leading-[1.8] text-pixel-line sm:text-[18px]">
             {title}
@@ -102,7 +125,7 @@ function Gate({
               <>
                 <Link href="/masuk" className="btn-primary">
                   <LogIn size={14} aria-hidden="true" />
-                  Masuk sebagai admin
+                  Masuk sebagai pengelola
                   <ArrowRight size={13} aria-hidden="true" />
                 </Link>
                 <Link href="/" className="btn-secondary">
@@ -113,7 +136,7 @@ function Gate({
           </div>
           <p className="mt-4 flex items-center justify-center gap-1.5 text-[9.5px] text-pixel-ink/65">
             <ShieldCheck size={11} className="text-emerald-700" aria-hidden="true" />
-            Akses admin memakai custom claim Firebase Authentication.
+            Akses pengelola diverifikasi dari peran akun dan aturan Firestore.
           </p>
         </div>
       </div>
@@ -122,17 +145,28 @@ function Gate({
 }
 
 export function AdminDashboard() {
-  const { user, isHydrated, isAdmin, isFirebaseMode, changePassword } = useAuth();
+  const {
+    user,
+    isHydrated,
+    isAdmin,
+    isModerator,
+    isFirebaseMode,
+    changePassword,
+  } = useAuth();
 
   const [tab, setTab] = useState<TabValue>("moderasi");
   const [reports, setReports] = useState<CitizenReport[]>([]);
   const [logs, setLogs] = useState<AdminLogEntry[]>([]);
+  const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loadingReports, setLoadingReports] = useState(true);
   const [loadingLogs, setLoadingLogs] = useState(true);
+  const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [logError, setLogError] = useState("");
+  const [userError, setUserError] = useState("");
   const [boardError, setBoardError] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [userBusyId, setUserBusyId] = useState<string | null>(null);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [nextPassword, setNextPassword] = useState("");
@@ -142,7 +176,7 @@ export function AdminDashboard() {
   const [passwordSuccess, setPasswordSuccess] = useState("");
 
   const loadReports = useCallback(async () => {
-    if (!isAdmin) return;
+    if (!isModerator) return;
     setLoadingReports(true);
     setLoadError("");
     try {
@@ -155,7 +189,7 @@ export function AdminDashboard() {
     } finally {
       setLoadingReports(false);
     }
-  }, [isAdmin, user?.id]);
+  }, [isModerator, user?.id]);
 
   const loadLogs = useCallback(async () => {
     if (!isAdmin) return;
@@ -172,28 +206,56 @@ export function AdminDashboard() {
     }
   }, [isAdmin]);
 
+  const loadUsers = useCallback(async () => {
+    if (!isAdmin) return;
+    setLoadingUsers(true);
+    setUserError("");
+    try {
+      setUsers(await getAllUsers());
+    } catch {
+      setUserError(
+        "Direktori pengguna belum dapat dimuat. Pastikan aturan Firestore sudah dipasang dan akun masih administrator.",
+      );
+    } finally {
+      setLoadingUsers(false);
+    }
+  }, [isAdmin]);
+
   useEffect(() => {
-    if (!isHydrated || !isAdmin) return;
+    if (!isHydrated || !isModerator) return;
     void loadReports();
-    void loadLogs();
-  }, [isHydrated, isAdmin, loadReports, loadLogs]);
+    if (isAdmin) {
+      void loadLogs();
+      void loadUsers();
+    }
+  }, [isHydrated, isModerator, isAdmin, loadReports, loadLogs, loadUsers]);
+
+  const visibleReports = useMemo(() => {
+    if (isAdmin) return reports;
+    if (!user) return [];
+    return reports.filter((report) => {
+      const regionId =
+        report.regionId || getProject(report.projectId)?.regionId || "";
+      return regionId === user.regionId;
+    });
+  }, [reports, isAdmin, user]);
 
   const stats = useMemo(() => {
     const base = {
-      total: reports.length,
+      total: visibleReports.length,
       pending: 0,
       verified: 0,
       flagged: 0,
       official: 0,
       photos: 0,
     };
-    reports.forEach((report) => {
+    visibleReports.forEach((report) => {
       base[statusOf(report)] += 1;
       if (report.official) base.official += 1;
       if (report.photoUrl) base.photos += 1;
     });
     return base;
-  }, [reports]);
+  }, [visibleReports]);
 
   const handleModerate = async (
     report: CitizenReport,
@@ -223,7 +285,7 @@ export function AdminDashboard() {
         projectId: report.projectId,
         detail:
           status === "verified"
-            ? "Laporan diverifikasi dari panel admin."
+            ? "Laporan diverifikasi dari panel pengelola."
             : status === "flagged"
               ? "Laporan ditandai untuk ditinjau."
               : "Verifikasi dibatalkan, laporan kembali menunggu.",
@@ -251,7 +313,7 @@ export function AdminDashboard() {
         action: "delete",
         targetId: report.id,
         projectId: report.projectId,
-        detail: `Laporan dari ${report.author} dihapus dari panel admin.`,
+        detail: `Laporan dari ${report.author} dihapus dari panel pengelola.`,
         actorId: user.id,
         actorName: user.name,
       }).catch(() => undefined);
@@ -268,6 +330,58 @@ export function AdminDashboard() {
   const handlePublished = (report: CitizenReport) => {
     setReports((previous) => [report, ...previous]);
     void loadLogs();
+  };
+
+  const handleRoleChange = async (
+    target: ManagedUser,
+    role: UserRole,
+    regionId: string,
+  ) => {
+    if (!user || !isAdmin) return;
+    if (target.id === user.id) {
+      setUserError("Anda tidak dapat mengubah peran akun sendiri dari panel ini.");
+      return;
+    }
+
+    setUserBusyId(target.id);
+    setUserError("");
+    try {
+      await updateUserRole({
+        uid: target.id,
+        role,
+        regionId,
+        actorId: user.id,
+      });
+      setUsers((previous) =>
+        previous.map((item) =>
+          item.id === target.id
+            ? {
+                ...item,
+                role,
+                regionId,
+                updatedAt: new Date().toISOString(),
+                promotedBy: user.id,
+              }
+            : item,
+        ),
+      );
+      const regionName =
+        regionId === "all" ? "semua wilayah" : getRegion(regionId)?.name ?? regionId;
+      await logAdminAction({
+        action: "role",
+        targetId: target.id,
+        detail: `${target.name} diatur sebagai ${USER_ROLE_LABEL[role]} untuk ${regionName}.`,
+        actorId: user.id,
+        actorName: user.name,
+      }).catch(() => undefined);
+      void loadLogs();
+    } catch (error) {
+      setUserError(
+        error instanceof Error ? error.message : "Peran pengguna gagal disimpan.",
+      );
+    } finally {
+      setUserBusyId(null);
+    }
   };
 
   const handlePassword = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -310,7 +424,7 @@ export function AdminDashboard() {
               ))}
             </div>
           </div>
-          <p className="sr-only">Memuat panel administrator…</p>
+          <p className="sr-only">Memuat panel pengelola…</p>
         </div>
       </section>
     );
@@ -320,25 +434,28 @@ export function AdminDashboard() {
     return (
       <Gate
         variant="login"
-        title="Masuk untuk membuka panel administrator."
-        description="Panel ini hanya tersedia bagi akun pengelola PRAJVALA. Masuk dengan akun yang sudah memiliki peran administrator."
+        title="Masuk untuk membuka panel pengelola."
+        description="Panel ini hanya tersedia bagi akun pengelola PRAJVALA. Masuk dengan akun yang sudah memiliki peran admin atau penanggung jawab daerah."
       />
     );
   }
 
-  if (!isAdmin) {
+  if (!isModerator) {
     return (
       <Gate
         variant="denied"
-        title="Akun ini belum memiliki akses administrator."
+        title="Akun ini belum memiliki akses pengelola."
         description={
           isFirebaseMode
-            ? "Peran admin dipasang sebagai custom claim Firebase Authentication. Minta pemilik proyek memasang claim admin: true pada akun Anda, lalu masuk ulang."
-            : "Mode Firebase belum aktif di perangkat ini, sehingga peran administrator tidak dapat diverifikasi."
+            ? "Peran pengelola berasal dari dokumen profil atau custom claim Firebase Authentication. Minta administrator memasang peran admin atau PJ daerah, lalu muat ulang halaman."
+            : "Mode Firebase belum aktif di perangkat ini, sehingga peran pengelola tidak dapat diverifikasi."
         }
       />
     );
   }
+
+  const region = user.regionId === "all" ? undefined : getRegion(user.regionId);
+  const tabs = isAdmin ? ADMIN_TABS : MODERATOR_TABS;
 
   return (
     <>
@@ -353,18 +470,25 @@ export function AdminDashboard() {
             <div>
               <span className="inline-flex items-center gap-1.5 border-2 border-pixel-line bg-pixel-sun px-2 py-0.5 font-pixel text-[7px] uppercase leading-[1.7] text-pixel-line shadow-chip">
                 <ShieldCheck size={10} aria-hidden="true" />
-                Panel administrator
+                {isAdmin ? "Panel administrator" : "Panel penanggung jawab daerah"}
               </span>
               <h1 className="mt-2.5 font-pixel text-[17px] uppercase leading-[1.75] text-pixel-cream sm:text-[22px]">
-                Ruang kendali PRAJVALA.
+                {isAdmin ? "Ruang kendali PRAJVALA." : "Ruang pantau daerah."}
               </h1>
               <p className="mt-2 max-w-xl text-[11.5px] leading-relaxed text-pixel-cream/80">
-                Tinjau laporan warga, terbitkan bukti resmi berfoto, dan jaga
-                jejak audit tetap rapi. Semua tindakan tercatat.
+                {isAdmin
+                  ? "Tinjau laporan warga, kelola peran pengguna, terbitkan bukti resmi berfoto, dan jaga jejak audit tetap rapi."
+                  : "Tinjau laporan warga di wilayah tugas Anda. Verifikasi, tandai, atau kembalikan laporan ke antrean."}
               </p>
-              <p className="mt-2 inline-flex items-center gap-1.5 border border-pixel-cream/30 bg-pixel-line/30 px-2 py-0.5 text-[9.5px] text-pixel-cream/85">
+              <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 border border-pixel-cream/30 bg-pixel-line/30 px-2 py-0.5 text-[9.5px] text-pixel-cream/85">
                 <UserRound size={10} aria-hidden="true" />
                 {user.name} · {user.email}
+                {!isAdmin ? (
+                  <span className="inline-flex items-center gap-1 border-l border-pixel-cream/30 pl-2">
+                    <MapPin size={10} aria-hidden="true" />
+                    {region ? region.name : "Semua wilayah"}
+                  </span>
+                ) : null}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -372,12 +496,17 @@ export function AdminDashboard() {
                 type="button"
                 onClick={() => {
                   void loadReports();
-                  void loadLogs();
+                  if (isAdmin) {
+                    void loadLogs();
+                    void loadUsers();
+                  }
                 }}
-                disabled={loadingReports || loadingLogs}
+                disabled={
+                  loadingReports || (isAdmin && (loadingLogs || loadingUsers))
+                }
                 className="inline-flex min-h-10 items-center gap-1.5 border-[3px] border-pixel-line bg-pixel-sun px-3 font-pixel text-[8px] uppercase text-pixel-line shadow-chip transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {loadingReports || loadingLogs ? (
+                {loadingReports || (isAdmin && (loadingLogs || loadingUsers)) ? (
                   <Loader2 size={12} className="animate-spin" aria-hidden="true" />
                 ) : (
                   <RefreshCw size={12} aria-hidden="true" />
@@ -460,10 +589,10 @@ export function AdminDashboard() {
         <div className="container-page py-6 sm:py-8">
           <div
             role="tablist"
-            aria-label="Bagian panel administrator"
+            aria-label="Bagian panel pengelola"
             className="flex flex-wrap gap-1.5"
           >
-            {TABS.map((item) => {
+            {tabs.map((item) => {
               const active = tab === item.value;
               const Icon = item.icon;
               return (
@@ -526,7 +655,7 @@ export function AdminDashboard() {
           ) : null}
 
           <div className="mt-4">
-            {loadingReports && reports.length === 0 ? (
+            {loadingReports && reports.length === 0 && tab === "moderasi" ? (
               <div className="space-y-3" aria-live="polite">
                 <div className="h-20 animate-pulse border-4 border-pixel-line bg-white" />
                 <div className="h-28 animate-pulse border-4 border-pixel-line bg-white" />
@@ -542,7 +671,7 @@ export function AdminDashboard() {
                   hidden={tab !== "moderasi"}
                 >
                   <ModerationBoard
-                    reports={reports}
+                    reports={visibleReports}
                     busyId={busyId}
                     error={boardError}
                     onDismissError={() => setBoardError("")}
@@ -551,31 +680,72 @@ export function AdminDashboard() {
                   />
                 </div>
 
-                <div
-                  role="tabpanel"
-                  id="admin-panel-bukti"
-                  aria-labelledby="admin-tab-bukti"
-                  hidden={tab !== "bukti"}
-                >
-                  <EvidencePublisher
-                    actor={{ id: user.id, name: user.name }}
-                    onPublished={handlePublished}
-                  />
-                </div>
+                {isAdmin ? (
+                  <div
+                    role="tabpanel"
+                    id="admin-panel-pengguna"
+                    aria-labelledby="admin-tab-pengguna"
+                    hidden={tab !== "pengguna"}
+                  >
+                    {loadingUsers && users.length === 0 ? (
+                      <div className="space-y-3" aria-live="polite">
+                        <div className="h-20 animate-pulse border-4 border-pixel-line bg-white" />
+                        <div className="h-24 animate-pulse border-4 border-pixel-line bg-white" />
+                        <p className="sr-only">Memuat direktori pengguna…</p>
+                      </div>
+                    ) : (
+                      <UserDirectory
+                        users={users}
+                        currentUserId={user.id}
+                        busyId={userBusyId}
+                        error={userError}
+                        onDismissError={() => setUserError("")}
+                        onSave={handleRoleChange}
+                      />
+                    )}
+                  </div>
+                ) : null}
 
-                <div
-                  role="tabpanel"
-                  id="admin-panel-log"
-                  aria-labelledby="admin-tab-log"
-                  hidden={tab !== "log"}
-                >
-                  <AuditLog
-                    logs={logs}
-                    loading={loadingLogs}
-                    error={logError}
-                    onRefresh={() => void loadLogs()}
-                  />
-                </div>
+                {isAdmin ? (
+                  <div
+                    role="tabpanel"
+                    id="admin-panel-sumber"
+                    aria-labelledby="admin-tab-sumber"
+                    hidden={tab !== "sumber"}
+                  >
+                    <PublicSourceFinder actor={{ id: user.id, name: user.name }} />
+                  </div>
+                ) : null}
+
+                {isAdmin ? (
+                  <div
+                    role="tabpanel"
+                    id="admin-panel-bukti"
+                    aria-labelledby="admin-tab-bukti"
+                    hidden={tab !== "bukti"}
+                  >
+                    <EvidencePublisher
+                      actor={{ id: user.id, name: user.name }}
+                      onPublished={handlePublished}
+                    />
+                  </div>
+                ) : null}
+
+                {isAdmin ? (
+                  <div
+                    role="tabpanel"
+                    id="admin-panel-log"
+                    aria-labelledby="admin-tab-log"
+                    hidden={tab !== "log"}
+                  >
+                    <AuditLog
+                      logs={logs}
+                      loading={loadingLogs}
+                      error={logError}
+                      onRefresh={() => void loadLogs()}
+                    />
+                  </div>
+                ) : null}
 
                 <div
                   role="tabpanel"
@@ -722,18 +892,34 @@ export function AdminDashboard() {
                       <div className="border-4 border-pixel-line bg-pixel-wood-darker p-3 shadow-panel">
                         <p className="flex items-center gap-1.5 font-pixel text-[7px] uppercase leading-[1.7] text-pixel-sun">
                           <ShieldCheck size={11} aria-hidden="true" />
-                          Peran administrator
+                          {isAdmin
+                            ? "Peran administrator"
+                            : "Peran penanggung jawab daerah"}
                         </p>
                         <p className="mt-2 text-[10px] leading-relaxed text-pixel-cream/80">
-                          Peran ini berasal dari custom claim Firebase Auth{" "}
-                          <code className="border border-pixel-cream/25 bg-pixel-line/40 px-1">
-                            admin: true
-                          </code>
-                          . Klien tidak dapat memasangnya sendiri.
+                          {isAdmin ? (
+                            <>
+                              Peran ini berasal dari custom claim Firebase Auth{" "}
+                              <code className="border border-pixel-cream/25 bg-pixel-line/40 px-1">
+                                admin: true
+                              </code>{" "}
+                              atau peran admin pada dokumen profil. Klien tidak
+                              dapat menaikkan perannya sendiri.
+                            </>
+                          ) : (
+                            <>
+                              Peran PJ daerah dibaca dari dokumen profil. Anda hanya
+                              dapat meninjau laporan pada wilayah tugas{" "}
+                              <strong className="text-pixel-cream">
+                                {region ? region.name : "yang ditetapkan"}
+                              </strong>
+                              .
+                            </>
+                          )}
                         </p>
                         <p className="mt-2 text-[10px] leading-relaxed text-pixel-cream/80">
-                          Jika claim baru dipasang, keluar lalu masuk kembali agar
-                          token memuat peran terbaru.
+                          Jika peran baru diubah administrator, muat ulang halaman
+                          atau masuk kembali agar panel memuat akses terbaru.
                         </p>
                       </div>
 
@@ -749,7 +935,7 @@ export function AdminDashboard() {
                         </p>
                         <p className="mt-2 inline-flex items-center gap-1 border border-pixel-line bg-emerald-50 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-900">
                           <BadgeCheck size={9} aria-hidden="true" />
-                          Peran admin aktif
+                          {isAdmin ? "Peran admin aktif" : "Peran PJ daerah aktif"}
                         </p>
                       </div>
                     </aside>

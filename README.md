@@ -35,9 +35,14 @@ Fitur utama:
   pilihannya tersimpan di perangkat.
 - **Akun warga** — daftar/masuk dengan Firebase Auth, prefilling identitas
   laporan, dan dasbor akun berisi riwayat kontribusi tersinkron.
-- **Panel administrator** — moderasi laporan (verifikasi/tandai/pending), hapus
-  laporan, penerbitan bukti resmi berfoto, log audit, dan ganti kata sandi.
-  Akses memakai custom claim Firebase Auth `admin: true`.
+- **Panel pengelola** — moderasi laporan (verifikasi/tandai/pending), hapus
+  laporan, direktori pengguna terdaftar dengan promosi peran (admin/PJ daerah),
+  penerbitan bukti resmi berfoto, log audit, dan ganti kata sandi. Admin
+  memakai custom claim Firebase Auth atau peran profil; PJ daerah hanya
+  meninjau laporan pada wilayah tugasnya.
+- **Sumber anggaran publik** — pencarian bertemplat yang aman (`site:go.id` +
+  Google Drive/Docs), tanpa kategori sensitif, serta pustaka tautan yang
+  ditinjau administrator dan tampil di `/informasi`.
 
 ## Akun warga & Firebase
 
@@ -87,43 +92,79 @@ firebase deploy --only firestore:rules --project prajvala
 
 Aturan tersebut menjamin:
 
-- `profiles/{uid}` hanya dapat dibaca/ditulis pemiliknya; admin boleh membaca.
+- `profiles/{uid}` dapat dibaca pemilik dan admin. Pemilik hanya boleh mengubah
+  `fullName` dan `regionId`; admin boleh mengatur `role` dan `regionId`.
+  Pemilik tidak dapat menaikkan perannya sendiri.
 - `reports` dapat dibaca publik. Warga hanya dapat membuat laporan `pending`
   yang belum terverifikasi; admin dapat menerbitkan bukti resmi berfoto.
 - Update moderasi (`verified`, `moderationStatus`, `moderationNote`,
-  `moderatedAt`, `moderatedBy`) hanya boleh dilakukan admin.
+  `moderatedAt`, `moderatedBy`) hanya boleh dilakukan admin, atau PJ daerah
+  untuk laporan dengan `regionId` yang sama dengan wilayah tugasnya.
 - `upvoteCount` hanya boleh berubah satu langkah dan wajib disertai dokumen
   suara milik pengguna yang sesuai.
 - `userVotes/{uid}` hanya dapat diakses pemiliknya.
-- `adminLogs` hanya dapat dibaca dan ditambah admin; tidak ada update/delete.
+- `adminLogs` hanya dapat dibaca admin dan ditambah admin/PJ daerah; tidak ada
+  update/delete.
+- `publicSources` dapat dibaca publik; hanya admin yang boleh menambah atau
+  menghapus, dan URL wajib mengarah ke host Google Drive/Docs.
 
 Foto bukti disimpan sebagai data URL JPEG di dokumen laporan (maks. 680.000
 karakter di klien, 720.000 di rules). Ini dipakai karena Cloud Storage belum
 tersedia tanpa billing/Blaze; foto dikompres ulang di peramban sehingga metadata
 EXIF/GPS benar-benar hilang.
 
-### 4. Membuat atau mempromosikan administrator
+### 4. Peran pengelola dan promosi pengguna
 
-Peran admin **tidak** disimpan sebagai field yang bisa diubah klien. Peran
-berasal dari custom claim Firebase Auth:
+Peran disimpan di dokumen `profiles/{uid}` dengan nilai `warga`, `pj_daerah`,
+atau `admin`. Aturan Firestore menolak perubahan peran oleh pemilik akun; hanya
+administrator yang boleh mengubah `role` dan `regionId` pengguna lain.
 
-1. Buat akun lewat Firebase Console atau Authentication REST API.
-2. Pasang claim dengan Firebase Admin SDK / Firebase CLI:
+1. Buat administrator pertama lewat Firebase Console atau Authentication REST.
+2. Pasang custom claim sebagai jalur bootstrap (opsional, tetapi disarankan):
    ```js
    await admin.auth().setCustomUserClaims(uid, { admin: true });
    ```
 3. Pastikan dokumen `profiles/{uid}` berisi `fullName`, `email`, `regionId`,
    dan `role: "admin"`.
-4. Keluar lalu masuk kembali agar ID token memuat claim baru.
+4. Buka `/admin` → tab **Pengguna** untuk melihat semua akun terdaftar, mencari
+   nama/email/wilayah, lalu menetapkan peran:
+   - **Warga** — kontribusi laporan dan dukungan seperti biasa.
+   - **Penanggung Jawab Daerah** — wajib memilih satu wilayah tugas; hanya
+     meninjau laporan dengan `regionId` yang sama.
+   - **Administrator** — akses penuh ke semua tab panel.
+5. Perubahan peran berlaku setelah pengguna memuat ulang halaman atau masuk
+   kembali. Pemilik akun tidak dapat mengubah perannya sendiri.
 
-Setelah itu menu akun menampilkan **Panel admin** dan rute `/admin` terbuka.
-Tanpa claim tersebut, `/admin` hanya menampilkan gerbang akses terbatas.
+Admin yang dipromosikan lewat dokumen profil tetap diakui oleh aturan Firestore.
+Custom claim tetap menjadi jalur bootstrap dan tidak dapat dipasang dari klien.
+Tab **Moderasi**, **Pengguna**, **Sumber publik**, **Bukti resmi**, **Log audit**,
+dan **Keamanan** hanya tampil sesuai peran.
 
 ### 5. Domain yang diizinkan
 
 Di **Firebase Console → Authentication → Settings → Authorized domains**,
 pastikan `localhost` dan `prajvala.vercel.app` terdaftar. Domain ini diperlukan
 untuk alur email (reset kata sandi) dan popup autentikasi.
+
+### 6. Sumber anggaran publik yang aman
+
+Panel `/admin` → **Sumber publik** menyediakan sembilan templat pencarian dokumen
+anggaran publik: Google Drive (semua, file, folder, open), Docs, Sheets, Slides,
+dan Forms. Semua templat memakai `site:go.id` dan kata kunci “anggaran”; kueri
+tidak dapat diedit bebas. Kategori **File Sensitif**, **Login & Admin**,
+**Config & Error**, dan **Data Leak** sengaja tidak dibuat dan tidak dijalankan.
+
+Alur kerja:
+
+1. Pilih jenis dokumen, salin kueri, atau buka hasil pencarian Google.
+2. Tinjau dokumen secara manual; hanya simpan tautan yang benar-benar publik.
+3. Tempel URL Google Drive/Docs (HTTPS), lalu isi judul, jenis, wilayah, tahun,
+   dan catatan opsional.
+4. Tautan tersimpan muncul di `/informasi` pada bagian pustaka sumber publik dan
+   dapat dihapus kembali oleh administrator.
+
+Tidak ada pengunduhan otomatis, pengambilan kredensial, atau penyimpanan berkas
+sensitif. Tautan divalidasi di klien dan aturan Firestore (`publicSources`).
 
 ### Alur yang didukung
 
@@ -139,8 +180,10 @@ untuk alur email (reset kata sandi) dan popup autentikasi.
 - Laporan warga baru masuk sebagai **menunggu tinjauan**. Skor validasi hanya
   menghitung laporan yang sudah diverifikasi admin.
 - Admin dapat memverifikasi, menandai, mengembalikan ke pending, menghapus
-  laporan, menerbitkan bukti resmi berfoto, dan mengganti kata sandi sendiri.
-  Semua tindakan tercatat di `adminLogs`.
+  laporan, menerbitkan bukti resmi berfoto, mengelola peran pengguna, menambah
+  sumber publik, dan mengganti kata sandi sendiri. PJ daerah hanya dapat
+  memoderasi laporan di wilayah tugasnya. Semua tindakan tercatat di
+  `adminLogs`.
 
 Ini purwarupa kompetisi. Jangan gunakan kata sandi akun penting Anda.
 
@@ -207,6 +250,8 @@ components/          UI, layout, grafik, peta, proyek, validasi, informasi, akun
 lib/data.ts          Sumber data percontohan + agregasi wilayah
 lib/api.ts           Lapisan data laporan/upvote/aktivitas/moderasi (Firestore)
 lib/admin.ts         Log audit tindakan administrator
+lib/users.ts         Direktori pengguna + promosi peran/wilayah
+lib/public-sources.ts Templat pencarian aman + pustaka sumber publik
 lib/image.ts         Kompresi foto + pembersihan metadata di peramban
 lib/utils.ts         Format rupiah, tanggal, persentase, slug
 types/               Tipe TypeScript bersama
