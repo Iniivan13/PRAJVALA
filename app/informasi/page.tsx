@@ -7,11 +7,14 @@ import { FaqSection, GlossarySection } from "@/components/information/faq-glossa
 import { PageHero } from "@/components/layout/page-hero";
 import { RegionPicker } from "@/components/ui/region-picker";
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Informasi Publik",
   description:
     "Repositori dokumen APBD/APBDes, RAB, tender, dan LPJ dengan ringkasan bahasa sederhana, pertanyaan umum, serta glosarium istilah anggaran.",
-};
+  path: "/informasi",
+});
 
 const ANCHORS = [
   { href: "#dokumen", label: "Dokumen publik", icon: FileText, note: "11 dokumen" },

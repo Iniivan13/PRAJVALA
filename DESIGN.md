@@ -284,6 +284,26 @@ The reference was measured in Firefox at 1440×1000 and 390×844, and its `style
 | Focus ring | 3 px `pixel.sun` outline, offset 2 px | Chosen for visibility on both cream and wood surfaces |
 | Motion | `fade-in`, `step-up`, `sheet-up`, `pop-in`, all `steps()`-based; global `prefers-reduced-motion` guard | Chosen; perpetual `idle-bob`/`drift` from the reference rejected |
 
+### Brand logo and share assets
+
+The owner's 2026 logo replaces the old 16×16 crest: a pixel magnifier whose lens is a lightbulb with a gold spark, maroon linework on a cream field, the `PRAJVALA` wordmark, and the tagline **Search · Discover · Empower**.
+
+| Asset | Path | Use |
+|---|---|---|
+| Crest mark (cream field) | `public/brand/prajvala-mark.png` | Pixel cream tile inside `Logo`; reads as a crest, not a rounded app icon |
+| Full lockup | `public/brand/prajvala-logo.png` | Reference asset for print/export and future brand use |
+| 512 / 192 icons | `public/brand/prajvala-icon-512.png`, `prajvala-icon-192.png` | Manifest, favicon fallback, structured-data logo |
+| Maskable icon | `public/brand/prajvala-icon-maskable-512.png` | PWA maskable icon with the 20% safe-zone padding |
+| Apple touch icon | `public/brand/prajvala-apple-icon.png` | iOS home screen |
+| Open Graph card | `public/brand/og-image.png` | 1200×630 share card used by Open Graph and Twitter |
+
+Rules:
+
+- The logo tile stays cream (`#FDF6E0`) in both light and dark contexts because the cream field is part of the mark; theming only changes the wordmark and tagline colors.
+- Keep the crest raster asset on its original pixel grid (`image-rendering: pixelated`, fixed height) and never redraw it as a generic line icon.
+- Favicon and Apple icon are generated from the crest (`app/icon.png`, `app/apple-icon.png`); do not reintroduce the old `icon.svg` crest.
+- The share card keeps the maroon/cream/gold palette, pixel frame, and Press Start 2P wordmark. It is the only place where the English tagline is set as a wide lockup; body copy stays Bahasa Indonesia.
+
 ### Deliberate divergences from the reference
 
 | Reference trait | Decision | Reason |
@@ -296,7 +316,7 @@ The reference was measured in Firefox at 1440×1000 and 390×844, and its `style
 
 ### Data-visualisation specifics
 
-- `sector-donut.tsx`: Recharts `Pie` uses `strokeLinejoin`/line caps set to butt, a `pixel.panel` track, and an inset cream centre plate; the legend uses block bars, not coloured dots.
+- `sector-donut.tsx`: Recharts `Pie` uses `strokeLinejoin`/line caps set to butt, a `pixel.panel` track, and a transparent centre that keeps the total label inside the ring (no inner card or border); the legend uses block bars, not coloured dots.
 - `cashflow-chart.tsx`: square bars, dotted grid lines, pixel-plaque tooltip, dark axis line; all axis labels, units, and legends retained.
 - `progress-bar.tsx`: stepped striped meter; no rounded track or gradient fill.
 - `validation-section.tsx`: the score meter is 10 discrete blocks, filled `round(score / 10)`, with the numeric score repeated in a bordered plate and `aria-label` on the meter container.

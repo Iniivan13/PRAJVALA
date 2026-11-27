@@ -170,7 +170,7 @@ export function SpriteSun(props: SpriteProps) {
   );
 }
 
-/** Merchant/civic crest used by the logo block. */
+/** Civic crest used by the pengelola shortcut in the mobile More sheet. */
 export function SpriteCrest(props: SpriteProps) {
   return (
     <Frame {...props}>

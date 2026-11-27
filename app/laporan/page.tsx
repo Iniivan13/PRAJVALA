@@ -5,11 +5,14 @@ import { PageHero } from "@/components/layout/page-hero";
 import { ReportsBoard } from "@/components/reports/reports-board";
 import { RegionPicker } from "@/components/ui/region-picker";
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Papan Laporan Warga",
   description:
     "Kumpulan laporan lapangan warga PRAJVALA: kesesuaian hasil dengan RAB, catatan keterlambatan, dan indikasi kejanggalan yang perlu ditindaklanjuti.",
-};
+  path: "/laporan",
+});
 
 export default function LaporanPage() {
   return (

@@ -42,9 +42,7 @@ export function Footer() {
       <div className="container-page relative py-12 sm:py-14">
         <div className="grid gap-9 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr]">
           <div>
-            <span className="inline-block border-[3px] border-pixel-line bg-pixel-cream px-2.5 py-2 shadow-chip">
-              <Logo theme="light" showTagline />
-            </span>
+            <Logo theme="dark" showTagline />
             <p className="mt-5 max-w-sm font-retro text-[16px] leading-snug text-pixel-cream/90">
               Platform Rakyat untuk Jaminan Validitas dan Akuntabilitas. Menyinari
               setiap rupiah anggaran publik agar dapat dilihat, dipahami, dan

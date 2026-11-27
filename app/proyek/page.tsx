@@ -5,11 +5,14 @@ import { PageHero } from "@/components/layout/page-hero";
 import { ProjectsExplorer } from "@/components/projects/projects-explorer";
 import { RegionPicker } from "@/components/ui/region-picker";
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Peta & Proyek Publik",
   description:
     "Jelajahi peta geotagging proyek publik: progres fisik, anggaran, bukti sebelum-sesudah, dan laporan verifikasi warga.",
-};
+  path: "/proyek",
+});
 
 interface ProyekPageProps {
   searchParams: Promise<{ q?: string; category?: string }>;

@@ -71,6 +71,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=prajvala
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=prajvala.firebasestorage.app
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 `.env.local` sudah masuk `.gitignore` dan tidak boleh di-commit.
@@ -220,6 +221,28 @@ npm run start      # menjalankan hasil build
 Catatan: ubin peta OpenStreetMap dan foto proyek Unsplash memerlukan koneksi
 internet saat runtime. Akun, laporan, dan dukungan memerlukan Firebase aktif.
 
+## Merek, favicon, dan SEO
+
+Logo baru (kaca pembesar + bohlam, maroon di atas krem) tersedia di
+`public/brand/` dan dipakai oleh `components/brand/logo.tsx`, favicon
+(`app/icon.png`), ikon Apple (`app/apple-icon.png`), serta kartu bagikan
+Open Graph 1200×630 (`public/brand/og-image.png`).
+
+Metadata situs berada di `app/layout.tsx` dan `lib/seo.ts`:
+
+- Canonical, Open Graph, dan Twitter Card per halaman.
+- `robots.txt` (`/robots.txt`) memblokir `/admin`, `/akun`, `/masuk`, dan
+  `/daftar`; `sitemap.xml` hanya memuat rute publik dan seluruh proyek.
+- Structured data `Organization` dan `WebSite` disuntikkan dari root layout.
+- `manifest.webmanifest` menyediakan ikon PWA dan warna tema.
+
+URL absolut metadata memakai `NEXT_PUBLIC_SITE_URL` dengan bawaan
+`https://prajvala.vercel.app`. Isi variabel ini bila domain produksi berubah:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://domain-anda.example
+```
+
 ## Deploy
 
 Produksi berjalan di Vercel: **https://prajvala.vercel.app**
@@ -234,6 +257,9 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=prajvala
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=prajvala.firebasestorage.app
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
+
+# Opsional: URL publik untuk canonical, Open Graph, sitemap, dan robots.
+NEXT_PUBLIC_SITE_URL=https://prajvala.vercel.app
 ```
 
 Lalu deploy ulang (`vercel --prod` atau push ke branch produksi).
@@ -253,6 +279,8 @@ lib/admin.ts         Log audit tindakan administrator
 lib/users.ts         Direktori pengguna + promosi peran/wilayah
 lib/public-sources.ts Templat pencarian aman + pustaka sumber publik
 lib/image.ts         Kompresi foto + pembersihan metadata di peramban
+lib/site.ts          Identitas situs untuk metadata, sitemap, dan robots
+lib/seo.ts           Pembangun metadata per halaman (canonical + OG + Twitter)
 lib/utils.ts         Format rupiah, tanggal, persentase, slug
 types/               Tipe TypeScript bersama
 firestore.rules      Aturan keamanan Firestore (termasuk peran admin)

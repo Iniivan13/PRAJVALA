@@ -21,6 +21,9 @@ yarn-error.log*
 # Large local archive (not part of the repository)
 prajvala_backup.zip
 
+# Raw logo export; optimized brand assets live in public/brand/
+logo.png
+
 # OS / editor
 .DS_Store
 Thumbs.db

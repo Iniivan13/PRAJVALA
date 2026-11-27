@@ -30,6 +30,7 @@ import {
   SpriteQuest,
 } from "@/components/ui/pixel-sprites";
 import { BUDGET_ITEMS, PROJECTS, getProject, getRegion } from "@/lib/data";
+import { buildPageMetadata } from "@/lib/seo";
 import {
   formatCompactIDR,
   formatDateLong,
@@ -49,16 +50,21 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: ProjectDetailProps): Promise<Metadata> {
   const { id } = await params;
   const project = getProject(id);
-  if (!project) return { title: "Proyek tidak ditemukan" };
-  return {
+  if (!project) {
+    return {
+      title: "Proyek tidak ditemukan",
+      robots: { index: false, follow: false },
+    };
+  }
+  return buildPageMetadata({
     title: project.name,
     description: project.summary,
-    openGraph: {
-      title: `${project.name} — PRAJVALA`,
-      description: project.summary,
-      images: [project.after.src],
+    path: `/proyek/${project.id}`,
+    image: {
+      url: project.after.src,
+      alt: `Foto kondisi proyek ${project.name}`,
     },
-  };
+  });
 }
 
 /** Section wrapper: pixel card with a plaque heading slot. */

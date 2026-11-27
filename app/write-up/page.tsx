@@ -13,11 +13,14 @@ import { SpriteJournal } from "@/components/ui/pixel-sprites";
 import { FAQS, GLOSSARY } from "@/lib/data";
 import { formatNumber } from "@/lib/utils";
 
-export const metadata: Metadata = {
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
   title: "Write Up",
   description:
     "Jurnal keterbukaan PRAJVALA: penjelasan sumber data, cara membaca status proyek, keamanan data pelapor, dan glosarium istilah anggaran.",
-};
+  path: "/write-up",
+});
 
 /**
  * Write Up.
