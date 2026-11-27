@@ -83,14 +83,21 @@ export function MobileBottomNav() {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        // Let an open region-picker listbox handle Escape first; a second
+        // Escape then closes the sheet itself.
+        if (document.querySelector('[role="listbox"]')) return;
         setMoreOpen(false);
         return;
       }
       if (event.key !== "Tab" || !sheetRef.current) return;
+      const listbox = document.querySelector('[role="listbox"]');
       const focusables = [
         ...sheetRef.current.querySelectorAll<HTMLElement>(
           "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])",
         ),
+        ...(listbox?.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), a[href]",
+        ) ?? []),
       ];
       if (focusables.length === 0) return;
       const first = focusables[0];

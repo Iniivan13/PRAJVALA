@@ -29,6 +29,7 @@ export function Navbar() {
   const { user, isHydrated, isAdmin, isModerator, logout } = useAuth();
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
+  const accountButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setAccountOpen(false);
@@ -40,7 +41,10 @@ export function Navbar() {
       if (!accountRef.current?.contains(event.target as Node)) setAccountOpen(false);
     };
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setAccountOpen(false);
+      if (event.key === "Escape") {
+        setAccountOpen(false);
+        accountButtonRef.current?.focus({ preventScroll: true });
+      }
     };
     document.addEventListener("mousedown", handlePointer);
     document.addEventListener("keydown", handleKey);
@@ -104,6 +108,7 @@ export function Navbar() {
           ) : user ? (
             <div ref={accountRef} className="relative">
               <button
+                ref={accountButtonRef}
                 type="button"
                 onClick={() => setAccountOpen((previous) => !previous)}
                 aria-haspopup="menu"

@@ -59,7 +59,10 @@ export function Reveal({ children, className, delay = 0, threshold = 0.01 }: Rev
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
         "transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-        hidden ? "translate-y-5 opacity-0" : "translate-y-0 opacity-100",
+        // Only transform while hidden. A permanent `translate-y-0` still creates
+        // a stacking context, which previously let later siblings paint over
+        // absolutely positioned dropdowns inside the revealed content.
+        hidden ? "translate-y-5 opacity-0" : "opacity-100",
         className,
       )}
     >
